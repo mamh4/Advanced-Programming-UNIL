@@ -1,0 +1,6 @@
+Predator prey simulation:
+
+Classes:
+Gameboard
+Predator, prey, inheritance
+terrain; impacts vision and the dynamics of the simulation.
