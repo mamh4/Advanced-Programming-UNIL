@@ -1,5 +1,5 @@
 #pragma once
-class Animal
+class Predator
 {
 };
 

@@ -24,6 +24,12 @@
     <ClInclude Include="Vegetation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Predator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Prey.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="test_SFML.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -36,6 +42,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Vegetation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Predator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Prey.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="test_SFML.cpp">

@@ -145,12 +145,16 @@
   <ItemGroup>
     <ClInclude Include="Animal.h" />
     <ClInclude Include="Gameboard.h" />
+    <ClInclude Include="Predator.h" />
+    <ClInclude Include="Prey.h" />
     <ClInclude Include="test_SFML.h" />
     <ClInclude Include="Vegetation.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animal.cpp" />
     <ClCompile Include="Gameboard.cpp" />
+    <ClCompile Include="Predator.cpp" />
+    <ClCompile Include="Prey.cpp" />
     <ClCompile Include="test_SFML.cpp" />
     <ClCompile Include="Vegetation.cpp" />
   </ItemGroup>
