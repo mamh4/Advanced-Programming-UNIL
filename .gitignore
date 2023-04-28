@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/predators/.vs/predators/v17/.suo
+/.gitignore
+/predators/.vs/predators/v17/Browse.VC.db
