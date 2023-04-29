@@ -1,5 +1,8 @@
 #pragma once
-class Prey
+#include "Animal.h"
+class Prey : public Animal
 {
-};
+}
+;
+
 

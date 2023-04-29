@@ -1,23 +1,8 @@
 #include "Animal.h"
+#include <SFML/Graphics.hpp>
 #pragma once
-class Animal
-{
-private:
-    int posX;
-    int posY;
-    int radius;
 
-    bool sex;
-    int speed;
-    int age;
-    int staminaLevel;
-    int hungerLevel;
-    float metabolicRate;
-    int lustLevel;
-    int visionRange;
-
-public:
-    Animal(int myPosX, int myPosY, int myRadius, bool mySex,
+    Animal::Animal(float myPosX, float myPosY, float myRadius, bool mySex,
         int mySpeed, int myAge, int myStaminaLevel, int myHungerLevel,
         float myMetabolicRate, int myLustLevel, int myVisionRange) {
         posX = myPosX;
@@ -27,83 +12,96 @@ public:
         speed = mySpeed;
         age = myAge;
         staminaLevel = myStaminaLevel;
-        hungerLevel = myHungerLevel;
+        hungerSensitivity = myHungerLevel;
         metabolicRate = myMetabolicRate;
         lustLevel = myLustLevel;
         visionRange = myVisionRange;
+
+        sf::CircleShape shape(2*radius);
+        shape.setPosition(posX, posY);
     }
 
-    int getPosX() {
-        return posX;
+    float Animal::getPosX() {
+        return Animal::posX;
     }
 
-    void setPosX(int posX) {
+    void Animal::setPosX(float posX) {
         this->posX = posX;
     }
 
-    int getPosY() {
-        return posY;
+    float Animal::getPosY() {
+        return Animal::posY;
     }
 
-    void setPosY(int posY) {
+    void Animal::setPosY(float posY) {
         this->posY = posY;
     }
 
-    int getRadius() {
-        return radius;
+    sf::CircleShape Animal::getShape() {
+		return Animal::shape;
+	}
+
+    float Animal::getRadius() {
+        return Animal::radius;
     }
 
-    void setRadius(int radius) {
+    void Animal::setRadius(float radius) {
         this->radius = radius;
     }
 
-    int getSpeed() {
-        return speed;
+    int Animal::getSpeed() {
+        return Animal::speed;
     }
 
-    void setSpeed() {
+    void Animal::setSpeed() {
         this->speed = speed;
     }
 
-    int getAge() {
-        return age;
+    int Animal::getAge() {
+        return Animal::age;
     }
 
-    void setAge(int age) {
+    void Animal::setAge(int age) {
         this->age = age;
     }
 
-    int getStaminaLevel() {
-        return staminaLevel;
+    int Animal::getStaminaLevel() {
+        return Animal::staminaLevel;
     }
 
-    void setStaminaLevel(int staminaLevel) {
+    void Animal::setStaminaLevel(int staminaLevel) {
         this->staminaLevel = staminaLevel;
     }
 
-    int getHungerLevel() {
-        return hungerLevel;
+    int Animal::getHungerLevel() {
+        return Animal::hungerSensitivity;
     }
 
-    void setHungerLevel(int hungerLevel) {
-        this->hungerLevel = hungerLevel;
+    void Animal::setHungerLevel(int hungerLevel) {
+        this->hungerSensitivity = hungerLevel;
     }
 
-    float getMetabolicRate() {
-        return metabolicRate;
+    float Animal::getMetabolicRate() {
+        return Animal::metabolicRate;
     }
 
-    void setMetabolicRate(float metabolicRate) {
+    void Animal::setMetabolicRate(float metabolicRate) {
         this->metabolicRate = metabolicRate;
     }
 
-    int getLustLevel() {
+    int Animal::getLustLevel() {
         return lustLevel;
     }
 
-    void setLustLevel(int lustLevel) {
+    void Animal::setLustLevel(int lustLevel) {
         this->lustLevel = lustLevel;
     }
+
+    void Animal::move(float x, float y) {
+		Animal::setPosX(x);
+        Animal::setPosY(y);
+        Animal::shape.move(x, y);
+	}
 
     /* psudo code implementatin of the move function
     animal.step_size <- 4
@@ -139,5 +137,4 @@ public:
     }
         */
 
-};
 
