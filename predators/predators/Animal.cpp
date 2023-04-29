@@ -17,8 +17,11 @@
         lustLevel = myLustLevel;
         visionRange = myVisionRange;
 
-        sf::CircleShape shape(2*radius);
-        shape.setPosition(posX, posY);
+        shape.setRadius(myRadius);
+        //shape.setFillColor(sf::Color::Green);
+        shape.setOrigin(myRadius, myRadius);
+        shape.setPosition(myPosX, myPosY);
+        
     }
 
     float Animal::getPosX() {
@@ -98,8 +101,8 @@
     }
 
     void Animal::move(float x, float y) {
-		Animal::setPosX(x);
-        Animal::setPosY(y);
+        Animal::setPosX(Animal::getPosX() + x);
+        Animal::setPosY(Animal::getPosY() + y);
         Animal::shape.move(x, y);
 	}
 

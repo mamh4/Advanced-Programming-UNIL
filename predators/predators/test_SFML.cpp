@@ -7,14 +7,7 @@ int main()
 {
 
     // Create a window
-    sf::RenderWindow window(sf::VideoMode(1000, 1000), "Black Circle");
-
-    // Create a black circle
-    sf::CircleShape circle(10);
-    circle.setFillColor(sf::Color::Black);
-
-    // Set the position of the circle to the center of the screen
-    circle.setPosition(window.getSize().x / 2 - circle.getRadius(), window.getSize().y / 2 - circle.getRadius());
+    sf::RenderWindow window(sf::VideoMode(1000, 1000), "Prey vs Predator");
 
     Predator myPredator(500, 500, 10, true, 5, 3, 10, 5, 0.2, 10, 50);
 

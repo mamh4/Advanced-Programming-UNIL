@@ -16,6 +16,7 @@ private:
     int lustLevel;
     int visionRange;
 
+protected:
     sf::CircleShape shape;
 
 public:

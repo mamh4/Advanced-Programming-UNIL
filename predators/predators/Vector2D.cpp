@@ -6,13 +6,37 @@
 
 ///Within the Vector2DcClass 
 
-// Set function
+// Initializing
 Vector2D::Vector2D(double x , double y)
 : x_(x), y_(y)
 {}
 
-//Self Operators	
-    //Vectorial sum
+// Set
+void  Vector2D:: set_coord(boolean coord_select, double coord){
+	if (coord_select){
+		x_=coord;
+		return;
+		}
+	else {
+		y_=coord;
+		return;
+		}
+	return;
+	}
+
+// Get
+const double Vector2D:: getx_() const{
+	return x_;
+	}
+const double Vector2D:: gety_() const{
+	return y_;
+	}
+const double Vector2D:: getz_()const{
+	return z_;
+	}
+
+//Operators	onto self
+    //Vectorial sum 
 		const Vector2D Vector2D::operator += (Vector2D const& othervector){
 			x_ += othervector.x_;
 			y_ += othervector.y_;
@@ -36,7 +60,6 @@ Vector2D::Vector2D(double x , double y)
 		y_ *= 1/scalar;
 	return *this;
 	}
-
 
 //Scalar product 
 const double  Vector2D:: scalar_product(Vector2D othervector) const{
@@ -77,29 +100,7 @@ double Vector2D:: angle(Vector2D const & othervector) const {
 	return acos(((*this)*othervector)/(1.0*norme()*othervector.norme()));
 	}
 
-// Set
-void  Vector2D:: set_coord(boolean coord_select, double coord){
-	if (coord_select){
-		x_=coord;
-		return;
-		}
-	else {
-		y_=coord;
-		return;
-		}
-	return;
-	}
-
-// Get
-const double Vector2D:: getx_() const{
-	return x_;
-	}
-const double Vector2D:: gety_() const{
-	return y_;
-	}
-const double Vector2D:: getz_()const{
-	return z_;
-	}
+// Outside of class 
 
 // Operator Surcharge 
 	// Vectorial sum
@@ -158,85 +159,58 @@ const double Vector2D:: getz_()const{
 			}
 		return vector1;
 		}
-	
-vector <Vector2D> operator +  (Vecteur3D const& x, vector<Vecteur3D>& V2){
-    V2.push_back(x);
-	return V2;
-	}
-vector <Vecteur3D> operator + (vector<Vecteur3D>& V2,Vecteur3D const& x){
-	V2.push_back(x);
-	return V2;
-	}
-	
-	
-const bool operator == (Vecteur3D const& V1, Vecteur3D const& V2){
-	if (((V1.getx_()==V2.getx_()) and (V1.gety_()==V2.gety_())) and (V1.getz_()==V2.getz_())){
-		return true;
+	//Append a vector of vectors with a vector (vector as first term)
+	vector <Vector2D> operator +  (Vector2D const& vector1, vector<Vector2D>& vector2){
+   		vector2.push_back(vector1);
+		return vector2;
 		}
-	return false;
-	} 
-	const bool operator < (Vecteur3D const& V1, Vecteur3D const& V2){
-		if (V1.norme2()<V2.norme2()){
-			return true;
-			}else{
-				return false;
-				}
+	//Append a vector of vectors with a vector (vector as second term)
+	vector <Vector2D> operator + (vector<Vector2D>& vector1,Vector2D const& vector2){
+		vector1.push_back(vector2);
+		return vector1;
 		}
-
-const bool operator < (Vecteur3D const& V1, double const& a){
-if (V1.norme2()< a){
+	//Check equality of vectors
+	const bool operator == (Vector2D const& vector1, Vector2D const& vector2){
+		if (((vector1.getx_()==vector2.getx_()) and (vector1.gety_()==vector2.gety_()))){
 			return true;
-			}else{
-				return false;
-				}
+			}
+		return false;
+		} 
+	//Compare the norm of vectors
+	const bool operator < (Vector2D const& vector1, Vector2D const& vector2){
+		return (vector1.l2norm()<vector2.l2norm());
 		}
-		
-const bool operator < (double const& a,Vecteur3D const& V1){
-if (a< V1.norme2()){
-			return true;
-			}else{
-				return false;
-				}
+	const bool operator > (Vector2D const& vector1, Vector2D const& vector2){
+		return (vector1.l2norm()>vector2.l2norm()); 
 		}
-		
-
-const bool operator > (Vecteur3D const& V1, Vecteur3D const& V2){
-if (V1.norme2()>V2.norme2()){
-			return true;
-			}else{
-				return false;
-				}
+	const bool operator <= (Vector2D const& vector1, Vector2D const& vector2){
+		return not (vector1>vector2);
 		}
-
-const bool operator > (Vecteur3D const& V1, double const& a){
-	if (V1.norme2()>a){
-			return true;
-			}else{
-				return false;
-				}
-	}
-	const bool operator > (double const& a,Vecteur3D const& V1){
-if (a > V1.norme2()){
-			return true;
-			}else{
-				return false;
-				}
+	const bool operator >= (Vector2D const& vector1, Vector2D const& vector2){
+		return not (vector1<vector2);
 		}
-const bool operator <= (Vecteur3D const& V1, Vecteur3D const& V2){
-	return V2>V1;
-	}
-const bool operator <= (Vecteur3D const& V1, double const& a){
-	return a>V1;
-	}
-const bool operator <= (double const& a, Vecteur3D const& V1){
-	return V1>a;
-	}
-const bool operator >= (Vecteur3D const& V1, Vecteur3D const& V2){
-	return V2<V1;
-	}
-const bool operator >= (Vecteur3D const& V1, double const& a){
-	return a<V1;
-	}
-const bool operator >= (double const& a,Vecteur3D const& V1){
-	return V1<a;
-	}
+	//Compare the norm of a vector with a scalar 
+	const bool operator < (Vector2D const& vector1, double const& scalar){
+		return (vector1.l2norm()<scalar); 
+		}
+	const bool operator > (Vector2D const& vector1, double const& scalar){
+		return (vector1.l2norm()>scalar); 
+		}
+	const bool operator <= (Vector2D const& vector1, double const& scalar){
+		return not (vector1 >scalar); 
+		}
+	const bool operator >= (Vector2D const& vector1, double const& scalar){
+		return not (vector1 < scalar); 
+		}
+	const bool operator < (double const& scalar, Vector2D const& vector1){
+		return (vector1 > scalar); 
+		}
+	const bool operator > (double const& scalar, Vector2D const& vector1){
+		return (vector1 < scalar); 
+		}
+	const bool operator <= (double const& scalar, Vector2D const& vector1){
+		return (vector1 >= scalar); 
+		}
+	const bool operator >= (double const& scalar, Vector2D const& vector1){
+		return (vector1 <= scalar); 
+		}

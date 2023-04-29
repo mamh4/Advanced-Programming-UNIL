@@ -1,5 +1,4 @@
 #include "Predator.h"
-#include "Animal.h"
 #include <SFML/Graphics.hpp>
 
 Predator::Predator(float myPosX, float myPosY, float myRadius, bool mySex,
