@@ -10,24 +10,16 @@
 int main()
 {
     const int numberOfAnimals = 1;
-
     std::vector<Organism*> organismVector;
+    sf::CircleShape shape(100.f);
+    shape.getPosition().x;
+   //Dynamic Casting
 
     Predator* myPredator = new Predator(500, 500, 20, 100, true, 10, 5, 80, 1.5f, 50, 100);
-
-
-
     organismVector.push_back(myPredator);
-
-    std::cout << "Energy level: " << myPredator->getEnergy() << std::endl;
-
-    delete myPredator;
-
-    std::cout << "Energy level: " << myPredator->getEnergy() << std::endl;
-
-
-    //delete myPredator;
-
+    
+    organismVector.at(0)->update(organismVector);
+    std::cout << organismVector.at(0)->getType() << std::endl;
 
     for (int i = 0; i < numberOfAnimals; i++) {
         if (rand() < 0.5) {
@@ -74,7 +66,8 @@ int main()
     }
 
     std::cout << organismVector.at(0)->getEnergy() << std::endl;
-  
+    
+    
     // Create a window
     sf::RenderWindow window(sf::VideoMode(1000, 1000), "Prey vs Predator");
    

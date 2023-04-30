@@ -10,12 +10,13 @@ private:
     int hungerSensitivity;
     float metabolicRate;
     int lustLevel;
-    int visionRange;
-
+    float visionRange;
+protected:
+    static const int rangeOfInteraction = 2;
 public:
     Fauna(float myPosX, float myPosY, float myRadius, float myEnergy,bool mySex,
         int mySpeed, int myAge, int myHungerLevel,
-        float myMetabolicRate, int myLustLevel, int myVisionRange);
+        float myMetabolicRate, int myLustLevel, float myVisionRange);
 
     int getSpeed();
 
@@ -24,6 +25,8 @@ public:
     int getAge();
 
     void setAge(int age);
+
+    bool getSex();
 
     int getHungerLevel();
 
@@ -37,7 +40,12 @@ public:
 
     void setLustLevel(int lustLevel);
 
-    void move(float x, float y);
+    float getVisionRange();
+
+    virtual float computeUtility(float distance, Organism organism);
+
+    void move(int direction);
+
 
 };
 

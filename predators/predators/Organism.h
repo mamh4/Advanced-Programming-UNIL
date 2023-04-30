@@ -1,5 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <typeinfo>
+#include <iostream>
 class Organism
 {
 
@@ -19,6 +21,11 @@ public:
     sf::CircleShape getShape();
 
     void setShape(sf::CircleShape shape);
+
+    virtual std::string getType();
+
+    virtual void update(std::vector<Organism*> organismVector);
+
 
 };
 

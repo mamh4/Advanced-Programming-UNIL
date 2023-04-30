@@ -4,7 +4,7 @@
 
     Fauna::Fauna(float myPosX, float myPosY, float myRadius, float myEnergy,bool mySex,
         int mySpeed, int myAge, int myHungerLevel, float myMetabolicRate,
-            int myLustLevel, int myVisionRange) : Organism(myPosX, myPosY, myRadius, myEnergy) {
+            int myLustLevel, float myVisionRange) : Organism(myPosX, myPosY, myRadius, myEnergy) {
 
         energy = myEnergy;
         sex = mySex;
@@ -32,6 +32,10 @@
         this->age = age;
     }
 
+    bool Fauna::getSex() {
+        return Fauna::sex;
+    }
+
     int Fauna::getHungerLevel() {
         return Fauna::hungerSensitivity;
     }
@@ -39,6 +43,11 @@
     void Fauna::setHungerLevel(int hungerLevel) {
         this->hungerSensitivity = hungerLevel;
     }
+
+    float Fauna::getVisionRange() {
+		return Fauna::visionRange;
+	}
+
 
     float Fauna::getMetabolicRate() {
         return Fauna::metabolicRate;
@@ -56,9 +65,12 @@
         this->lustLevel = lustLevel;
     }
 
-    void Fauna::move(float x, float y) {
-        Fauna::shape.move(x, y);
-	}
+    float Fauna::computeUtility(float distance, Organism organism) {
+        return 0;
+    }
+
+    //void Fauna::update(std::vector<Organism*> organismVector) {
+	//}
 
     /* psudo code implementatin of the move function
     animal.step_size <- 4
@@ -95,3 +107,11 @@
         */
 
 
+
+// 12 assumed to be the number of sections 
+// pass step size as class constant 
+void Fauna::move(int directionIndicator){
+    float stepSize ;
+    stepSize = 1.0 ; 
+    shape.setPosition(shape.getPosition().x + stepSize* cos( (directionIndicator + 0.5) * M_PI * 2 / 12 ) , shape.getPosition().y + stepSize *  sin( (directionIndicator + 0.5) * M_PI * 2 / 12 ));
+}

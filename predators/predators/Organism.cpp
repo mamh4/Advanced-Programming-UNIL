@@ -25,3 +25,10 @@
 	void Organism::setShape(sf::CircleShape shape) {
 		this->shape = shape;
 	}
+
+	std::string Organism::getType() {
+		return typeid(*this).name();
+	}
+
+	void Organism::update(std::vector<Organism*> organismVector) {
+	}

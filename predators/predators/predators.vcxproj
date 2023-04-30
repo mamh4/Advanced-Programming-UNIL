@@ -155,6 +155,7 @@
     <ClCompile Include="Fauna.cpp" />
     <ClCompile Include="Flora.cpp" />
     <ClCompile Include="Gameboard.cpp" />
+    <ClCompile Include="OrganicMaths.cpp" />
     <ClCompile Include="Organism.cpp" />
     <ClCompile Include="Predator.cpp" />
     <ClCompile Include="Prey.cpp" />
