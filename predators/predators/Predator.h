@@ -1,5 +1,6 @@
 #pragma once
 #include "Fauna.h"
+#include "Flora.h"
 class Predator : public Fauna
 {
 	public:
@@ -7,8 +8,10 @@ class Predator : public Fauna
 			int mySpeed, int myAge, int myHungerLevel,
 			float myMetabolicRate, int myLustLevel, float myVisionRange);
 		
-		virtual void update(std::vector<Organism*> organismVector);
+		virtual void update(std::vector<Fauna*> organismVector);
 
-		virtual float computeUtility(float distance, Organism organism);
+		virtual float computeUtility(float distance, Fauna* fuana);
+
+		virtual float computeUtility(float distance, Flora* flora);
 };
 

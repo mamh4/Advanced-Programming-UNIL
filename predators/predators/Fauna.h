@@ -42,7 +42,7 @@ public:
 
     float getVisionRange();
 
-    virtual float computeUtility(float distance, Organism organism);
+    virtual float computeUtility(float distance, Organism* organism);
 
     void move(int direction);
 
