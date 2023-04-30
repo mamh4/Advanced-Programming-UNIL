@@ -18,7 +18,7 @@
     <ClInclude Include="Gameboard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Animal.h">
+    <ClInclude Include="Fauna.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Vegetation.h">
@@ -33,12 +33,18 @@
     <ClInclude Include="test_SFML.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Organism.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Flora.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Gameboard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Animal.cpp">
+    <ClCompile Include="Fauna.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Vegetation.cpp">
@@ -51,6 +57,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="test_SFML.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Organism.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Flora.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

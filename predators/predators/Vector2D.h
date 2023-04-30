@@ -8,17 +8,16 @@ class Vector2D {
 	
 	public:
 //~ PUBLIC
-
+ 
 // Initialization
 	Vector2D(double x = 0, double y =0);
 
 // Set
-	void set_coord(boolean coord_select, double coord);
+	void set_coord(bool coord_select, double coord);
 		
 // Get
 	const double getx_() const;
 	const double gety_()const;
-	const double getz_()const;
 
 //Operators	onto self
 	//Vectorial sum 

@@ -1,10 +1,10 @@
 #include "Predator.h"
 #include <SFML/Graphics.hpp>
 
-Predator::Predator(float myPosX, float myPosY, float myRadius, bool mySex,
-	int mySpeed, int myAge, int myStaminaLevel, int myHungerLevel,
-	float myMetabolicRate, int myLustLevel, int myVisionRange) : Animal(myPosX, myPosY, myRadius, mySex,
-		mySpeed, myAge, myStaminaLevel, myHungerLevel,
+Predator::Predator(float myPosX, float myPosY, float myRadius, int myEnergy,bool mySex,
+	int mySpeed, int myAge, int myHungerLevel,
+	float myMetabolicRate, int myLustLevel, int myVisionRange) : Fauna(myPosX, myPosY,myRadius, myEnergy, 
+		mySex, mySpeed, myAge, myHungerLevel,
 		myMetabolicRate, myLustLevel, myVisionRange) {
 	shape.setFillColor(sf::Color::Red);
 }

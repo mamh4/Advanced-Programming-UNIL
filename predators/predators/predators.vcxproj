@@ -143,16 +143,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Animal.h" />
+    <ClInclude Include="Fauna.h" />
+    <ClInclude Include="Flora.h" />
     <ClInclude Include="Gameboard.h" />
+    <ClInclude Include="Organism.h" />
     <ClInclude Include="Predator.h" />
     <ClInclude Include="Prey.h" />
     <ClInclude Include="test_SFML.h" />
     <ClInclude Include="Vegetation.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Animal.cpp" />
+    <ClCompile Include="Fauna.cpp" />
+    <ClCompile Include="Flora.cpp" />
     <ClCompile Include="Gameboard.cpp" />
+    <ClCompile Include="Organism.cpp" />
     <ClCompile Include="Predator.cpp" />
     <ClCompile Include="Prey.cpp" />
     <ClCompile Include="test_SFML.cpp" />

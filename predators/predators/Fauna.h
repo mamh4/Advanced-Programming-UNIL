@@ -1,42 +1,21 @@
 #pragma once
+#include "Organism.h"
 #include <SFML/Graphics.hpp>
-class Animal
+class Fauna : public Organism
 {
 private:
-    float posX;
-    float posY;
-    float radius;
-
     bool sex;
     int speed;
     int age;
-    int staminaLevel;
     int hungerSensitivity;
     float metabolicRate;
     int lustLevel;
     int visionRange;
 
-protected:
-    sf::CircleShape shape;
-
 public:
-    Animal(float myPosX, float myPosY, float myRadius, bool mySex,
-        int mySpeed, int myAge, int myStaminaLevel, int myHungerLevel,
+    Fauna(float myPosX, float myPosY, float myRadius, int myEnergy,bool mySex,
+        int mySpeed, int myAge, int myHungerLevel,
         float myMetabolicRate, int myLustLevel, int myVisionRange);
-
-    float getPosX();
-
-    void setPosX(float posX);
-
-    float getPosY();
-
-    void setPosY(float posY);
-
-    float getRadius();
-
-    sf::CircleShape getShape();
-
-    void setRadius(float radius);
 
     int getSpeed();
 
@@ -45,10 +24,6 @@ public:
     int getAge();
 
     void setAge(int age);
-
-    int getStaminaLevel();
-
-    void setStaminaLevel(int staminaLevel);
 
     int getHungerLevel();
 
@@ -63,5 +38,6 @@ public:
     void setLustLevel(int lustLevel);
 
     void move(float x, float y);
+
 };
 
