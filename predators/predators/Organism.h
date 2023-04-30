@@ -4,15 +4,17 @@ class Organism
 {
 
 protected:
-    int energy;
+    float energy;
     sf::CircleShape shape;
 
 public:
-    Organism(float myPosX, float myPosY, float myRadius,int myEnergy);
+    Organism(float myPosX, float myPosY, float myRadius,float myEnergy);
 
-    int getEnergy();
+    ~Organism() {};
 
-    void setEnergy(int myEnergy);
+    float getEnergy();
+
+    void setEnergy(float myEnergy);
 
     sf::CircleShape getShape();
 

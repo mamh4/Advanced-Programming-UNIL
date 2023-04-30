@@ -13,7 +13,7 @@ private:
     int visionRange;
 
 public:
-    Fauna(float myPosX, float myPosY, float myRadius, int myEnergy,bool mySex,
+    Fauna(float myPosX, float myPosY, float myRadius, float myEnergy,bool mySex,
         int mySpeed, int myAge, int myHungerLevel,
         float myMetabolicRate, int myLustLevel, int myVisionRange);
 

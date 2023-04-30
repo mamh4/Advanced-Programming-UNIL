@@ -8,8 +8,7 @@ private:
 	const float maxEnergy = 100;
 	
 public:
-	Flora(float myPosX, float myPosY, float myRadius, int myEnergy, float myGrowthRate);
+	Flora(float myPosX, float myPosY, float myRadius, float myEnergy, float myGrowthRate);
 
 	void update();
 };
-

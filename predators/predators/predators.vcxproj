@@ -150,7 +150,6 @@
     <ClInclude Include="Predator.h" />
     <ClInclude Include="Prey.h" />
     <ClInclude Include="test_SFML.h" />
-    <ClInclude Include="Vegetation.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Fauna.cpp" />
@@ -160,7 +159,6 @@
     <ClCompile Include="Predator.cpp" />
     <ClCompile Include="Prey.cpp" />
     <ClCompile Include="test_SFML.cpp" />
-    <ClCompile Include="Vegetation.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

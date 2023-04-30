@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #pragma once
 
-    Fauna::Fauna(float myPosX, float myPosY, float myRadius, int myEnergy,bool mySex,
+    Fauna::Fauna(float myPosX, float myPosY, float myRadius, float myEnergy,bool mySex,
         int mySpeed, int myAge, int myHungerLevel, float myMetabolicRate,
             int myLustLevel, int myVisionRange) : Organism(myPosX, myPosY, myRadius, myEnergy) {
 

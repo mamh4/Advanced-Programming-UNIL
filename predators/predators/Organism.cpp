@@ -1,6 +1,7 @@
 #include "Organism.h"
 
-	Organism::Organism(float myPosX, float myPosY, float myRadius,int myEnergy) {
+
+	Organism::Organism(float myPosX, float myPosY, float myRadius,float myEnergy) {
 
 		energy = myEnergy;
 
@@ -9,11 +10,11 @@
 		shape.setPosition(myPosX, myPosY);
 	}
 
-	int Organism::getEnergy() {
+	float Organism::getEnergy() {
 		return Organism::energy;
 	}
 
-	void Organism::setEnergy(int myEnergy) {
+	void Organism::setEnergy(float myEnergy) {
 		this->energy = myEnergy;
 	}
 

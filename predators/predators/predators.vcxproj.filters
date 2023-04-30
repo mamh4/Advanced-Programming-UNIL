@@ -21,9 +21,6 @@
     <ClInclude Include="Fauna.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Vegetation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Predator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -45,9 +42,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Fauna.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Vegetation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Predator.cpp">
