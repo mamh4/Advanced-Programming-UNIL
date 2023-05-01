@@ -1,6 +1,10 @@
 #include <cmath>
 #include "Organism.h"
+#include "OrganicMaths.h"
+#include <SFML/Graphics.hpp>
 #define M_PI 3.14159265358979323846
+#define angleSectionNumber 12
+#define stepSize  1.0
 
 float distanceSquared (Organism* target1 , Organism* target2 ) {
     return std::pow(target1->getShape().getPosition().x - target2->getShape().getPosition().x,2) + std::pow(target1->getShape().getPosition().y - target2->getShape().getPosition().y,2);
@@ -36,11 +40,9 @@ float angle (Organism* target1 , Organism* target2) {
 
 // acos gives in 0 pi range 
 int angleSorting (float angle) {
-    int angleSectionNumber;
-    angleSectionNumber=12; 
     int angleSectionCounter;
     angleSectionCounter=0; 
-    while  (not ( (angle >= (angleSectionCounter *1.0)*M_PI/angleSectionNumber ) and (angle <  (angleSectionCounter *1.0 + 1.0)*M_PI/angleSectionNumber ) ) ){
+    while  (not ( (angle >= (angleSectionCounter *1.0)*2*M_PI/angleSectionNumber ) and (angle <  (angleSectionCounter *1.0 + 1.0)*2*M_PI/angleSectionNumber ) ) ){
         angleSectionCounter++ ; 
     }
     return angleSectionCounter; 

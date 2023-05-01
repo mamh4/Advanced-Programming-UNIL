@@ -5,18 +5,19 @@ class Fauna : public Organism
 {
 private:
     bool sex;
-    int speed;
+    float speed;
     int age;
-    int hungerSensitivity;
+    float hungerSensitivity;
     float metabolicRate;
-    int lustLevel;
+    float lustLevel;
     float visionRange;
 protected:
     static const int rangeOfInteraction = 2;
+    //static const float stepSize = 1.0;
 public:
     Fauna(float myPosX, float myPosY, float myRadius, float myEnergy,bool mySex,
-        int mySpeed, int myAge, int myHungerLevel,
-        float myMetabolicRate, int myLustLevel, float myVisionRange);
+        int mySpeed, float myHungerSensitivity,
+        float myMetabolicRate, float myLustLevel, float myVisionRange);
 
     int getSpeed();
 
@@ -28,23 +29,31 @@ public:
 
     bool getSex();
 
-    int getHungerLevel();
+    float getHungerSensitivity();
 
-    void setHungerLevel(int hungerLevel);
+    void setHungerSensitivity(float hungerSensitivity);
 
     float getMetabolicRate();
 
     void setMetabolicRate(float metabolicRate);
 
-    int getLustLevel();
+    float getLustLevel();
 
-    void setLustLevel(int lustLevel);
+    void setLustLevel(float lustLevel);
 
     float getVisionRange();
 
     virtual float computeUtility(float distance, Organism* organism);
 
     void move(int direction);
+
+    void ageing();
+
+    virtual void update(std::vector<Organism*>& organismVector);
+
+    virtual void interact(Organism* organism, std::vector<Organism*>& organismVector);
+
+    virtual void dies(std::vector<Organism*>& organismVector);
 
 
 };

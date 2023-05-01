@@ -24,8 +24,9 @@ public:
 
     virtual std::string getType();
 
-    virtual void update(std::vector<Organism*> organismVector);
+    virtual void update(std::vector<Organism*>& organismVector);
 
+    virtual void dies(std::vector<Organism*>& organismVector);
 
 };
 

@@ -3,18 +3,23 @@
 #include "Flora.h"
 class Prey : public Fauna
 {
+private: 
+	float predatorAversion;
 
 public:
 	Prey(float myPosX, float myPosY, float myRadius, float myEnergy,bool mySex,
-		int mySpeed, int myAge, int myHungerLevel,
-		float myMetabolicRate, int myLustLevel, float myVisionRange);
+		int mySpeed, float myHungerSensitivity,
+		float myMetabolicRate, float myLustLevel, float myVisionRange, float myPredatorAversion);
 
-	virtual void update(std::vector<Organism*> organismVector);
+	float getPredatorAversion();
 
-	virtual float computeUtility(float distance, Fauna* fuana);
+//	virtual void update(std::vector<Organism*>& organismVector);
 
-	virtual float computeUtility(float distance, Flora* flora);
+//	virtual float computeUtility(float distance, Fauna* fauna);
 
+	virtual float computeUtility(float distance, Organism* organism);
+
+	virtual void interact(Organism* organism, std::vector<Organism*>& organismVector);
 
 }
 ;

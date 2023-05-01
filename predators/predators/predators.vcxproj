@@ -146,6 +146,7 @@
     <ClInclude Include="Fauna.h" />
     <ClInclude Include="Flora.h" />
     <ClInclude Include="Gameboard.h" />
+    <ClInclude Include="OrganicMaths.h" />
     <ClInclude Include="Organism.h" />
     <ClInclude Include="Predator.h" />
     <ClInclude Include="Prey.h" />

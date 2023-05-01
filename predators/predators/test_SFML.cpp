@@ -5,59 +5,70 @@
 #include "Flora.h"
 #include <iostream>
 
-//TODO: Adjust hunger level to hunger sensitivity
-//TODO: Adjust types from int to float when necessary
+
+
 //TODO: Decide on intialisation in main class of two vectors Fauna and Flora and then we loop through all Faunas, then all Floras? I think so
 //TODO: Implement update for Prey and Flora
 
 int main()
 {
-    const int numberOfAnimals = 1;
-    std::vector<Fauna*> faunaVector;
-    sf::CircleShape shape(100.f);
-    shape.getPosition().x;
-   //Dynamic Casting
+    //test age of predator any prey make sure they inherit it and the value is 0
+    const int numberOfPrey = 1;
+    const int numberOfPredators = 1;
+    const int numberOfFlora = 1;
 
-    Predator* myPredator = new Predator(500, 500, 20, 100, true, 10, 5, 80, 1.5f, 50, 100);
-    faunaVector.push_back(myPredator);
+    std::vector<Organism*> organismVector;
+
+
+    //Predator(float myPosX, float myPosY, float myRadius, float myEnergy, bool mySex,
+     //   int mySpeed, float myHungerSensitivity,
+     //  float myMetabolicRate, float myLustLevel, float myVisionRange);
+
+    //Predator* myPredator = new Predator(500, 500, 20, 100, true, 10, 5, 1.5f, 50, 100);
+    //organismVector.push_back(myPredator);
     
-    std::cout << faunaVector.at(0)->getType() << std::endl;
+    //std::cout << organismVector.at(0)->getType() << std::endl;
 
-    for (int i = 0; i < numberOfAnimals; i++) {
-        if (rand() < 0.5) {
-            float posX = static_cast<float>(rand() % 1000);
-            float posY = static_cast<float>(rand() % 1000);
-            float radius = static_cast<float>(rand() % 10 + 5);
-            float energy = rand() % 100 + 1;
-            bool sex = rand() % 2 == 0 ? true : false;
-            int speed = rand() % 10 + 1;
-            int age = rand() % 100 + 1;
-            int hungerLevel = rand() % 100 + 1;
-            float metabolicRate = static_cast<float>(rand() % 10 + 1) / 10.0f;
-            int lustLevel = rand() % 100 + 1;
-            int visionRange = rand() % 100 + 1;
-            Predator* myPredator = new Predator(posX, posY, radius, energy, sex, speed, age, hungerLevel, metabolicRate, lustLevel, visionRange);
-            faunaVector.push_back(myPredator);
-        }
-        else {
-            float posX = static_cast<float>(rand() % 1000);
-            float posY = static_cast<float>(rand() % 1000);
-            float radius = static_cast<float>(rand() % 10 + 5);
-            float energy = rand() % 100 + 1;
-            bool sex = rand() % 2 == 0 ? true : false;
-            int speed = rand() % 10 + 1;
-            int age = rand() % 100 + 1;
-            int hungerLevel = rand() % 100 + 1;
-            float metabolicRate = static_cast<float>(rand() % 10 + 1) / 10.0f;
-            int lustLevel = rand() % 100 + 1;
-            int visionRange = rand() % 100 + 1;
-            Prey* myPrey = new Prey(posX, posY, radius, energy, sex, speed, age, hungerLevel, metabolicRate, lustLevel, visionRange);
-            faunaVector.push_back(myPrey);
-        }
-
+    for (int i = 0; i < numberOfPredators; i++) {
+        float posX = static_cast<float>(rand() % 1000);
+        float posY = static_cast<float>(rand() % 1000);
+        float radius = static_cast<float>(rand() % 10 + 5);
+        float energy = rand() % 100 + 1;
+        bool sex = rand() % 2 == 0 ? true : false;
+        int speed = rand() % 10 + 1;
+        int hungerLevel = rand() % 100 + 1;
+        float metabolicRate = static_cast<float>(rand() % 10 + 1) / 10.0f;
+        int lustLevel = rand() % 100 + 1;
+        int visionRange = rand() % 100 + 1;
+        Predator* myPredator = new Predator(posX, posY, radius, energy, sex, speed, hungerLevel, metabolicRate, lustLevel, visionRange);
+        organismVector.push_back(myPredator);
     }
 
-    std::cout << faunaVector.at(0)->getEnergy() << std::endl;
+    for (int i = 0; i < numberOfPrey; i++) {
+        float posX = static_cast<float>(rand() % 1000);
+        float posY = static_cast<float>(rand() % 1000);
+        float radius = static_cast<float>(rand() % 10 + 5);
+        float energy = rand() % 100 + 1;
+        bool sex = rand() % 2 == 0 ? true : false;
+        int speed = rand() % 10 + 1;
+        int hungerLevel = rand() % 100 + 1;
+        float metabolicRate = static_cast<float>(rand() % 10 + 1) / 10.0f;
+        int lustLevel = rand() % 100 + 1;
+        int visionRange = rand() % 100 + 1;
+        float predatorAversion = static_cast<float>(rand()*100);
+        Prey* myPrey = new Prey(posX, posY, radius, energy, sex, speed, hungerLevel, metabolicRate, lustLevel, visionRange,predatorAversion);
+        organismVector.push_back(myPrey);
+    }
+
+    for (int i = 0; i < numberOfFlora; i++) {
+        float posX = static_cast<float>(rand() % 1000);
+        float posY = static_cast<float>(rand() % 1000);
+        float radius = static_cast<float>(rand() % 10 + 5);
+        float energy = rand() % 100 + 1;
+        float growthRate = static_cast<float>(rand() * 100);
+        Flora* myFlora = new Flora(posX, posY, radius, energy, growthRate);
+        organismVector.push_back(myFlora);
+    }
     
     
     // Create a window
@@ -82,18 +93,18 @@ int main()
                 window.close();
             }
         }
-        for (int i = 0; i < numberOfAnimals; i++) {
+        for (int i = 0; i < organismVector.size(); i++) {
             //NEED TO CHECK TYPE FIRST
-            faunaVector.at(0)->getShape().move(0, -1);
+            organismVector.at(i)->getShape().setPosition(organismVector.at(i)->getShape().getPosition().x, organismVector.at(i)->getShape().getPosition().y);
 
             // Move the circle up
-            //myPredator.move(0, -1);
+            organismVector.at(i)->getShape().move(0, -5);
 
             // Clear the window
             window.clear(sf::Color::White);
 
             // Draw the circle
-            window.draw(faunaVector.at(0)->getShape());
+            window.draw(organismVector.at(i)->getShape());
 
             // Display the window
             window.display();

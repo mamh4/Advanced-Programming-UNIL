@@ -1,6 +1,7 @@
 #include "Organism.h"
 
 
+
 	Organism::Organism(float myPosX, float myPosY, float myRadius,float myEnergy) {
 
 		energy = myEnergy;
@@ -30,5 +31,8 @@
 		return typeid(*this).name();
 	}
 
-	void Organism::update(std::vector<Organism*> organismVector) {
+	void Organism::update(std::vector<Organism*>& organismVector) {
+	}
+
+	void Organism::dies(std::vector<Organism*>& organismVector) {
 	}
