@@ -4,6 +4,10 @@
 #include <iostream>
 class Organism
 {
+private:
+    float posX;
+	float posY;
+    float radius;
 
 protected:
     float energy;
@@ -13,6 +17,18 @@ public:
     Organism(float myPosX, float myPosY, float myRadius,float myEnergy);
 
     ~Organism() {};
+
+    float getPosX();
+
+    void setPosX(float myPosX);
+
+    float getPosY();
+
+    void setPosY(float myPosY);
+
+    float getRadius();
+
+    void setRadius(float myRadius);
 
     float getEnergy();
 

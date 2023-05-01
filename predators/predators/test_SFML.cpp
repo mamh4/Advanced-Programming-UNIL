@@ -26,7 +26,7 @@ int main()
 
     //Predator* myPredator = new Predator(500, 500, 20, 100, true, 10, 5, 1.5f, 50, 100);
     //organismVector.push_back(myPredator);
-    
+
     //std::cout << organismVector.at(0)->getType() << std::endl;
 
     for (int i = 0; i < numberOfPredators; i++) {
@@ -55,8 +55,8 @@ int main()
         float metabolicRate = static_cast<float>(rand() % 10 + 1) / 10.0f;
         int lustLevel = rand() % 100 + 1;
         int visionRange = rand() % 100 + 1;
-        float predatorAversion = static_cast<float>(rand()*100);
-        Prey* myPrey = new Prey(posX, posY, radius, energy, sex, speed, hungerLevel, metabolicRate, lustLevel, visionRange,predatorAversion);
+        float predatorAversion = static_cast<float>(rand() * 100);
+        Prey* myPrey = new Prey(posX, posY, radius, energy, sex, speed, hungerLevel, metabolicRate, lustLevel, visionRange, predatorAversion);
         organismVector.push_back(myPrey);
     }
 
@@ -69,8 +69,49 @@ int main()
         Flora* myFlora = new Flora(posX, posY, radius, energy, growthRate);
         organismVector.push_back(myFlora);
     }
-    
-    
+    // Create a window
+    sf::RenderWindow window(sf::VideoMode(1000, 1000), "Prey vs Predator");
+
+    //Predator myPredator(500, 500, 20, 100, true, 10, 5, 80, 1.5f, 50, 100);
+
+    // Set the frame rate
+    window.setFramerateLimit(30);
+
+    // Set the movement speed of the pixel
+    float moveSpeed = 1.0f;
+
+    // start the game loop
+    while (window.isOpen()) {
+        // handle events
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+
+        // move the circles up
+        for (Organism* circle : organismVector) {
+            sf::Vector2f position = circle->getShape().getPosition();
+            circle->setPosX(position.x);
+            circle->setPosY(position.y-5);
+        }
+
+        // clear the window
+        window.clear(sf::Color::White);
+
+        // draw the circles
+        for (Organism* circle : organismVector) {
+            window.draw(circle->getShape());
+        }
+
+        // display the window
+        window.display();
+    }
+}
+/*
+
+    //----------------
+
     // Create a window
     sf::RenderWindow window(sf::VideoMode(1000, 1000), "Prey vs Predator");
    
@@ -114,7 +155,7 @@ int main()
     return 0;
 }
    
-
+   */
 
 
 

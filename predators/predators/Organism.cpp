@@ -11,6 +11,34 @@
 		shape.setPosition(myPosX, myPosY);
 	}
 
+	float Organism::getPosX() {
+		return Organism::shape.getPosition().x;
+	}
+
+	void Organism::setPosX(float myPosX) {
+		Organism::shape.setPosition(myPosX, Organism::shape.getPosition().y);
+		this->posX = myPosX;
+	}
+
+	float Organism::getPosY() {
+		return Organism::shape.getPosition().y;
+	}
+
+	void Organism::setPosY(float myPosY) {
+		Organism::shape.setPosition(Organism::shape.getPosition().x, myPosY);
+		this->posY = myPosY;
+	}
+
+	float Organism::getRadius() {
+		return Organism::shape.getRadius();
+	}
+
+	void Organism::setRadius(float myRadius) {
+		Organism::shape.setRadius(myRadius);
+		Organism::shape.setOrigin(myRadius, myRadius);
+		this->radius = myRadius;
+	}
+
 	float Organism::getEnergy() {
 		return Organism::energy;
 	}
