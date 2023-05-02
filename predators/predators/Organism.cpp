@@ -6,6 +6,9 @@
 
 		energy = myEnergy;
 
+		posX = myPosX;
+		posY = myPosY;
+		radius = myRadius;
 		shape.setRadius(myRadius);
 		shape.setOrigin(myRadius, myRadius);
 		shape.setPosition(myPosX, myPosY);

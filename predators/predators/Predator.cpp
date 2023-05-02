@@ -11,7 +11,7 @@ Predator::Predator(float myPosX, float myPosY, float myRadius, float myEnergy,bo
 		myMetabolicRate, myLustLevel, myVisionRange) {
 	shape.setFillColor(sf::Color::Red);
 }
-
+/*
 void Predator::update(std::vector<Organism*>& organismVector) {
 	// std::cout << "I am a predator" << std::endl;
 
@@ -90,7 +90,7 @@ void Predator::update(std::vector<Organism*>& organismVector) {
 //float Predator::computeUtility(float distance, Organism organism) {
 //	return 3;
 //}
-
+*/
 // NEED TO CHANGE HEADERS 
 // energy radius Position Speed Sex age hungerlevel hungerSensitivity metabolicRate lustLevel 
 //assuming visionRange is from 50 to 100  atan 

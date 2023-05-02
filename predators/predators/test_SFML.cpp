@@ -20,15 +20,21 @@ int main()
     std::vector<Organism*> organismVector;
 
 
-    //Predator(float myPosX, float myPosY, float myRadius, float myEnergy, bool mySex,
-     //   int mySpeed, float myHungerSensitivity,
-     //  float myMetabolicRate, float myLustLevel, float myVisionRange);
 
-    //Predator* myPredator = new Predator(500, 500, 20, 100, true, 10, 5, 1.5f, 50, 100);
-    //organismVector.push_back(myPredator);
+    
+    Predator* myPredator = new Predator(400, 500, 20, 97, true, 6, 10, 1, 50, 30);
+    organismVector.push_back(myPredator);
+
+    Prey* myPrey = new Prey(815, 100, 20, 100, true, 10, 10, 15, 50, 50,10);
+    organismVector.push_back(myPrey);
+
+    Flora* myFlora = new Flora(10,20,5,100,2);
+    organismVector.push_back(myFlora);
+
+    
 
     //std::cout << organismVector.at(0)->getType() << std::endl;
-
+    /*
     for (int i = 0; i < numberOfPredators; i++) {
         float posX = static_cast<float>(rand() % 1000);
         float posY = static_cast<float>(rand() % 1000);
@@ -69,13 +75,14 @@ int main()
         Flora* myFlora = new Flora(posX, posY, radius, energy, growthRate);
         organismVector.push_back(myFlora);
     }
+    */
     // Create a window
     sf::RenderWindow window(sf::VideoMode(1000, 1000), "Prey vs Predator");
 
     //Predator myPredator(500, 500, 20, 100, true, 10, 5, 80, 1.5f, 50, 100);
 
     // Set the frame rate
-    window.setFramerateLimit(30);
+    window.setFramerateLimit(1);
 
     // Set the movement speed of the pixel
     float moveSpeed = 1.0f;
@@ -89,11 +96,13 @@ int main()
                 window.close();
         }
 
-        // move the circles up
+        
         for (Organism* organism : organismVector) {
-            sf::Vector2f position(organism->getPosX(), organism->getPosY());// = circle->getShape().getPosition();
-            organism->setPosX(position.x);
-            organism->setPosY(position.y-5);
+            organism->update(organismVector);
+            // move the organisms up
+            //sf::Vector2f position(organism->getPosX(), organism->getPosY());// = circle->getShape().getPosition();
+            //organism->setPosX(position.x);
+            //organism->setPosY(position.y-5);
         }
 
         // clear the window

@@ -127,6 +127,9 @@
 // 12 assumed to be the number of sections 
 // pass step size as class constant 
 void Fauna::move(int directionIndicator){
+    
+    //std::cout << "my speed is " << Fauna::getSpeed() << "my coordinates are: " << Fauna::getPosX() << " "<< Fauna::getPosY << std::endl;
+    std::cout << "my position is " << Fauna::getPosX() << " " << Fauna::getPosY() << std::endl;
     float energyCostOfMovement; 
     energyCostOfMovement = 5.0 ; 
     // as Class constant later on ? 
@@ -152,7 +155,7 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
     }
 
 	for (int k = 1 ; k <= Fauna::getSpeed() ; k ++ ){ // BEGINING OF TURN LOOP 
-	
+        
 	    float distSquare;
 	    float angleBetween;
 	
@@ -172,7 +175,8 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
             if ((distSquare >  0.001 ) and (distSquare < std::pow(Fauna::getVisionRange() - organismVector.at(i)->getRadius(), 2))) { 
                 if (distSquare < std::pow(Fauna::getRadius() + organismVector.at(i)->getRadius() + rangeOfInteraction, 2)) {
  //                   possibleCollisions.push_back(OrganismVector.at(i));
-                    currentUtility =  computeUtility(0.0 , organismVector.at(i)); // Arbitrarily distance 0.0 to transmit that it is utility of an interaction
+                    currentUtility =  computeUtility(0.0 , organismVector.at(i));
+                    // Arbitrarily distance 0.0 to transmit that it is utility of an interaction
                     // NEED TO BE PASSED ARE RIGHT POINTER OR INTERPRETED ONCE IN COMPUTE UTILITY 
                     if (currentUtility > maxInteractionUtility) {
                         maxInteractionUtility = currentUtility ; 
@@ -188,6 +192,7 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
                 }
                 else {
                     currentUtility = computeUtility(distSquare, organismVector.at(i));
+                    std::cout << "current utility is " << currentUtility << std::endl;
                     angleBetween = angle(organismVector.at(i), this);
                     directionalUtility[angleSorting(angleBetween)] += currentUtility;
                     //Prototype for directional gradient of utility increase / MAYBE CHANGE DECREASE RATE ?   
@@ -204,10 +209,14 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
                 if ( std::pow(Fauna::getPosX() - possibleCollisions.at(i)->getPosX() + stepSize * cos(2 * M_PI * (j + 0.5) / directionalUtility.size()), 2)
                     +  std::pow(Fauna::getPosY() - possibleCollisions.at(i)->getPosX() + stepSize*sin(2*M_PI* (j + 0.5) / directionalUtility.size()),2  )
                      < std::pow((Fauna::getRadius() + possibleCollisions.at(i)->getRadius()),2) ) {
-                        directionalUtility[angleSorting(angleBetween)] -= 1000 ; 
+                    angleBetween = angle(possibleCollisions.at(i), this);//was missing
+                    directionalUtility[angleSorting(angleBetween)] -= 1000 ; 
                     }
             }
         }
+
+        //std::cout << "max interaction utility is " << maxInteractionUtility << std::endl;
+        //std::cout << "max directional utility is " << maxDirectionalUtility << std::endl;
         if (maxDirectionalUtility > maxInteractionUtility) {
             Fauna::move(maxDirectionalUtilityTarget);
         }
