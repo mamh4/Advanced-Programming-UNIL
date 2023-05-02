@@ -21,7 +21,7 @@ int main()
 
 
 
-    
+    //CAREFUL!! Adjusting some of the parameters causes failuer in the program!!!!!!!!!
     Predator* myPredator = new Predator(400, 500, 20, 97, true, 60000, 10, 1, 50, 300);
     organismVector.push_back(myPredator);
     Predator* myPredator2 = new Predator(410, 500, 20, 97, false, 60000, 10, 1, 50, 300);

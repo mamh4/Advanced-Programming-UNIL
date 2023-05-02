@@ -139,7 +139,6 @@ float Predator::computeUtility(float distanceSquared, Organism* targetOrganism) 
 }
 
 void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organismVector) {
-	std::cout << "interact called";
 	if(Prey* myPrey = dynamic_cast<Prey*>(targetOrganism)){
 		float energyAbsorbtionSpeed;
 		energyAbsorbtionSpeed = 10.0;
@@ -150,6 +149,7 @@ void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organi
 		Predator::setEnergy(Predator::getEnergy() + absorbedEnergy);
 	}
 	else if (Predator* myPred = dynamic_cast<Predator*>(targetOrganism)) {
+		//TODO Adjust parameters
 		float posX = static_cast<float>(rand() % 1000);
 		float posY = static_cast<float>(rand() % 1000);
 		float radius = static_cast<float>(rand() % 10 + 5);
@@ -161,8 +161,8 @@ void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organi
 		int lustLevel = rand() % 100 + 1;
 		int visionRange = rand() % 100 + 1;
 		// CHECK EMPTY SPACE 
-		std::cout << "Creating offspring" << std::endl;
-		Predator* offspring = new Predator(posX, posY, radius, energy, sex, speed, hungerLevel, metabolicRate, lustLevel, visionRange);
+		Predator* offspring = new Predator(410, 500, 20, 97, false, 60000, 10, 1, 50, 300);//Above parameters cause program failure!
+		//std::cout << "here is fine";
 		organismVector.push_back(offspring);
 	}
 }
