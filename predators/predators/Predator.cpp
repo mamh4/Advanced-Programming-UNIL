@@ -34,8 +34,8 @@ void Predator::update(std::vector<Organism*>& organismVector) {
 
 	for (int i = 0; i < organismVector.size(); i++) {
 		distSquare = distanceSquared(organismVector.at(i), this);
-		if (distSquare < std::pow(Predator::getVisionRange() - organismVector.at(i)->getShape().getRadius(), 2)) {
-			if (distSquare < std::pow(Predator::getShape().getRadius() + organismVector.at(i)->getShape().getRadius() + 2, 2)) {//range of interaction 2 pixels
+		if (distSquare < std::pow(Predator::getVisionRange() - organismVector.at(i)->getRadius(), 2)) {
+			if (distSquare < std::pow(Predator::getRadius() + organismVector.at(i)->getRadius() + 2, 2)) {//range of interaction 2 pixels
 				possibleCollisions.push_back(organismVector.at(i));
 				if (Prey* myPrey = dynamic_cast<Prey*>(organismVector.at(i))) {
 					currentUtility = computeUtility(distSquare, myPrey);
@@ -63,7 +63,7 @@ void Predator::update(std::vector<Organism*>& organismVector) {
 		}
 		for (int i = 0; i < directionalUtilitySize; i++) {
 			for (int j = 0; j < possibleCollisions.size(); j++) {
-				if(distSquare < std::pow(shape.getRadius() + possibleCollisions.at(j)->getShape().getRadius(),2)){
+				if(distSquare < std::pow(shape.getRadius() + possibleCollisions.at(j)->getRadius(),2)){
 					directionalUtility[i] = -10000;//avoid collision
 				}
 			}
@@ -102,7 +102,7 @@ float Predator::computeUtility(float distanceSquared, Organism* targetOrganism) 
 		float distanceToInterraction;
 		float distancefactor;
 
-		distanceToInterraction = sqrt(distanceSquared) - Predator::shape.getRadius() - targetOrganism->getShape().getRadius();//U used getRadius :p
+		distanceToInterraction = sqrt(distanceSquared) - Predator::getRadius() - targetOrganism->getRadius();//U used getRadius :p
 
 		distancefactor = proximityEffectFactor(0, Predator::getVisionRange(), 1, distanceToInterraction);//use getters and always "Class::"
 

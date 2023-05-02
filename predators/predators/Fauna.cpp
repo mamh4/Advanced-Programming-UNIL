@@ -130,8 +130,10 @@ void Fauna::move(int directionIndicator){
     float energyCostOfMovement; 
     energyCostOfMovement = 5.0 ; 
     // as Class constant later on ? 
-    Fauna::getShape().setPosition(Fauna::getShape().getPosition().x + stepSize * cos((directionIndicator + 0.5) * M_PI * 2 / 12),
-        Fauna::getShape().getPosition().y + stepSize * sin((directionIndicator + 0.5) * M_PI * 2 / 12));
+    //Fauna::getShape().setPosition(Fauna::getShape().getPosition().x + stepSize * cos((directionIndicator + 0.5) * M_PI * 2 / 12),
+    //    Fauna::getShape().getPosition().y + stepSize * sin((directionIndicator + 0.5) * M_PI * 2 / 12));
+    Fauna::setPosX(Fauna::getPosX() + stepSize * cos((directionIndicator + 0.5) * M_PI * 2 / 12));
+    Fauna::setPosY(Fauna::getPosY() + stepSize * sin((directionIndicator + 0.5) * M_PI * 2 / 12));
     Fauna::setEnergy( Fauna::getEnergy() - energyCostOfMovement ); 
 }
 
@@ -167,8 +169,8 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
 
         for (int i = 0; i < organismVector.size(); i++) { 
             distSquare = distanceSquared(organismVector.at(i), this);
-            if ((distSquare >  0.001 ) and (distSquare < std::pow(Fauna::getVisionRange() - organismVector.at(i)->getShape().getRadius(), 2))) { 
-                if (distSquare < std::pow(Fauna::getShape().getRadius() + organismVector.at(i)->getShape().getRadius() + rangeOfInteraction, 2)) {
+            if ((distSquare >  0.001 ) and (distSquare < std::pow(Fauna::getVisionRange() - organismVector.at(i)->getRadius(), 2))) { 
+                if (distSquare < std::pow(Fauna::getRadius() + organismVector.at(i)->getRadius() + rangeOfInteraction, 2)) {
  //                   possibleCollisions.push_back(OrganismVector.at(i));
                     currentUtility =  computeUtility(0.0 , organismVector.at(i)); // Arbitrarily distance 0.0 to transmit that it is utility of an interaction
                     // NEED TO BE PASSED ARE RIGHT POINTER OR INTERPRETED ONCE IN COMPUTE UTILITY 
@@ -199,9 +201,9 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
         for (int i = 0; i < possibleCollisions.size(); i++) { 
             for (int j = 0; j < directionalUtility.size(); j++){
                 // ELIMINATION 
-                if ( std::pow(Fauna::getShape().getPosition().x - possibleCollisions.at(i)->getShape().getPosition().x + stepSize*cos(2*M_PI* (j+ 0.5) / directionalUtility.size() ),2  ) 
-                    +  std::pow(Fauna::getShape().getPosition().y - possibleCollisions.at(i)->getShape().getPosition().y + stepSize*sin(2*M_PI* (j + 0.5) / directionalUtility.size()),2  )
-                     < std::pow((Fauna::getShape().getRadius() + possibleCollisions.at(i)->getShape().getRadius()),2) ) {
+                if ( std::pow(Fauna::getPosX() - possibleCollisions.at(i)->getPosX() + stepSize * cos(2 * M_PI * (j + 0.5) / directionalUtility.size()), 2)
+                    +  std::pow(Fauna::getPosY() - possibleCollisions.at(i)->getPosX() + stepSize*sin(2*M_PI* (j + 0.5) / directionalUtility.size()),2  )
+                     < std::pow((Fauna::getRadius() + possibleCollisions.at(i)->getRadius()),2) ) {
                         directionalUtility[angleSorting(angleBetween)] -= 1000 ; 
                     }
             }

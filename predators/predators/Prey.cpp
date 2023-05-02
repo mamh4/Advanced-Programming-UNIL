@@ -40,7 +40,7 @@ float Prey::computeUtility(float distanceSquared, Organism* targetOrganism) {
     float distanceToInterraction;
     float distancefactor;
 
-    distanceToInterraction = sqrt(distanceSquared) - Prey::shape.getRadius() - targetOrganism->getShape().getRadius();//U used getRadius :p
+    distanceToInterraction = sqrt(distanceSquared) - Prey::getRadius() - targetOrganism->getRadius();//U used getRadius :p
 
     distancefactor = proximityEffectFactor(0, Prey::getVisionRange(), 1, distanceToInterraction);//use getters and always "Class::"
 

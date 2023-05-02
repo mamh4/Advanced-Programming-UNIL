@@ -7,6 +7,6 @@
 	}
 
 	void Flora::update() {
-		Flora::energy = std::min(Flora::maxEnergy * Flora::getShape().getRadius(), (energy * growthRate + 1));
+		Flora::energy = std::min(Flora::maxEnergy * Flora::getRadius(), (energy * growthRate + 1));
 	}
 

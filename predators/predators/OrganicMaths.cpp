@@ -7,12 +7,12 @@
 #define stepSize  1.0
 
 float distanceSquared (Organism* target1 , Organism* target2 ) {
-    return std::pow(target1->getShape().getPosition().x - target2->getShape().getPosition().x,2) + std::pow(target1->getShape().getPosition().y - target2->getShape().getPosition().y,2);
+    return std::pow(target1->getPosX() - target2->getPosX(), 2) + std::pow(target1->getPosY() - target2->getPosY(), 2);
 //    return std::pow(target1->getShape().getPosition().x - target2->getShape().getPosition().x,2) + std::pow(target1->getShape().getPosition().y - target2->getShape().getPosition().y,2);
 }
 
 float l2NormSquared (Organism* target) {
-    return std::pow(target->getShape().getPosition().x,2) + std::pow(target->getShape().getPosition().y,2);
+    return std::pow(target->getPosX(),2) + std::pow(target->getPosY(),2);
 }
 
 //float alternativeAngle (Organism* target1 , Organism* target2) {
@@ -25,13 +25,13 @@ float angle (Organism* target1 , Organism* target2) {
     target1Norm = sqrt( l2NormSquared(target1) ); 
     target2Norm = sqrt( l2NormSquared(target2) ); 
     if ( target1Norm != 0 and  target2Norm != 0 ){
-        return acos( (target1->getShape().getPosition().x*target2->getShape().getPosition().x + target1->getShape().getPosition().y*target2->getShape().getPosition().y) / (1.0 * target1Norm * target2Norm));
+        return acos( (target1->getPosX() *target2->getPosX() + target1->getPosY()*target2->getPosY()) / (1.0 * target1Norm * target2Norm));
     }
     else if  ( target1Norm != 0 ){
-        return acos( target1->getShape().getPosition().x / target1Norm  ) ; 
+        return acos( target1->getPosX() / target1Norm  ) ;
     }
     else if  ( target2Norm != 0 ){
-        return acos( target2->getShape().getPosition().x / target2Norm  ) ; 
+        return acos( target2->getPosX() / target2Norm  ) ;
     }
     else {
         return 0; 

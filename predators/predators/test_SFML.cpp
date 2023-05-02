@@ -90,18 +90,18 @@ int main()
         }
 
         // move the circles up
-        for (Organism* circle : organismVector) {
-            sf::Vector2f position = circle->getShape().getPosition();
-            circle->setPosX(position.x);
-            circle->setPosY(position.y-5);
+        for (Organism* organism : organismVector) {
+            sf::Vector2f position(organism->getPosX(), organism->getPosY());// = circle->getShape().getPosition();
+            organism->setPosX(position.x);
+            organism->setPosY(position.y-5);
         }
 
         // clear the window
         window.clear(sf::Color::White);
 
         // draw the circles
-        for (Organism* circle : organismVector) {
-            window.draw(circle->getShape());
+        for (Organism* organism : organismVector) {
+            window.draw(organism->getShape());
         }
 
         // display the window
