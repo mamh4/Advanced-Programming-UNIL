@@ -96,7 +96,8 @@ void Predator::update(std::vector<Organism*>& organismVector) {
 //assuming visionRange is from 50 to 100  atan 
 float Predator::computeUtility(float distanceSquared, Organism* targetOrganism) {
 	if (distanceSquared == 0.0) {
-		//get utility of interaction
+		//TO DO GET UTILITY OF INTERACTION.
+		return 5.0;
 	}
 	else {
 		float distanceToInterraction;
@@ -138,6 +139,7 @@ float Predator::computeUtility(float distanceSquared, Organism* targetOrganism) 
 }
 
 void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organismVector) {
+	std::cout << "interact called";
 	if(Prey* myPrey = dynamic_cast<Prey*>(targetOrganism)){
 		float energyAbsorbtionSpeed;
 		energyAbsorbtionSpeed = 10.0;
@@ -147,8 +149,7 @@ void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organi
 		targetOrganism->setEnergy(targetOrganism->getEnergy() - absorbedEnergy);
 		Predator::setEnergy(Predator::getEnergy() + absorbedEnergy);
 	}
-	else{
-		Predator* myPred = dynamic_cast<Predator*>(targetOrganism);
+	else if (Predator* myPred = dynamic_cast<Predator*>(targetOrganism)) {
 		float posX = static_cast<float>(rand() % 1000);
 		float posY = static_cast<float>(rand() % 1000);
 		float radius = static_cast<float>(rand() % 10 + 5);
@@ -160,6 +161,7 @@ void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organi
 		int lustLevel = rand() % 100 + 1;
 		int visionRange = rand() % 100 + 1;
 		// CHECK EMPTY SPACE 
+		std::cout << "Creating offspring" << std::endl;
 		Predator* offspring = new Predator(posX, posY, radius, energy, sex, speed, hungerLevel, metabolicRate, lustLevel, visionRange);
 		organismVector.push_back(offspring);
 	}

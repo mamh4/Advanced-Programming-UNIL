@@ -22,10 +22,12 @@ int main()
 
 
     
-    Predator* myPredator = new Predator(400, 500, 20, 97, true, 6, 10, 1, 50, 30);
+    Predator* myPredator = new Predator(400, 500, 20, 97, true, 60000, 10, 1, 50, 300);
     organismVector.push_back(myPredator);
+    Predator* myPredator2 = new Predator(410, 500, 20, 97, false, 60000, 10, 1, 50, 300);
+    organismVector.push_back(myPredator2);
 
-    Prey* myPrey = new Prey(815, 100, 20, 100, true, 10, 10, 15, 50, 50,10);
+    Prey* myPrey = new Prey(815, 100, 20, 100, true, 1000, 10, 15, 50, 50,10);
     organismVector.push_back(myPrey);
 
     Flora* myFlora = new Flora(10,20,5,100,2);

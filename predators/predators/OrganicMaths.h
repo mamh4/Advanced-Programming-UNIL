@@ -6,7 +6,7 @@
 #include "Organism.h"
 #define M_PI 3.14159265358979323846
 #define angleSectionNumber 12
-#define stepSize  1.0
+#define stepSize  5.0
 
 float distanceSquared (Organism* target1 , Organism* target2 ) ;
 

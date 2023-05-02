@@ -1,6 +1,8 @@
 #include "Fauna.h"
 #include <SFML/Graphics.hpp>
 #include "OrganicMaths.h"
+#include "Predator.h"
+#include "Prey.h"
 
 
 #pragma once
@@ -70,7 +72,6 @@
     }
 
     void Fauna::interact(Organism* organism, std::vector<Organism*>& organismVector) {
-
     }
 
     float Fauna::computeUtility(float distance, Organism* organism) {
@@ -88,8 +89,7 @@
     //void Fauna::update(std::vector<Organism*> organismVector) {
 	//}
 
-    /* psudo code implementatin of the move function
-    animal.step_size <- 4
+    /* psudo code implementatin of the move function animal.step_size <- 4
 
     move <- function(){
       #call utility score function: A function that determines and returns a coordinate of the best viable option
@@ -142,45 +142,46 @@ void Fauna::move(int directionIndicator){
 
 void Fauna::ageing() {
     age ++ ;
+    Fauna::setRadius(Fauna::getRadius() + 1);
 }
 
 void Fauna::update(std::vector<Organism*>& organismVector) {
-
-	Fauna::ageing(); // CHANGE TO DATE OF BIRTH 
+    //Fauna::move(10);
+    Fauna::ageing(); // CHANGE TO DATE OF BIRTH 
     Fauna::setEnergy(Fauna::getEnergy() - Fauna::getMetabolicRate());
     // with arbitrary 100 seconds (6000 frames ) max lifespan, arbitrary function with certain death at 6000 
     //Maybe separate function
-    if ((1.0*(rand() % 100) < (100*std::pow(( (1+Fauna::getAge())/6000 ),10) ) or (Fauna::getEnergy() <=0 ))  ){
+    if ((1.0 * (rand() % 100) < (100 * std::pow(((1 + Fauna::getAge()) / 6000), 10)) or (Fauna::getEnergy() <= 0))) {
         Fauna::dies(organismVector);
     }
 
-	for (int k = 1 ; k <= Fauna::getSpeed() ; k ++ ){ // BEGINING OF TURN LOOP 
-        
-	    float distSquare;
-	    float angleBetween;
-	
-	    float currentUtility;
+    for (int k = 1; k <= Fauna::getSpeed(); k++) { // BEGINING OF TURN LOOP 
 
-	    float maxDirectionalUtility = 0;
+        float distSquare;
+        float angleBetween;
+
+        float currentUtility;
+
+        float maxDirectionalUtility = 0;
         float maxInteractionUtility = 0;
 
         Organism* maxInteractionUtilityTarget = nullptr;
-        int maxDirectionalUtilityTarget = 0; 
+        int maxDirectionalUtilityTarget = 0;
 
-	    std::vector<float> directionalUtility(angleSectionNumber,0.0);
-	    std::vector<Organism*> possibleCollisions;
+        std::vector<float> directionalUtility(angleSectionNumber, 0.0);
+        std::vector<Organism*> possibleCollisions;
 
-        for (int i = 0; i < organismVector.size(); i++) { 
+        for (int i = 0; i < organismVector.size(); i++) {
             distSquare = distanceSquared(organismVector.at(i), this);
-            if ((distSquare >  0.001 ) and (distSquare < std::pow(Fauna::getVisionRange() - organismVector.at(i)->getRadius(), 2))) { 
+            if ((distSquare > 0.001) and (distSquare < std::pow(Fauna::getVisionRange() - organismVector.at(i)->getRadius(), 2))) {
                 if (distSquare < std::pow(Fauna::getRadius() + organismVector.at(i)->getRadius() + rangeOfInteraction, 2)) {
- //                   possibleCollisions.push_back(OrganismVector.at(i));
-                    currentUtility =  computeUtility(0.0 , organismVector.at(i));
+                    //                   possibleCollisions.push_back(OrganismVector.at(i));
+                    currentUtility = computeUtility(0.0, organismVector.at(i));
                     // Arbitrarily distance 0.0 to transmit that it is utility of an interaction
                     // NEED TO BE PASSED ARE RIGHT POINTER OR INTERPRETED ONCE IN COMPUTE UTILITY 
                     if (currentUtility > maxInteractionUtility) {
-                        maxInteractionUtility = currentUtility ; 
-                        maxInteractionUtilityTarget = organismVector.at(i); 
+                        maxInteractionUtility = currentUtility;
+                        maxInteractionUtilityTarget = organismVector.at(i);
                     }
                     //angleBetween = angle(OrganismVector.at(i), this);
                     //if ( pow(Fauna::getShape().getPosition().x - OrganismVector.at(i)->getShape().getPosition().x + stepSize*cos(2*M_PI* (angleSorting(angleBetween)+ 0.5) / directionalUtilitySize ),2  ) 
@@ -192,26 +193,25 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
                 }
                 else {
                     currentUtility = computeUtility(distSquare, organismVector.at(i));
-                    std::cout << "current utility is " << currentUtility << std::endl;
                     angleBetween = angle(organismVector.at(i), this);
                     directionalUtility[angleSorting(angleBetween)] += currentUtility;
                     //Prototype for directional gradient of utility increase / MAYBE CHANGE DECREASE RATE ?   
-                    for (int l = 1 ; l <= (angleSectionNumber/4); l++){
-                        directionalUtility[( (angleSorting(angleBetween) + l)  % 12 ) ] += (currentUtility / (l + 1 ));
-                        directionalUtility[( (angleSorting(angleBetween) - l)  % 12 ) ] += (currentUtility / (l + 1 ));
+                    for (int l = 1; l <= (angleSectionNumber / 4); l++) {
+                        directionalUtility[((angleSorting(angleBetween) + l) % 12)] += (currentUtility / (l + 1));
+                        directionalUtility[((angleSorting(angleBetween) - l) % 12)] += (currentUtility / (l + 1));
                     }
                 }
             }
         }
-        for (int i = 0; i < possibleCollisions.size(); i++) { 
-            for (int j = 0; j < directionalUtility.size(); j++){
+        for (int i = 0; i < possibleCollisions.size(); i++) {
+            for (int j = 0; j < directionalUtility.size(); j++) {
                 // ELIMINATION 
-                if ( std::pow(Fauna::getPosX() - possibleCollisions.at(i)->getPosX() + stepSize * cos(2 * M_PI * (j + 0.5) / directionalUtility.size()), 2)
-                    +  std::pow(Fauna::getPosY() - possibleCollisions.at(i)->getPosX() + stepSize*sin(2*M_PI* (j + 0.5) / directionalUtility.size()),2  )
-                     < std::pow((Fauna::getRadius() + possibleCollisions.at(i)->getRadius()),2) ) {
+                if (std::pow(Fauna::getPosX() - possibleCollisions.at(i)->getPosX() + stepSize * cos(2 * M_PI * (j + 0.5) / directionalUtility.size()), 2)
+                    + std::pow(Fauna::getPosY() - possibleCollisions.at(i)->getPosX() + stepSize * sin(2 * M_PI * (j + 0.5) / directionalUtility.size()), 2)
+                    < std::pow((Fauna::getRadius() + possibleCollisions.at(i)->getRadius()), 2)) {
                     angleBetween = angle(possibleCollisions.at(i), this);//was missing
-                    directionalUtility[angleSorting(angleBetween)] -= 1000 ; 
-                    }
+                    directionalUtility[angleSorting(angleBetween)] -= 1000;
+                }
             }
         }
 
@@ -221,9 +221,15 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
             Fauna::move(maxDirectionalUtilityTarget);
         }
         else {
-            Fauna::interact(maxInteractionUtilityTarget,organismVector);
+            //Earlier had Fauna::interact(maxInteractionUtilityTarget); which only called interact from Fauna which does nothing
+            interact(maxInteractionUtilityTarget, organismVector);
         }
-	}
-}
+    }
+}////VERY IMPORTANT: interact is not being called from the predator class 
+//Issue 1) Is compute utility correct to the class?????
+//Issue 2) Check if the correct inherited method is being called, possibly I would need to create a predator instance and call
+// the compute utility method and interact method from there
+	
+
 
 
