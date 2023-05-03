@@ -23,7 +23,7 @@
     }
 
     int Fauna::getSpeed() {
-        return Fauna::speed;
+        return this->speed;
     }
 
     void Fauna::setSpeed() {
@@ -31,7 +31,7 @@
     }
 
     int Fauna::getAge() {
-        return Fauna::age;
+        return this->age;
     }
 
     void Fauna::setAge(int age) {
@@ -39,11 +39,11 @@
     }
 
     bool Fauna::getSex() {
-        return Fauna::sex;
+        return this->sex;
     }
 
     float Fauna::getHungerSensitivity() {
-        return Fauna::hungerSensitivity;
+        return this->hungerSensitivity;
     }
 
     void Fauna::setHungerSensitivity(float hungerSensitivity) {
@@ -51,12 +51,12 @@
     }
 
     float Fauna::getVisionRange() {
-		return Fauna::visionRange;
+		return this->visionRange;
 	}
 
 
     float Fauna::getMetabolicRate() {
-        return Fauna::metabolicRate;
+        return this->metabolicRate;
     }
 
     void Fauna::setMetabolicRate(float metabolicRate) {
@@ -64,7 +64,7 @@
     }
 
     float Fauna::getLustLevel() {
-        return lustLevel;
+        return this->lustLevel;
     }
 
     void Fauna::setLustLevel(float lustLevel) {
@@ -135,9 +135,9 @@ void Fauna::move(int directionIndicator){
     // as Class constant later on ? 
     //Fauna::getShape().setPosition(Fauna::getShape().getPosition().x + stepSize * cos((directionIndicator + 0.5) * M_PI * 2 / 12),
     //    Fauna::getShape().getPosition().y + stepSize * sin((directionIndicator + 0.5) * M_PI * 2 / 12));
-    Fauna::setPosX(Fauna::getPosX() + stepSize * cos((directionIndicator + 0.5) * M_PI * 2 / 12));
-    Fauna::setPosY(Fauna::getPosY() + stepSize * sin((directionIndicator + 0.5) * M_PI * 2 / 12));
-    Fauna::setEnergy( Fauna::getEnergy() - energyCostOfMovement ); 
+    this->setPosX(this->getPosX() + stepSize * cos((directionIndicator + 0.5) * M_PI * 2 / 12));
+    this->setPosY(this->getPosY() + stepSize * sin((directionIndicator + 0.5) * M_PI * 2 / 12));
+    this->setEnergy( this->getEnergy() - energyCostOfMovement ); 
 }
 
 void Fauna::ageing() {
@@ -146,7 +146,6 @@ void Fauna::ageing() {
 }
 
 void Fauna::update(std::vector<Organism*>& organismVector) {
-    //Fauna::move(10);
     Fauna::ageing(); // CHANGE TO DATE OF BIRTH 
     Fauna::setEnergy(Fauna::getEnergy() - Fauna::getMetabolicRate());
     // with arbitrary 100 seconds (6000 frames ) max lifespan, arbitrary function with certain death at 6000 
@@ -172,9 +171,11 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
         std::vector<Organism*> possibleCollisions;
 
         for (int i = 0; i < organismVector.size(); i++) {
-            distSquare = distanceSquared(organismVector.at(i), this);
-            if ((distSquare > 0.001) and (distSquare < std::pow(Fauna::getVisionRange() - organismVector.at(i)->getRadius(), 2))) {
-                if (distSquare < std::pow(Fauna::getRadius() + organismVector.at(i)->getRadius() + rangeOfInteraction, 2)) {
+            //TRY organismVector.at(i)->getRadius() print maybe
+            distSquare = distanceSquared(organismVector.at(i), this);//organismvector at get radius is read as an uninitialised organism
+            if ((distSquare > 0.001) and (distSquare < std::pow(this->getVisionRange() - organismVector.at(i)->getRadius(), 2))) {
+
+                if (distSquare < std::pow(this->getRadius() + organismVector.at(i)->getRadius() + rangeOfInteraction, 2)) {
                     //                   possibleCollisions.push_back(OrganismVector.at(i));
                     currentUtility = computeUtility(0.0, organismVector.at(i));
                     // Arbitrarily distance 0.0 to transmit that it is utility of an interaction
@@ -192,37 +193,34 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
                     //}
                 }
                 else {
-                    currentUtility = computeUtility(distSquare, organismVector.at(i));
-                    angleBetween = angle(organismVector.at(i), this);
-                    directionalUtility[angleSorting(angleBetween)] += currentUtility;
+                   // currentUtility = computeUtility(distSquare, organismVector.at(i));
+                   // angleBetween = angle(organismVector.at(i), this);
+                    //directionalUtility[angleSorting(angleBetween)] += currentUtility;
                     //Prototype for directional gradient of utility increase / MAYBE CHANGE DECREASE RATE ?   
-                    for (int l = 1; l <= (angleSectionNumber / 4); l++) {
-                        directionalUtility[((angleSorting(angleBetween) + l) % 12)] += (currentUtility / (l + 1));
-                        directionalUtility[((angleSorting(angleBetween) - l) % 12)] += (currentUtility / (l + 1));
-                    }
+                    //for (int l = 1; l <= (angleSectionNumber / 4); l++) {
+                     //   directionalUtility[((angleSorting(angleBetween) + l) % 12)] += (currentUtility / (l + 1));
+                      //  directionalUtility[((angleSorting(angleBetween) - l) % 12)] += (currentUtility / (l + 1));
+                    //}
                 }
             }
         }
         for (int i = 0; i < possibleCollisions.size(); i++) {
             for (int j = 0; j < directionalUtility.size(); j++) {
                 // ELIMINATION 
-                if (std::pow(Fauna::getPosX() - possibleCollisions.at(i)->getPosX() + stepSize * cos(2 * M_PI * (j + 0.5) / directionalUtility.size()), 2)
-                    + std::pow(Fauna::getPosY() - possibleCollisions.at(i)->getPosX() + stepSize * sin(2 * M_PI * (j + 0.5) / directionalUtility.size()), 2)
-                    < std::pow((Fauna::getRadius() + possibleCollisions.at(i)->getRadius()), 2)) {
+                if (std::pow(this->getPosX() - possibleCollisions.at(i)->getPosX() + stepSize * cos(2 * M_PI * (j + 0.5) / directionalUtility.size()), 2)
+                    + std::pow(this->getPosY() - possibleCollisions.at(i)->getPosX() + stepSize * sin(2 * M_PI * (j + 0.5) / directionalUtility.size()), 2)
+                    < std::pow((this->getRadius() + possibleCollisions.at(i)->getRadius()), 2)) {
                     angleBetween = angle(possibleCollisions.at(i), this);//was missing
                     directionalUtility[angleSorting(angleBetween)] -= 1000;
                 }
             }
         }
 
-        //std::cout << "max interaction utility is " << maxInteractionUtility << std::endl;
-        //std::cout << "max directional utility is " << maxDirectionalUtility << std::endl;
         if (maxDirectionalUtility > maxInteractionUtility) {
-            Fauna::move(maxDirectionalUtilityTarget);
+            this->move(maxDirectionalUtilityTarget);
         }
         else {
-            //Earlier had Fauna::interact(maxInteractionUtilityTarget); which only called interact from Fauna which does nothing
-            interact(maxInteractionUtilityTarget, organismVector);
+            this->interact(maxInteractionUtilityTarget, organismVector);
         }
     }
 }////VERY IMPORTANT: interact is not being called from the predator class 

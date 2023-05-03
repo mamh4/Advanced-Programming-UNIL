@@ -9,31 +9,34 @@
 		posX = myPosX;
 		posY = myPosY;
 		radius = myRadius;
+		//this->shape.setRadius(myRadius);
+		//this->shape.setOrigin(myRadius, myRadius);
+		//this->shape.setPosition(myPosX, myPosY);
 		shape.setRadius(myRadius);
 		shape.setOrigin(myRadius, myRadius);
 		shape.setPosition(myPosX, myPosY);
 	}
 
 	float Organism::getPosX() {
-		return Organism::shape.getPosition().x;
+		return this->posX;
 	}
 
 	void Organism::setPosX(float myPosX) {
-		Organism::shape.setPosition(myPosX, Organism::shape.getPosition().y);
+		this->shape.setPosition(myPosX, Organism::shape.getPosition().y);
 		this->posX = myPosX;
 	}
 
 	float Organism::getPosY() {
-		return Organism::shape.getPosition().y;
+		return this->posY;
 	}
 
 	void Organism::setPosY(float myPosY) {
-		Organism::shape.setPosition(Organism::shape.getPosition().x, myPosY);
+		this->shape.setPosition(Organism::shape.getPosition().x, myPosY);
 		this->posY = myPosY;
 	}
 
 	float Organism::getRadius() {
-		return Organism::shape.getRadius();
+		return this->radius;
 	}
 
 	void Organism::setRadius(float myRadius) {
@@ -43,7 +46,7 @@
 	}
 
 	float Organism::getEnergy() {
-		return Organism::energy;
+		return this->energy;
 	}
 
 	void Organism::setEnergy(float myEnergy) {
@@ -51,7 +54,7 @@
 	}
 
 	sf::CircleShape Organism::getShape() {
-		return Organism::shape;
+		return this->shape;
 	}
 
 	void Organism::setShape(sf::CircleShape shape) {

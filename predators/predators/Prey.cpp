@@ -71,6 +71,7 @@ float Prey::computeUtility(float distanceSquared, Organism* targetOrganism) {
 
 
 void Prey::interact(Organism* targetOrganism, std::vector<Organism*>& OrganismVector) {
+    /*
     if (Flora* myFlora = dynamic_cast<Flora*>(targetOrganism)) {
         float energyAbsorbtionSpeed;
         energyAbsorbtionSpeed = 10.0;
@@ -96,4 +97,5 @@ void Prey::interact(Organism* targetOrganism, std::vector<Organism*>& OrganismVe
         Prey* offspring = new Prey(posX, posY, radius, energy, sex, speed, hungerLevel, metabolicRate, lustLevel, visionRange, predatorAversion);
         OrganismVector.push_back(offspring);
     }
+    */
 }
