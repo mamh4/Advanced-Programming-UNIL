@@ -9,9 +9,6 @@
 		posX = myPosX;
 		posY = myPosY;
 		radius = myRadius;
-		//this->shape.setRadius(myRadius);
-		//this->shape.setOrigin(myRadius, myRadius);
-		//this->shape.setPosition(myPosX, myPosY);
 		shape.setRadius(myRadius);
 		shape.setOrigin(myRadius, myRadius);
 		shape.setPosition(myPosX, myPosY);

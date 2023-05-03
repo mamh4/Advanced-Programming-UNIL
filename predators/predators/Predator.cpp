@@ -166,7 +166,7 @@ void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organi
 		this->setEnergy( this->getEnergy() - baseReproductionEnergyCost);
 		targetOrganism->setEnergy(targetOrganism->getEnergy() - baseReproductionEnergyCost);
 		// CHECK EMPTY SPACE 
-		Predator* offspring = new Predator(710, 515, 10, 97, false, 60000, 10, 1, 50, 600);//Above parameters cause program failure!
+		Predator* offspring = new Predator(600, 515, 10, 1, false, 60, 10, 1, 0, 600);//Above parameters cause program failure!
 		organismVector.push_back(offspring);
 	}
 }

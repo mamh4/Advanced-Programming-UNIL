@@ -11,7 +11,6 @@
         int mySpeed, float myHungerSensitivity, float myMetabolicRate,
             float myLustLevel, float myVisionRange) : Organism(myPosX, myPosY, myRadius, myEnergy) {
 
-        energy = myEnergy;
         sex = mySex;
         speed = mySpeed;
         // Possibly replaced with date of birth (turn of birth ) then access age as the difference between current turn and turn of birth 
