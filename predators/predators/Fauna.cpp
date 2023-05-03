@@ -128,7 +128,7 @@
 void Fauna::move(int directionIndicator){
     
     //std::cout << "my speed is " << Fauna::getSpeed() << "my coordinates are: " << Fauna::getPosX() << " "<< Fauna::getPosY << std::endl;
-    std::cout << "my position is " << Fauna::getPosX() << " " << Fauna::getPosY() << std::endl;
+
     float energyCostOfMovement; 
     energyCostOfMovement = 5.0 ; 
     // as Class constant later on ? 
@@ -141,19 +141,19 @@ void Fauna::move(int directionIndicator){
 
 void Fauna::ageing() {
     age ++ ;
-    Fauna::setRadius(Fauna::getRadius() + 1);
+    this->setRadius(this->getRadius() + 1);
 }
 
 void Fauna::update(std::vector<Organism*>& organismVector) {
-    Fauna::ageing(); // CHANGE TO DATE OF BIRTH 
-    Fauna::setEnergy(Fauna::getEnergy() - Fauna::getMetabolicRate());
+    this->ageing(); // CHANGE TO DATE OF BIRTH 
+    this->setEnergy(this->getEnergy() - this->getMetabolicRate());
     // with arbitrary 100 seconds (6000 frames ) max lifespan, arbitrary function with certain death at 6000 
     //Maybe separate function
-    if ((1.0 * (rand() % 100) < (100 * std::pow(((1 + Fauna::getAge()) / 6000), 10)) or (Fauna::getEnergy() <= 0))) {
-        Fauna::dies(organismVector);
+    if ((1.0 * (rand() % 100) < (100 * std::pow(((1 + this->getAge()) / 6000), 10)) or (this->getEnergy() <= 0))) {
+        this->dies(organismVector);
     }
 
-    for (int k = 1; k <= Fauna::getSpeed(); k++) { // BEGINING OF TURN LOOP 
+    for (int k = 1; k <= this->getSpeed(); k++) { // BEGINING OF TURN LOOP 
 
         float distSquare;
         float angleBetween;

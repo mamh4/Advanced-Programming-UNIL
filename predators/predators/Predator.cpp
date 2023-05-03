@@ -110,7 +110,7 @@ float Predator::computeUtility(float distanceSquared, Organism* targetOrganism) 
 		if (Prey* myPrey = dynamic_cast<Prey*>(targetOrganism)) {
 			float hungerFactor;
 			//1000 acts as placeholder for amount of energy at which indifference to food is total 
-			hungerFactor = proximityEffectFactor(0, 1000, this->getHungerSensitivity(), Predator::getEnergy());
+			hungerFactor = proximityEffectFactor(0, 1000, this->getHungerSensitivity(), this->getEnergy());
 			return hungerFactor * distancefactor;
 			// effect of size or energy of target prey ? 
 		}
@@ -119,7 +119,7 @@ float Predator::computeUtility(float distanceSquared, Organism* targetOrganism) 
 				float lustFactor;
 				//1000 acts as placeholder for amount of energy at which the weight of sex drive is total 
 				//lustFactor =  1 - proximityEffectFactor(0, 1000, Predator::getLustLevel(), Predator::getEnergy());
-				lustFactor =2*( 0.5 - proximityEffectFactor(0, 1000, Predator::getLustLevel(), Predator::getEnergy()));
+				lustFactor =2*( 0.5 - proximityEffectFactor(0, 1000, this->getLustLevel(), this->getEnergy()));
 				// effect of size or energy of target mate ? 
 				return lustFactor * distancefactor;
 			}
@@ -150,23 +150,25 @@ void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organi
 		this->setEnergy(this->getEnergy() + absorbedEnergy);
 	}
 	else if (Predator* myPred = dynamic_cast<Predator*>(targetOrganism)) {
-		float baseReproductionEnergyCost;
-		baseReproductionEnergyCost = 250.0;
-		//TODO Adjust parameters
-		float posX = static_cast<float>(rand() % 1000);
-		float posY = static_cast<float>(rand() % 1000);
-		float radius = static_cast<float>(rand() % 10 + 5);
-		float energy = rand() % 100 + 1;
-		bool sex = rand() % 2 == 0 ? true : false;
-		int speed = rand() % 10 + 1;
-		int hungerLevel = rand() % 100 + 1;
-		float metabolicRate = static_cast<float>(rand() % 10 + 1) / 10.0f;
-		int lustLevel = rand() % 100 + 1;
-		int visionRange = rand() % 100 + 1;
-		this->setEnergy( this->getEnergy() - baseReproductionEnergyCost);
-		targetOrganism->setEnergy(targetOrganism->getEnergy() - baseReproductionEnergyCost);
-		// CHECK EMPTY SPACE 
-		Predator* offspring = new Predator(600, 515, 10, 1, false, 60, 10, 1, 0, 600);//Above parameters cause program failure!
-		organismVector.push_back(offspring);
+		if (myPred->getAge() > 30) {//NEW!! Age must be greater than 30 to reproduce
+			float baseReproductionEnergyCost;
+			baseReproductionEnergyCost = 250.0;
+			//TODO Adjust parameters
+			float posX = static_cast<float>(rand() % 1000);
+			float posY = static_cast<float>(rand() % 1000);
+			float radius = static_cast<float>(rand() % 10 + 5);
+			float energy = rand() % 100 + 1;
+			bool sex = rand() % 2 == 0 ? true : false;
+			int speed = rand() % 10 + 1;
+			int hungerLevel = rand() % 100 + 1;
+			float metabolicRate = static_cast<float>(rand() % 10 + 1) / 10.0f;
+			int lustLevel = rand() % 100 + 1;
+			int visionRange = rand() % 100 + 1;
+			this->setEnergy(this->getEnergy() - baseReproductionEnergyCost);
+			targetOrganism->setEnergy(targetOrganism->getEnergy() - baseReproductionEnergyCost);
+			// CHECK EMPTY SPACE 
+			Predator* offspring = new Predator(700.0, 515.0, 10.0, 1, false, 60, 10, 1, 0, 600);//Above parameters cause program failure!
+			organismVector.push_back(offspring);
+		}
 	}
 }

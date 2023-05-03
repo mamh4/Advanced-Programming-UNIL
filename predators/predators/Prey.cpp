@@ -15,7 +15,7 @@ Prey::Prey(float myPosX, float myPosY, float myRadius, float myEnergy,bool mySex
 }
 
 float Prey::getPredatorAversion() {
-	return Prey::predatorAversion;
+	return this->predatorAversion;
 }
 
 
@@ -40,15 +40,15 @@ float Prey::computeUtility(float distanceSquared, Organism* targetOrganism) {
     float distanceToInterraction;
     float distancefactor;
 
-    distanceToInterraction = sqrt(distanceSquared) - Prey::getRadius() - targetOrganism->getRadius();//U used getRadius :p
+    distanceToInterraction = sqrt(distanceSquared) - this->getRadius() - targetOrganism->getRadius();//U used getRadius :p
 
-    distancefactor = proximityEffectFactor(0, Prey::getVisionRange(), 1, distanceToInterraction);//use getters and always "Class::"
+    distancefactor = proximityEffectFactor(0, this->getVisionRange(), 1, distanceToInterraction);//use getters and always "Class::"
 
     if (Prey* myPrey = dynamic_cast<Prey*>(targetOrganism)) {
-        if (myPrey->getSex() != Prey::getSex()) {
+        if (myPrey->getSex() != this->getSex()) {
             float lustFactor;
             //1000 acts as placeholder for amount of energy at which the weight of sex drive is total 
-            lustFactor = 1 - proximityEffectFactor(0, 1000, Prey::getLustLevel(), energy);
+            lustFactor = 1 - proximityEffectFactor(0, 1000, this->getLustLevel(), energy);
             // effect of size or energy of target mate ? 
             return lustFactor * distancefactor;
         }
@@ -60,7 +60,7 @@ float Prey::computeUtility(float distanceSquared, Organism* targetOrganism) {
     else if (Flora* myFlora = dynamic_cast<Flora*>(targetOrganism)) {
             float hungerFactor;
             //1000 acts as placeholder for amount of energy at which indifference to food is total 
-            hungerFactor = proximityEffectFactor(0, 1000, Prey::getHungerSensitivity(), Prey::getEnergy());
+            hungerFactor = proximityEffectFactor(0, 1000, this->getHungerSensitivity(), this->getEnergy());
             return hungerFactor * distancefactor;
             // effect of size or energy of target prey ? 
     }

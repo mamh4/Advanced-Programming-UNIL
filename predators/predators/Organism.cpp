@@ -5,7 +5,6 @@
 	Organism::Organism(float myPosX, float myPosY, float myRadius,float myEnergy) {
 
 		energy = myEnergy;
-
 		posX = myPosX;
 		posY = myPosY;
 		radius = myRadius;
@@ -19,7 +18,7 @@
 	}
 
 	void Organism::setPosX(float myPosX) {
-		this->shape.setPosition(myPosX, Organism::shape.getPosition().y);
+		this->shape.setPosition(myPosX, this->getPosY());
 		this->posX = myPosX;
 	}
 
@@ -28,7 +27,7 @@
 	}
 
 	void Organism::setPosY(float myPosY) {
-		this->shape.setPosition(Organism::shape.getPosition().x, myPosY);
+		this->shape.setPosition(this->getPosX(), myPosY);
 		this->posY = myPosY;
 	}
 
@@ -37,8 +36,8 @@
 	}
 
 	void Organism::setRadius(float myRadius) {
-		Organism::shape.setRadius(myRadius);
-		Organism::shape.setOrigin(myRadius, myRadius);
+		this->shape.setRadius(myRadius);
+		this->shape.setOrigin(myRadius, myRadius);
 		this->radius = myRadius;
 	}
 
