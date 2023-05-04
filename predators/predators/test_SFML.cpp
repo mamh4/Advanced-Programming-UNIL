@@ -4,7 +4,7 @@
 #include "Prey.h"
 #include "Flora.h"
 #include <iostream>
-
+#include <unordered_set>
 
 
 //TODO: Decide on intialisation in main class of two vectors Fauna and Flora and then we loop through all Faunas, then all Floras? I think so
@@ -18,19 +18,55 @@ int main()
     const int numberOfFlora = 1;
 
     std::vector<Organism*> organismVector;
+    //store positions to decide where to place new predators, 
+    std::vector<float*> distances;
 
+    /////////WIP
+    /*
+    // Generate new predators and add them to the vector
+    for (int i = 0; i < numberOfPredators; i++) {
 
+        while (!positionFound) {
+            // Generate random x,y coordinates
+            posX = static_cast<float>(rand() % 1000);
+            posY = static_cast<float>(rand() % 1000);
+
+            // Check if position is already occupied by another predator
+
+            if (predatorPositions.count({ posX, posY }) == 0) {
+                positionFound = true;
+            }
+        }
+
+        // Add new predator to the vector and set
+        float radius = static_cast<float>(rand() % 10 + 5);
+        float energy = rand() % 100 + 1;
+        bool sex = rand() % 2 == 0 ? true : false;
+        int speed = rand() % 10 + 1;
+        int hungerLevel = rand() % 100 + 1;
+        float metabolicRate = static_cast<float>(rand() % 10 + 1) / 10.0f;
+        int lustLevel = rand() % 100 + 1;
+        int visionRange = rand() % 100 + 1;
+        Predator* myPredator = new Predator(posX, posY, radius, energy, sex, speed, hungerLevel, metabolicRate, lustLevel, visionRange);
+        organismVector.push_back(myPredator);
+        predatorPositions.insert({ posX, posY });
+    }
+    */
+    ///////////////////////
 
     //CAREFUL!! Adjusting some of the parameters causes failuer in the program!!!!!!!!!
-    Predator* myPredator = new Predator(700, 500, 10, 50000, true, 1, 10, 1, 50, 100);
+    Predator* myPredator = new Predator(500, 500, 10, 50000, true, 1, 10, 1, 50, 700);
     organismVector.push_back(myPredator);
-    Predator* myPredator2 = new Predator(700, 540, 10, 50000, false, 1, 10, 1, 50, 100);
+    Predator* myPredator2 = new Predator(475, 596, 10, 50000, false, 1, 10, 1, 50, 700);
     organismVector.push_back(myPredator2);
 
-    Prey* myPrey = new Prey(815, 100, 20, 5000, true, 1, 10, 15, 50, 50,10);
+    Predator* myPredator3 = new Predator(500, 290, 10, 10000000, false, 1, 10, 1, 50, 700);
+    organismVector.push_back(myPredator3);
+
+    Prey* myPrey = new Prey(30, 40, 20, 5000, true, 1, 10, 15, 50, 50,10);
     organismVector.push_back(myPrey);
 
-    Flora* myFlora = new Flora(10,20,5,100,2);
+    Flora* myFlora = new Flora(500,190,10,100,2);
     organismVector.push_back(myFlora);
 
     

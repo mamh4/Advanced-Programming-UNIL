@@ -94,6 +94,112 @@ void Predator::update(std::vector<Organism*>& organismVector) {
 // NEED TO CHANGE HEADERS 
 // energy radius Position Speed Sex age hungerlevel hungerSensitivity metabolicRate lustLevel 
 //assuming visionRange is from 50 to 100  atan 
+
+/*/
+void Predator::computeUtility(float distanceSquared, Organism* targetOrganism, std::vector<float>& directionalUtility,
+	float& maxDirectionalUtility , int maxDirectionalUtilityTarget , std::vector<Organism*>& possibleCollisions, 
+	float& maxInteractionUtility , Organism*& maxInteractionUtilityTarget ) {
+/*/
+void Predator::computeUtility(float distanceSquared, Organism* targetOrganism, std::vector<float>& directionalUtility , std::vector<Organism*>& possibleCollisions, 
+	float& maxInteractionUtility , Organism*& maxInteractionUtilityTarget ) {
+    
+	float currentUtility = 0 ; 
+    float angleBetween = 0 ;
+    int currentIntegerDirection =0 ; 
+
+    float baseReproductionEnergyCost;
+	baseReproductionEnergyCost = 250.0;
+
+    float energyAbsorbtionSpeed;
+	energyAbsorbtionSpeed = 10.0;
+
+    angleBetween = angle( this, targetOrganism);
+    currentIntegerDirection = angleSorting(angleBetween); 
+
+    if (distanceSquared < std::pow(this->getRadius() + targetOrganism->getRadius() + rangeOfInteraction, 2)) {
+        possibleCollisions.push_back(targetOrganism);
+        if (Prey* myPrey = dynamic_cast<Prey*>(targetOrganism)) {
+
+            currentUtility = std::min( myPrey->getEnergy(), energyAbsorbtionSpeed); 
+		}
+		else if (Predator* myPredator = dynamic_cast<Predator*>(targetOrganism)) {
+			if (this->getSex() != myPredator->getSex()) {
+
+                if (this->getEnergy() < baseReproductionEnergyCost){
+                    // ARBITRARY 250
+                    currentUtility = - baseReproductionEnergyCost; 
+                } 
+                else{
+                    // ARBITRARY 250
+					currentUtility = baseReproductionEnergyCost;
+                }
+			}
+		}
+        else if (Flora* myFlora = dynamic_cast<Flora*>(targetOrganism)) {
+		}
+        //currentUtility = computeUtility(0.0, organismVector.at(i));  NEEDS TO BE IMPLEMENTED 
+        // Arbitrarily distance 0.0 to transmit that it is utility of an interaction
+        if (currentUtility > maxInteractionUtility) { // HANDLE PREDATOR SEEN BY PREY EXCEPTION HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            maxInteractionUtility = currentUtility;
+            maxInteractionUtilityTarget = targetOrganism;
+        }
+    }
+	else {
+		float distanceToInterraction;
+		float distancefactor;
+
+
+		distanceToInterraction = sqrt(distanceSquared) - this->getRadius() - targetOrganism->getRadius();//U used getRadius :p
+
+		distancefactor = proximityEffectFactor(0, this->getVisionRange(), 1, distanceToInterraction);//use getters and always "Class::"
+
+		if (Prey* myPrey = dynamic_cast<Prey*>(targetOrganism)) {
+			float hungerFactor;
+			//1000 acts as placeholder for amount of energy at which indifference to food is total 
+			hungerFactor = proximityEffectFactor(0, 1000, this->getHungerSensitivity(), this->getEnergy());
+			currentUtility =  std::min( myPrey->getEnergy(), energyAbsorbtionSpeed) * hungerFactor * distancefactor;
+			// effect of size or energy of target prey ? 
+		}
+		else if (Predator* myPredator = dynamic_cast<Predator*>(targetOrganism)) {
+			if (this->getSex() != myPredator->getSex()) {
+                if (not this->getEnergy() < baseReproductionEnergyCost){
+                    float lustFactor;
+				    //1000 acts as placeholder for amount of energy at which the weight of sex drive is total 
+				    //lustFactor =  1 - proximityEffectFactor(0, 1000, Predator::getLustLevel(), Predator::getEnergy());
+				    lustFactor = 1 - proximityEffectFactor(0, 1000, this->getLustLevel(), this->getEnergy());
+				    // effect of size or energy of target mate ? 
+				    currentUtility =  baseReproductionEnergyCost * lustFactor * distancefactor;
+                } 
+
+			}
+		}
+        else if (Flora* myFlora = dynamic_cast<Flora*>(targetOrganism)) {
+		}
+    directionalUtility[currentIntegerDirection] += currentUtility;
+//	if ( directionalUtility[currentIntegerDirection] > maxDirectionalUtility ) { 
+//		maxDirectionalUtility = directionalUtility[currentIntegerDirection] ; 
+//		maxDirectionalUtilityTarget = currentIntegerDirection ; 
+//	 } 
+    for (int l = 1; l <= (angleSectionNumber / 4); l++) {
+                            int testInteger =0 ;
+                            testInteger = directionalUtility.size() ; 
+                            testInteger = (((currentIntegerDirection + l) % angleSectionNumber)) ; 
+                            directionalUtility[((currentIntegerDirection + l) % angleSectionNumber)] +=  (currentUtility / (l + 1));
+							//if ( directionalUtility[((currentIntegerDirection + l) % angleSectionNumber)] > maxDirectionalUtility ) { 
+							//	maxDirectionalUtility = directionalUtility[((currentIntegerDirection + l) % angleSectionNumber)] ; 
+							//	maxDirectionalUtilityTarget = ((currentIntegerDirection + l) % angleSectionNumber) ; 
+	 						//} 
+                            testInteger = (((currentIntegerDirection - l + angleSectionNumber) % angleSectionNumber)) ; 
+                            directionalUtility[((currentIntegerDirection - l + angleSectionNumber ) % angleSectionNumber)] +=   (currentUtility / (l + 1));
+							//if ( directionalUtility[((currentIntegerDirection - l + angleSectionNumber) % angleSectionNumber)] > maxDirectionalUtility ) { 
+							//	maxDirectionalUtility = directionalUtility[((currentIntegerDirection - l + angleSectionNumber) % angleSectionNumber)] ; 
+							//	maxDirectionalUtilityTarget = ((currentIntegerDirection - l + angleSectionNumber) % angleSectionNumber) ; 
+	 						//} 
+                        }
+	}
+}
+
+/*/
 float Predator::computeUtility(float distanceSquared, Organism* targetOrganism) {
 	if (distanceSquared == 0.0) {
 		//TO DO GET UTILITY OF INTERACTION.
@@ -138,7 +244,6 @@ float Predator::computeUtility(float distanceSquared, Organism* targetOrganism) 
 		return distancefactor ;
 	}
 	*/
-}
 
 void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organismVector) {
 	if(Prey* myPrey = dynamic_cast<Prey*>(targetOrganism)){
@@ -168,9 +273,9 @@ void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organi
 			this->setEnergy(this->getEnergy() - baseReproductionEnergyCost);
 			targetOrganism->setEnergy(targetOrganism->getEnergy() - baseReproductionEnergyCost);
 			// CHECK EMPTY SPACE
-			//q:How to make sure that the offspring will appear in my sf::window?
+
 			Predator* offspring = new Predator(700.0, 515.0, 10.0, 1, false, 60, 10, 1, 0, 600);//Above parameters cause program failure!
-			//organismVector.push_back(offspring);
+			organismVector.push_back(offspring);
 		}
 	}
 }

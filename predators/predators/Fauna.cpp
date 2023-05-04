@@ -73,8 +73,9 @@
     void Fauna::interact(Organism* organism, std::vector<Organism*>& organismVector) {
     }
 
-    float Fauna::computeUtility(float distance, Organism* organism) {
-        return 0;
+   // void Fauna::computeUtility(float distanceSquared, Organism* targetOrganism, std::vector<float>& directionalUtility, float& maxDirectionalUtility, int maxDirectionalUtilityTarget, std::vector<Organism*>& possibleCollisions, float& maxInteractionUtility, Organism*& maxInteractionUtilityTarget){
+   // }
+    void Fauna::computeUtility(float distanceSquared, Organism* targetOrganism, std::vector<float>& directionalUtility, std::vector<Organism*>& possibleCollisions, float& maxInteractionUtility, Organism*& maxInteractionUtilityTarget){
     }
 
     //TODO implement this function
@@ -127,12 +128,11 @@
 void Fauna::move(int directionIndicator){
     
     //std::cout << "my speed is " << Fauna::getSpeed() << "my coordinates are: " << Fauna::getPosX() << " "<< Fauna::getPosY << std::endl;
-
     float energyCostOfMovement; 
     energyCostOfMovement = 5.0 ; 
     // as Class constant later on ? 
     //Fauna::getShape().setPosition(Fauna::getShape().getPosition().x + stepSize * cos((directionIndicator + 0.5) * M_PI * 2 / 12),
-    //    Fauna::getShape().getPosition().y + stepSize * sin((directionIndicator + 0.5) * M_PI * 2 / 12));
+    //    Fauna::getShape().getPosition().y + stepSize * sin((directionIndicator + 0.5) * M_PI * 2 / 12)); 
     this->setPosX(this->getPosX() + stepSize * cos((directionIndicator + 0.5) * M_PI * 2 / 12));
     this->setPosY(this->getPosY() + stepSize * sin((directionIndicator + 0.5) * M_PI * 2 / 12));
     this->setEnergy( this->getEnergy() - energyCostOfMovement ); 
@@ -143,6 +143,95 @@ void Fauna::ageing() {
     this->setRadius(this->getRadius() + 0.1);
 }
 
+
+
+void Fauna::update(std::vector<Organism*>& organismVector) {
+    this->ageing(); // CHANGE TO DATE OF BIRTH 
+    this->setEnergy(this->getEnergy() - this->getMetabolicRate());
+    // with arbitrary 100 seconds (6000 frames ) max lifespan, arbitrary function with certain death at 6000 
+    //Maybe separate function
+    //a:delete the pointer
+    //Predator* offspring = new Predator(79.0, 515.0, 10.0, 1, false, 60, 10, 1, 0, 600);//Above parameters cause program failure!
+    
+    if ((1.0 * (rand() % 100) < (100 * std::pow(((1 + this->getAge()) / 6000), 10)) or (this->getEnergy() <= 0))) {
+        this->dies(organismVector);
+    }
+    else {
+        for (int k = 0; k <= this->getSpeed(); k++) { // BEGINING OF TURN LOOP 
+
+            float distSquare;
+            float angleBetween = 0.0;
+
+            float maxDirectionalUtility = 0;
+            float maxInteractionUtility = 0;
+
+            Organism* maxInteractionUtilityTarget = nullptr;
+            int maxDirectionalUtilityTarget = 0;
+
+
+            std::vector<float> directionalUtility(angleSectionNumber, 0.0);
+            std::vector<Organism*> possibleCollisions;
+
+            for (int i = 0; i < organismVector.size(); i++) {
+                //TRY organismVector.at(i)->getRadius() print maybe
+                distSquare = distanceSquared(organismVector.at(i), this);//organismvector at get radius is read as an uninitialised organism
+                if ((distSquare > 0.0001) and (distSquare < std::pow(this->getVisionRange() - organismVector.at(i)->getRadius(), 2))) {
+                //   this->computeUtility(distSquare, organismVector.at(i), directionalUtility, maxDirectionalUtility , maxDirectionalUtilityTarget , possibleCollisions, maxInteractionUtility , maxInteractionUtilityTarget ); 
+                this->computeUtility(distSquare, organismVector.at(i), directionalUtility , possibleCollisions, maxInteractionUtility , maxInteractionUtilityTarget ); 
+
+                }
+            }
+            for (int i = 0; i < possibleCollisions.size(); i++) {
+                for (int j = 0; j < directionalUtility.size(); j++) {
+                    // ELIMINATION 
+                    if (std::pow(this->getPosX() - possibleCollisions.at(i)->getPosX() + stepSize * cos(2 * M_PI * (j + 0.5) / directionalUtility.size()), 2)
+                        + std::pow(this->getPosY() - possibleCollisions.at(i)->getPosX() + stepSize * sin(2 * M_PI * (j + 0.5) / directionalUtility.size()), 2)
+                        < std::pow((this->getRadius() + possibleCollisions.at(i)->getRadius()), 2)) {
+                        //angleBetween = angle(possibleCollisions.at(i), this);//was missing
+                        //directionalUtility[angleSorting(angleBetween)] = -10000;
+                        directionalUtility.at(j) = -10000.0;
+                    }
+                }
+            }
+            for (int i = 0; i < directionalUtility.size(); i++) {
+                if ( ( this->getPosX()  + stepSize * cos(2 * M_PI * (i + 0.5) / directionalUtility.size()) > 1000 ) or ( this->getPosX()  + stepSize * cos(2 * M_PI * (i + 0.5) / directionalUtility.size()) < 0 ) or ( this->getPosY()  + stepSize * sin(2 * M_PI * (i + 0.5) / directionalUtility.size()) > 1000 ) or ( this->getPosY()  + stepSize * sin(2 * M_PI * (i + 0.5) / directionalUtility.size()) < 0  )  ) {
+                    directionalUtility.at(i) = -10000.0;
+                }
+            }
+
+            //std::cout << " my directional utility is: " ; 
+            //for (int i = 0; i < directionalUtility.size(); i++) {
+             //   std::cout << directionalUtility.at(i) << "     " ; 
+            //}
+            //std::cout << " " << std::endl;
+
+            maxDirectionalUtility = directionalUtility.at(0); 
+            maxDirectionalUtilityTarget = 0 ; 
+            for (int i = 0; i < directionalUtility.size(); i++) {
+                if (maxDirectionalUtility < directionalUtility.at(i)){
+                    maxDirectionalUtility = directionalUtility.at(i); 
+                    maxDirectionalUtilityTarget = i ; 
+                }
+            }
+
+            if (maxDirectionalUtility > maxInteractionUtility) {
+                this->move(maxDirectionalUtilityTarget);
+            }
+            else {
+                //std::cout << "Interaction" << std::endl;
+                //this->interact(maxInteractionUtilityTarget, organismVector);
+            }
+        }
+    }
+
+}////VERY IMPORTANT: interact is not being called from the predator class 
+//Issue 1) Is compute utility correct to the class?????
+//Issue 2) Check if the correct inherited method is being called, possibly I would need to create a predator instance and call
+// the compute utility method and interact method from there
+	
+
+
+/*/
 void Fauna::update(std::vector<Organism*>& organismVector) {
     this->ageing(); // CHANGE TO DATE OF BIRTH 
     this->setEnergy(this->getEnergy() - this->getMetabolicRate());
@@ -237,7 +326,7 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
 //Issue 1) Is compute utility correct to the class?????
 //Issue 2) Check if the correct inherited method is being called, possibly I would need to create a predator instance and call
 // the compute utility method and interact method from there
-	
+	/*/
 
 
 

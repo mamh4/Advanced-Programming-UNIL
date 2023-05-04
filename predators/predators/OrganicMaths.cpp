@@ -24,7 +24,31 @@ float angle (Organism* target1 , Organism* target2) {
     float target2Norm ; 
     target1Norm = sqrt( l2NormSquared(target1) ); 
     target2Norm = sqrt( l2NormSquared(target2) ); 
+
+    float xcoord = target2->getPosX() - target1->getPosX(); 
+    float ycoord = target2->getPosY() - target1->getPosY(); 
+    float newNorm = sqrt (pow(xcoord, 2 ) + pow(ycoord, 2 )) ; 
+
+
+
+    if (newNorm == 0.0  ) {
+        return 0.0 ;
+    } 
+    else {
+            
+        float phi = acos(xcoord / newNorm);
+        if (ycoord >=0 ){ 
+                return phi ; 
+        }
+        else {
+                return 2*M_PI - phi ; 
+        }
+    }
+ /*/
+    if ()
     if ( target1Norm != 0 and  target2Norm != 0 ){
+        return acos( ( target2->getPosX() - target1->getPosX() + target1->getPosY()*target2->getPosY()) / (1.0 * target1Norm * target2Norm));
+
         return acos( (target1->getPosX() *target2->getPosX() + target1->getPosY()*target2->getPosY()) / (1.0 * target1Norm * target2Norm));
     }
     else if  ( target1Norm != 0 ){
@@ -36,15 +60,22 @@ float angle (Organism* target1 , Organism* target2) {
     else {
         return 0; 
     }
+    /*/
 }
 
 // acos gives in 0 pi range 
 int angleSorting (float angle) {
     int angleSectionCounter;
     angleSectionCounter=0; 
-    while  (not ( (angle >= (angleSectionCounter *1.0)*2*M_PI/angleSectionNumber ) and (angle <  (angleSectionCounter *1.0 + 1.0)*2*M_PI/angleSectionNumber ) ) ){
+    float adjustedAngle ; 
+    adjustedAngle = angle ; 
+    while (adjustedAngle < 0 ) {
+        adjustedAngle += 2* M_PI ; 
+    }
+    while  (not ( (adjustedAngle >= (angleSectionCounter *1.0)*2*M_PI/angleSectionNumber ) and (adjustedAngle <  (angleSectionCounter *1.0 + 1.0)*2*M_PI/angleSectionNumber ) ) ){
         angleSectionCounter++ ; 
     }
+    angleSectionCounter = angleSectionCounter % angleSectionNumber ; 
     return angleSectionCounter; 
 }
 
