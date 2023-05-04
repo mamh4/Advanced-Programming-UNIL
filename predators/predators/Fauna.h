@@ -19,6 +19,8 @@ public:
         int mySpeed, float myHungerSensitivity,
         float myMetabolicRate, float myLustLevel, float myVisionRange);
 
+    virtual ~Fauna() {};
+
     int getSpeed();
 
     void setSpeed();

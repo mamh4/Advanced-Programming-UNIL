@@ -97,6 +97,7 @@ void Predator::update(std::vector<Organism*>& organismVector) {
 float Predator::computeUtility(float distanceSquared, Organism* targetOrganism) {
 	if (distanceSquared == 0.0) {
 		//TO DO GET UTILITY OF INTERACTION.
+
 		return 5.0;
 	}
 	else {
@@ -166,9 +167,10 @@ void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organi
 			int visionRange = rand() % 100 + 1;
 			this->setEnergy(this->getEnergy() - baseReproductionEnergyCost);
 			targetOrganism->setEnergy(targetOrganism->getEnergy() - baseReproductionEnergyCost);
-			// CHECK EMPTY SPACE 
+			// CHECK EMPTY SPACE
+			//q:How to make sure that the offspring will appear in my sf::window?
 			Predator* offspring = new Predator(700.0, 515.0, 10.0, 1, false, 60, 10, 1, 0, 600);//Above parameters cause program failure!
-			organismVector.push_back(offspring);
+			//organismVector.push_back(offspring);
 		}
 	}
 }

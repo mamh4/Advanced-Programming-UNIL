@@ -22,12 +22,12 @@ int main()
 
 
     //CAREFUL!! Adjusting some of the parameters causes failuer in the program!!!!!!!!!
-    Predator* myPredator = new Predator(700, 510, 10, 5, true, 6, 10, 1, 50, 600);
+    Predator* myPredator = new Predator(700, 500, 10, 50000, true, 1, 10, 1, 50, 100);
     organismVector.push_back(myPredator);
-    Predator* myPredator2 = new Predator(700, 505, 10, 5, false, 6, 10, 1, 50, 600);
+    Predator* myPredator2 = new Predator(700, 540, 10, 50000, false, 1, 10, 1, 50, 100);
     organismVector.push_back(myPredator2);
 
-    Prey* myPrey = new Prey(815, 100, 20, 100, true, 1000, 10, 15, 50, 50,10);
+    Prey* myPrey = new Prey(815, 100, 20, 5000, true, 1, 10, 15, 50, 50,10);
     organismVector.push_back(myPrey);
 
     Flora* myFlora = new Flora(10,20,5,100,2);
@@ -89,6 +89,7 @@ int main()
     // Set the movement speed of the pixel
     float moveSpeed = 1.0f;
 
+    srand(time(NULL));
     // start the game loop
     while (window.isOpen()) {
         // handle events
@@ -99,13 +100,14 @@ int main()
         }
 
         
-        for (Organism* organism : organismVector) {
-            organism->update(organismVector);
-            // move the organisms up
-            //sf::Vector2f position(organism->getPosX(), organism->getPosY());// = circle->getShape().getPosition();
-            //organism->setPosX(position.x);
-            //organism->setPosY(position.y-5);
-        }
+        //for (Organism* organism : organismVector) {
+           // organism->update(organismVector);//make update return the number of added fauna so that we can 
+          //                                   //increment the iterator by that amount
+        //}
+        for (int i = 0; i < organismVector.size(); i++) {
+
+			organismVector.at(i)->update(organismVector);
+		}
 
         // clear the window
         window.clear(sf::Color::White);

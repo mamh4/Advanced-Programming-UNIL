@@ -54,7 +54,7 @@ float proximityEffectFactor (float lowerRange, float upperRange, float shiftFact
         return 1.0; 
     }
     else if (evaluationPoint > upperRange ) {
-        return 1.0; 
+        return 0.0; 
     }
     else {
     return 0.5 - 0.5*(atan(10 *(-0.5 + pow((( evaluationPoint - lowerRange )/ (upperRange - lowerRange) ), shiftFactor)  ) ) /(M_PI*0.43717)) ;  

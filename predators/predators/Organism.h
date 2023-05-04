@@ -16,7 +16,7 @@ protected:
 public:
     Organism(float myPosX, float myPosY, float myRadius,float myEnergy);
 
-    ~Organism() {};
+    virtual ~Organism() {};
 
     float getPosX();
 

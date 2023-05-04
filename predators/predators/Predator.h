@@ -8,6 +8,8 @@ class Predator : public Fauna
 			int mySpeed, float myHungerSensitivity,
 			float myMetabolicRate, float myLustLevel, float myVisionRange);
 
+		virtual ~Predator() {};
+
 		virtual float computeUtility(float distance, Organism* organism);
 
 		virtual void interact(Organism* organism, std::vector<Organism*>& organismVector);

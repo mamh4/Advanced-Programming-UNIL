@@ -79,7 +79,6 @@
 
     //TODO implement this function
     void Fauna::dies(std::vector<Organism*>& organismVector){
-
         auto it = std::remove(organismVector.begin(), organismVector.end(), this);
         organismVector.erase(it, organismVector.end());
         delete this;
@@ -141,7 +140,7 @@ void Fauna::move(int directionIndicator){
 
 void Fauna::ageing() {
     age ++ ;
-    this->setRadius(this->getRadius() + 1);
+    this->setRadius(this->getRadius() + 0.1);
 }
 
 void Fauna::update(std::vector<Organism*>& organismVector) {
@@ -149,11 +148,14 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
     this->setEnergy(this->getEnergy() - this->getMetabolicRate());
     // with arbitrary 100 seconds (6000 frames ) max lifespan, arbitrary function with certain death at 6000 
     //Maybe separate function
+    //a:delete the pointer
+    //Predator* offspring = new Predator(79.0, 515.0, 10.0, 1, false, 60, 10, 1, 0, 600);//Above parameters cause program failure!
+    
     if ((1.0 * (rand() % 100) < (100 * std::pow(((1 + this->getAge()) / 6000), 10)) or (this->getEnergy() <= 0))) {
         this->dies(organismVector);
     }
-
-    for (int k = 1; k <= this->getSpeed(); k++) { // BEGINING OF TURN LOOP 
+    
+    for (int k = 0; k <= this->getSpeed(); k++) { // BEGINING OF TURN LOOP 
 
         float distSquare;
         float angleBetween;
@@ -165,6 +167,8 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
 
         Organism* maxInteractionUtilityTarget = nullptr;
         int maxDirectionalUtilityTarget = 0;
+
+        int currentIntegerDirection =0 ; 
 
         std::vector<float> directionalUtility(angleSectionNumber, 0.0);
         std::vector<Organism*> possibleCollisions;
@@ -192,14 +196,19 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
                     //}
                 }
                 else {
-                   // currentUtility = computeUtility(distSquare, organismVector.at(i));
-                   // angleBetween = angle(organismVector.at(i), this);
-                    //directionalUtility[angleSorting(angleBetween)] += currentUtility;
+                    currentUtility = computeUtility(distSquare, organismVector.at(i));
+                    angleBetween = angle(organismVector.at(i), this);
+                    currentIntegerDirection = angleSorting(angleBetween); 
+                    directionalUtility[currentIntegerDirection] += currentUtility;
                     //Prototype for directional gradient of utility increase / MAYBE CHANGE DECREASE RATE ?   
-                    //for (int l = 1; l <= (angleSectionNumber / 4); l++) {
-                     //   directionalUtility[((angleSorting(angleBetween) + l) % 12)] += (currentUtility / (l + 1));
-                      //  directionalUtility[((angleSorting(angleBetween) - l) % 12)] += (currentUtility / (l + 1));
-                    //}
+                    for (int l = 1; l <= (angleSectionNumber / 4); l++) {
+                        int testInteger =0 ;
+                        testInteger = directionalUtility.size() ; 
+                        testInteger = (((currentIntegerDirection + l) % angleSectionNumber)) ; 
+                        directionalUtility[((currentIntegerDirection + l) % angleSectionNumber)] +=  (currentUtility / (l + 1));
+                        testInteger = (((currentIntegerDirection - l + angleSectionNumber) % angleSectionNumber)) ; 
+                        directionalUtility[((currentIntegerDirection - l + angleSectionNumber ) % angleSectionNumber)] +=   (currentUtility / (l + 1));
+                    }
                 }
             }
         }
@@ -219,9 +228,11 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
             this->move(maxDirectionalUtilityTarget);
         }
         else {
-            this->interact(maxInteractionUtilityTarget, organismVector);
+            //std::cout << "Interaction" << std::endl;
+            //this->interact(maxInteractionUtilityTarget, organismVector);
         }
     }
+
 }////VERY IMPORTANT: interact is not being called from the predator class 
 //Issue 1) Is compute utility correct to the class?????
 //Issue 2) Check if the correct inherited method is being called, possibly I would need to create a predator instance and call
