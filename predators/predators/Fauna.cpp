@@ -199,13 +199,13 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
                         < std::pow((this->getRadius() + possibleCollisions.at(i)->getRadius()), 2)) {
                         //angleBetween = angle(possibleCollisions.at(i), this);//was missing
                         //directionalUtility[angleSorting(angleBetween)] = -10000;
-                        directionalUtility.at(j) = -10000.0;
+                        directionalUtility.at(j) = -1000000.0;
                     }
                 }
             }
             for (int i = 0; i < directionalUtility.size(); i++) {
                 if ( ( this->getPosX()  + stepSize * cos(2 * M_PI * (i + 0.5) / directionalUtility.size()) > 1000 ) or ( this->getPosX()  + stepSize * cos(2 * M_PI * (i + 0.5) / directionalUtility.size()) < 0 ) or ( this->getPosY()  + stepSize * sin(2 * M_PI * (i + 0.5) / directionalUtility.size()) > 1000 ) or ( this->getPosY()  + stepSize * sin(2 * M_PI * (i + 0.5) / directionalUtility.size()) < 0  )  ) {
-                    directionalUtility.at(i) = -10000.0;
+                    directionalUtility.at(i) = -1000000.0;
                 }
             }
 

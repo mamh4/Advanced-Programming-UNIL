@@ -106,8 +106,9 @@ void Prey::computeUtility(float distanceSquared, Organism* targetOrganism, std::
             distanceToInterraction = sqrt(distanceSquared) - this->getRadius() - targetOrganism->getRadius();
             float fearFactor; 
             fearFactor = proximityEffectFactor(0, 1000, this->getPredatorAversion(), distanceToInterraction);
-            currentUtility = -1000.0 * fearFactor ; 
-            directionalUtility[currentIntegerDirection] += currentUtility;
+            currentUtility = 1000.0 * fearFactor ; 
+            int oppositeCurrentIntegerDirection = ( ( (angleSectionNumber/2) + currentIntegerDirection ) % angleSectionNumber ) ; 
+            directionalUtility[oppositeCurrentIntegerDirection] += currentUtility;
             //	if ( directionalUtility[currentIntegerDirection] > maxDirectionalUtility ) { 
             //		maxDirectionalUtility = directionalUtility[currentIntegerDirection] ; 
             //		maxDirectionalUtilityTarget = currentIntegerDirection ; 
@@ -115,10 +116,10 @@ void Prey::computeUtility(float distanceSquared, Organism* targetOrganism, std::
             for (int l = 1; l <= (angleSectionNumber / 4); l++) {
                                     int testInteger =0 ;
                                     testInteger = directionalUtility.size() ; 
-                                    testInteger = (((currentIntegerDirection + l) % angleSectionNumber)) ; 
-                                    directionalUtility[((currentIntegerDirection + l) % angleSectionNumber)] +=  (currentUtility / (l + 1));
-                                    testInteger = (((currentIntegerDirection - l + angleSectionNumber) % angleSectionNumber)) ; 
-                                    directionalUtility[((currentIntegerDirection - l + angleSectionNumber ) % angleSectionNumber)] +=   (currentUtility / (l + 1));
+                                    testInteger = (((oppositeCurrentIntegerDirection + l) % angleSectionNumber)) ; 
+                                    directionalUtility[((oppositeCurrentIntegerDirection + l) % angleSectionNumber)] +=  (currentUtility / (l + 1));
+                                    testInteger = (((oppositeCurrentIntegerDirection - l + angleSectionNumber) % angleSectionNumber)) ; 
+                                    directionalUtility[((oppositeCurrentIntegerDirection - l + angleSectionNumber ) % angleSectionNumber)] +=   (currentUtility / (l + 1));
                                 
 	        }
             currentUtility = maxInteractionUtility -10 ; // disqualifying interaction as an option  
