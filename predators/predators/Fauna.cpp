@@ -19,6 +19,7 @@
         metabolicRate = myMetabolicRate;
         lustLevel = myLustLevel;
         visionRange = myVisionRange;
+        fertile = false;
     }
 
     int Fauna::getSpeed() {
@@ -129,7 +130,7 @@ void Fauna::move(int directionIndicator){
     
     //std::cout << "my speed is " << Fauna::getSpeed() << "my coordinates are: " << Fauna::getPosX() << " "<< Fauna::getPosY << std::endl;
     float energyCostOfMovement; 
-    energyCostOfMovement = 5.0 ; 
+    energyCostOfMovement = 1.0 ; 
     // as Class constant later on ? 
     //Fauna::getShape().setPosition(Fauna::getShape().getPosition().x + stepSize * cos((directionIndicator + 0.5) * M_PI * 2 / 12),
     //    Fauna::getShape().getPosition().y + stepSize * sin((directionIndicator + 0.5) * M_PI * 2 / 12)); 
@@ -140,7 +141,7 @@ void Fauna::move(int directionIndicator){
 
 void Fauna::ageing() {
     age ++ ;
-    this->setRadius(this->getRadius() + 0.1);
+    this->setRadius(this->getRadius() + 0.001);
 }
 
 
@@ -157,16 +158,25 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
         this->dies(organismVector);
     }
     else {
+        int minFertilityAge = 50 ; 
+        int maxFertilityAge = 100 ; 
+        if (( 1.0 * (rand() % 100) < std::max( 0.0 , (100 * std::pow((( this->getAge() - minFertilityAge) / (maxFertilityAge - minFertilityAge )), 10) )) )  and not this->getFertile() ) {
+            this->setFertile(true) ; 
+            std::cout << "Fertility Unlocked " << std::endl; 
+        }
         for (int k = 0; k <= this->getSpeed(); k++) { // BEGINING OF TURN LOOP 
 
             float distSquare;
             float angleBetween = 0.0;
 
             float maxDirectionalUtility = 0;
-            float maxInteractionUtility = 0;
+            //float maxInteractionUtility = -1000.0;
+            float maxInteractionUtility = 0.0;
 
             Organism* maxInteractionUtilityTarget = nullptr;
             int maxDirectionalUtilityTarget = 0;
+
+            
 
 
             std::vector<float> directionalUtility(angleSectionNumber, 0.0);
@@ -199,27 +209,35 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
                 }
             }
 
-            //std::cout << " my directional utility is: " ; 
-            //for (int i = 0; i < directionalUtility.size(); i++) {
-             //   std::cout << directionalUtility.at(i) << "     " ; 
-            //}
-            //std::cout << " " << std::endl;
+            std::cout << " my directional utility is: " ; 
+            for (int i = 0; i < directionalUtility.size(); i++) {
+                std::cout << directionalUtility.at(i) << "     " ; 
+            }
+            std::cout << " " << std::endl;
 
             maxDirectionalUtility = directionalUtility.at(0); 
             maxDirectionalUtilityTarget = 0 ; 
+            bool noDirectionalUtility= true ; 
             for (int i = 0; i < directionalUtility.size(); i++) {
+                if (directionalUtility.at(i) != 0.0 ){
+                    noDirectionalUtility = false ; 
+                } 
                 if (maxDirectionalUtility < directionalUtility.at(i)){
                     maxDirectionalUtility = directionalUtility.at(i); 
                     maxDirectionalUtilityTarget = i ; 
                 }
             }
 
-            if (maxDirectionalUtility > maxInteractionUtility) {
-                this->move(maxDirectionalUtilityTarget);
+            if (maxDirectionalUtility >= maxInteractionUtility) {
+                if (not noDirectionalUtility) {
+                    this->move(maxDirectionalUtilityTarget);
+                }
             }
             else {
                 //std::cout << "Interaction" << std::endl;
-                //this->interact(maxInteractionUtilityTarget, organismVector);
+                //if (maxInteractionUtilityTarget != nullptr) {
+                this->interact(maxInteractionUtilityTarget, organismVector);
+                //} 
             }
         }
     }

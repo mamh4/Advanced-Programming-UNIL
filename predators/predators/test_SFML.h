@@ -1,5 +1,4 @@
 #pragma once
-class test_SFML
-{
-};
+const int windowWidth = 1280;
+const int windowHeight = 720;
 

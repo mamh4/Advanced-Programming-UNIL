@@ -2,6 +2,8 @@
 #include <SFML/Graphics.hpp>
 #include <typeinfo>
 #include <iostream>
+#include "test_SFML.h"
+
 class Organism
 {
 private:

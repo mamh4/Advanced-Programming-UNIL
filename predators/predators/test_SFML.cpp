@@ -5,6 +5,7 @@
 #include "Flora.h"
 #include <iostream>
 #include <unordered_set>
+#include <string>
 
 
 //TODO: Decide on intialisation in main class of two vectors Fauna and Flora and then we loop through all Faunas, then all Floras? I think so
@@ -19,7 +20,9 @@ int main()
 
     std::vector<Organism*> organismVector;
     //store positions to decide where to place new predators, 
-    std::vector<float*> distances;
+    //std::vector<float*> distances;
+
+    
 
     /////////WIP
     /*
@@ -55,25 +58,34 @@ int main()
     ///////////////////////
 
     //CAREFUL!! Adjusting some of the parameters causes failuer in the program!!!!!!!!!
-    Predator* myPredator = new Predator(500, 500, 10, 50000, true, 1, 10, 1, 50, 700);
-    organismVector.push_back(myPredator);
-    Predator* myPredator2 = new Predator(475, 596, 10, 50000, false, 1, 10, 1, 50, 700);
-    organismVector.push_back(myPredator2);
+    
+   // Predator* myPredator = new Predator(500, 500, 5, 750, true, 1, 10, 1, 50, 400);
+   // organismVector.push_back(myPredator);
+   // Predator* myPredator2 = new Predator(475, 596, 5, 750, false, 1, 10, 1, 50, 400);
+   // organismVector.push_back(myPredator2);
 
-    Predator* myPredator3 = new Predator(500, 290, 10, 10000000, false, 1, 10, 1, 50, 700);
+    Predator* myPredator3 = new Predator(500, 290, 5, 750, false, 1, 10, 1, 50, 400);
     organismVector.push_back(myPredator3);
-
-    Prey* myPrey = new Prey(30, 40, 20, 5000, true, 1, 10, 15, 50, 50,10);
+    
+    Prey* myPrey = new Prey(400, 460, 10, 750, true, 2, 10, 1, 50, 900,1);
     organismVector.push_back(myPrey);
 
-    Flora* myFlora = new Flora(500,190,10,100,2);
+    Flora* myFlora = new Flora(500,190,10,1000,2);
     organismVector.push_back(myFlora);
 
-    
 
     //std::cout << organismVector.at(0)->getType() << std::endl;
     /*
     for (int i = 0; i < numberOfPredators; i++) {
+        bool validRespawnPlace = false;
+        while (not validRespawnPlace){
+            posX = rand()
+            posY = rand()
+            distance = l2distance(posX, posY, predatorVector.at(i)->getPosX(), predatorVector.at(i)->getPosY());
+
+        }
+
+
         float posX = static_cast<float>(rand() % 1000);
         float posY = static_cast<float>(rand() % 1000);
         float radius = static_cast<float>(rand() % 10 + 5);
@@ -125,6 +137,16 @@ int main()
     // Set the movement speed of the pixel
     float moveSpeed = 1.0f;
 
+   /* sf::Text populationDisplay;
+    populationDisplay.setCharacterSize(24);
+    populationDisplay.setPosition(500, 1000);
+    populationDisplay.setFillColor(sf::Color::Red);
+    populationDisplay.setString("Population size: ");
+
+    std::string populationDisplayText ; 
+*/
+
+
     srand(time(NULL));
     // start the game loop
     while (window.isOpen()) {
@@ -152,6 +174,13 @@ int main()
         for (Organism* organism : organismVector) {
             window.draw(organism->getShape());
         }
+
+        std::cout << "population size : " << organismVector.size() << std::endl; 
+
+       // populationDisplayText = "Total population: " + organismVector.size(); 
+
+        //populationDisplay.setString(populationDisplayText);
+        //window.draw(populationDisplay); 
 
         // display the window
         window.display();

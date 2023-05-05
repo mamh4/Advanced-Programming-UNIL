@@ -123,9 +123,10 @@ void Predator::computeUtility(float distanceSquared, Organism* targetOrganism, s
             currentUtility = std::min( myPrey->getEnergy(), energyAbsorbtionSpeed); 
 		}
 		else if (Predator* myPredator = dynamic_cast<Predator*>(targetOrganism)) {
-			if (this->getSex() != myPredator->getSex()) {
+			// CHECK 
+			if ((this->getSex() != myPredator->getSex()) and this->getFertile() and myPredator->getFertile() and (myPredator->getEnergy() > baseReproductionEnergyCost)) {
 
-                if (this->getEnergy() < baseReproductionEnergyCost){
+                if (this->getEnergy() <= baseReproductionEnergyCost){
                     // ARBITRARY 250
                     currentUtility = - baseReproductionEnergyCost; 
                 } 
@@ -135,11 +136,11 @@ void Predator::computeUtility(float distanceSquared, Organism* targetOrganism, s
                 }
 			}
 		}
-        else if (Flora* myFlora = dynamic_cast<Flora*>(targetOrganism)) {
+		else if (Flora* myFlora = dynamic_cast<Flora*>(targetOrganism)) {
 		}
         //currentUtility = computeUtility(0.0, organismVector.at(i));  NEEDS TO BE IMPLEMENTED 
         // Arbitrarily distance 0.0 to transmit that it is utility of an interaction
-        if (currentUtility > maxInteractionUtility) { // HANDLE PREDATOR SEEN BY PREY EXCEPTION HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    if (currentUtility > maxInteractionUtility) { // HANDLE PREDATOR SEEN BY PREY EXCEPTION HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             maxInteractionUtility = currentUtility;
             maxInteractionUtilityTarget = targetOrganism;
         }
@@ -161,8 +162,8 @@ void Predator::computeUtility(float distanceSquared, Organism* targetOrganism, s
 			// effect of size or energy of target prey ? 
 		}
 		else if (Predator* myPredator = dynamic_cast<Predator*>(targetOrganism)) {
-			if (this->getSex() != myPredator->getSex()) {
-                if (not this->getEnergy() < baseReproductionEnergyCost){
+			if ((this->getSex() != myPredator->getSex()) and this->getFertile() and myPredator->getFertile() and (myPredator->getEnergy() > baseReproductionEnergyCost)) {
+                if (not this->getEnergy() <= baseReproductionEnergyCost){
                     float lustFactor;
 				    //1000 acts as placeholder for amount of energy at which the weight of sex drive is total 
 				    //lustFactor =  1 - proximityEffectFactor(0, 1000, Predator::getLustLevel(), Predator::getEnergy());
@@ -256,26 +257,64 @@ void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organi
 		this->setEnergy(this->getEnergy() + absorbedEnergy);
 	}
 	else if (Predator* myPred = dynamic_cast<Predator*>(targetOrganism)) {
-		if (myPred->getAge() > 30) {//NEW!! Age must be greater than 30 to reproduce
+			//NEW!! Age must be greater than 30 to reproduce
+		std::cout << "Reproduction just happened " << std::endl; 
 			float baseReproductionEnergyCost;
 			baseReproductionEnergyCost = 250.0;
-			//TODO Adjust parameters
-			float posX = static_cast<float>(rand() % 1000);
-			float posY = static_cast<float>(rand() % 1000);
-			float radius = static_cast<float>(rand() % 10 + 5);
-			float energy = rand() % 100 + 1;
-			bool sex = rand() % 2 == 0 ? true : false;
-			int speed = rand() % 10 + 1;
-			int hungerLevel = rand() % 100 + 1;
-			float metabolicRate = static_cast<float>(rand() % 10 + 1) / 10.0f;
-			int lustLevel = rand() % 100 + 1;
-			int visionRange = rand() % 100 + 1;
+			float radius = 5;//static_cast<float>(rand() % 10 + 5);
+			float energy = 100;//rand() % 100 + 1;
+			bool sex = false;//rand() % 2 == 0 ? true : false;
+			int speed = 3000;//rand() % 10 + 1;
+			float hungerSensitivity = 1;//rand() % 100 + 1;
+			float metabolicRate = 1;//static_cast<float>(rand() % 10 + 1) / 10.0f;
+			int lustLevel = 50;//rand() % 100 + 1;
+			int visionRange = 300; //rand() % 100 + 1;
 			this->setEnergy(this->getEnergy() - baseReproductionEnergyCost);
 			targetOrganism->setEnergy(targetOrganism->getEnergy() - baseReproductionEnergyCost);
 			// CHECK EMPTY SPACE
+			float childRadius = 5.0 ; 
+			float posXBirthPlace = (this->getPosX() + targetOrganism->getPosX() )/ 2.0  ; // avg of parents position 
+			float posYBirthPlace = (this->getPosY() + targetOrganism->getPosY() )/ 2.0  ; // avg of parents position 
+			bool validBirthPlace = false; 
+			float posXProspectiveBirthPlace = posXBirthPlace; 
+			float posYProspectiveBirthPlace = posYBirthPlace; 
+			bool creatureCollision ;
+			bool wallCollision ; 
 
-			Predator* offspring = new Predator(700.0, 515.0, 10.0, 1, false, 60, 10, 1, 0, 600);//Above parameters cause program failure!
+			const int limitNumberOfSteps = 20 ; 
+			int numberOfSteps = 1;
+			while ( (numberOfSteps <= limitNumberOfSteps ) and not validBirthPlace ) {
+				int newAngleSectionNumber ; 
+				int j = 0 ; 
+				newAngleSectionNumber = static_cast<int> ((  M_PI * limitNumberOfSteps * stepSize / childRadius )); 
+				while ( (j < newAngleSectionNumber ) and not validBirthPlace ) {
+					std::cout << " testing angle " << numberOfSteps << "at angle " << j << "out of "<< newAngleSectionNumber << std::endl;
+					// test location 
+					posXProspectiveBirthPlace = posXBirthPlace + numberOfSteps *stepSize *cos(2*M_PI* j / newAngleSectionNumber) ;
+					posYProspectiveBirthPlace = posYBirthPlace + numberOfSteps *stepSize *sin(2*M_PI* j / newAngleSectionNumber) ;
+					creatureCollision = false; 
+					wallCollision = false ; 
+				
+					if ( (posXProspectiveBirthPlace > 1000 ) or (posXProspectiveBirthPlace < 0 ) or (posYProspectiveBirthPlace > 1000 ) or (posYProspectiveBirthPlace < 0) ) {
+						wallCollision = true ; 
+					}
+					int k = 0 ;
+					while ( (k < organismVector.size() ) and not wallCollision and not creatureCollision ) {
+						creatureCollision =  (std::pow(posXProspectiveBirthPlace - organismVector.at(k)->getPosX() , 2) + std::pow(posYProspectiveBirthPlace - organismVector.at(k)->getPosY() , 2) ) < std::pow(childRadius + organismVector.at(k)->getRadius(), 2) ;
+						k++ ; 
+						if (creatureCollision) { std::cout << "COLLISION WITH CREATURE " << std::endl ; } 
+					}
+					validBirthPlace =( (not creatureCollision ) and (not wallCollision)) ; 
+					if (not validBirthPlace){
+						std::cout << " there is a collision " << std::endl ; 
+					}   
+					j ++; 
+				} 
+				numberOfSteps++ ; 
+			}
+			
+			Predator* offspring = new Predator(posXProspectiveBirthPlace, posYProspectiveBirthPlace,
+				childRadius,energy, sex, speed, hungerSensitivity, metabolicRate, lustLevel, visionRange);//Above parameters cause program failure!
 			organismVector.push_back(offspring);
-		}
 	}
 }

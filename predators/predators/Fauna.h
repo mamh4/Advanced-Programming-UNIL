@@ -11,6 +11,7 @@ private:
     float metabolicRate;
     float lustLevel;
     float visionRange;
+    bool fertile;
 protected:
     static const int rangeOfInteraction = 2;
     //static const float stepSize = 1.0;
@@ -52,6 +53,13 @@ public:
     void move(int direction);
 
     void ageing();
+
+    bool getFertile() {
+        return this->fertile;
+    }
+    void setFertile(bool fertile){
+        this->fertile = fertile;
+        }
 
     virtual void update(std::vector<Organism*>& organismVector);
 
