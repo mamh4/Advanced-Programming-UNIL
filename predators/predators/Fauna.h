@@ -67,6 +67,7 @@ public:
 
     virtual void dies(std::vector<Organism*>& organismVector);
 
-
 };
 
+
+    float geneticEngine (std::string speciesName, std::string traitName, float parent1TraitValue, float parent2TraitValue); 

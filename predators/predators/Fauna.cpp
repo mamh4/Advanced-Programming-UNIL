@@ -4,9 +4,11 @@
 #include "Predator.h"
 #include "Prey.h"
 #include "Gameboard.h"
-
-
+#include "GeneticIntervals.h"
 #pragma once
+
+
+
 
     Fauna::Fauna(float myPosX, float myPosY, float myRadius, float myEnergy,bool mySex,
         int mySpeed, float myHungerSensitivity, float myMetabolicRate,
@@ -85,7 +87,8 @@
         auto it = std::remove(organismVector.begin(), organismVector.end(), this);
         organismVector.erase(it, organismVector.end());
         delete this;
-        numberOfPredators-=1;
+
+        numberOfPredators += 1;
     }
 
     //void Fauna::update(std::vector<Organism*> organismVector) {
@@ -363,5 +366,88 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
 // the compute utility method and interact method from there
 	/*/
 
+/*/
+struct GeneticInterval { 
+    float SpeedRange [4] ; 
+    float HungerSensitivityRange [4] ; 
+    float MetabolicRateRange[4];
+    float LustLevelRange[4];
+    float VisionRangeRange[4];
+    float PredatorAversionRange[4];
+};
+/*/
+/*
+float geneticsEngine(float parent1Trait , float parent2Trait, string traitName, sting faunaType){
+
+    isPrey = (faunaType == "Prey");
+    if (traitName == "Speed" ){
+        if (isPrey){
+            traitRange = 
+        }
+        else{
+
+        }
+    }
+        if (traitName == "Speed" ){
+        
+    }
+    return 0.0 ; 
+}
+
+*/
 
 
+float geneticEngine (std::string speciesName, std::string traitName, float parent1TraitValue, float parent2TraitValue) {
+    float offspringTraitValue = 0.0 ; 
+
+    bool speciesFound = false ; 
+    bool traitFound = false ; 
+
+    std::vector<float> geneticTraitInterval; 
+
+    int geneticRand = 0 ; 
+
+    float parentsTraitValues [2] = {parent1TraitValue, parent2TraitValue}; 
+    
+    int i = 0 ; 
+    while  (i < geneticDatabase.size() and not speciesFound) {
+        if (geneticDatabase[i].speciesName == speciesName){
+            speciesFound = true ; 
+            int j = 0 ; 
+            while (j < geneticDatabase[i].geneticTraitIntervals.size() and not traitFound) {
+                if (geneticDatabase[i].geneticTraitIntervals[j].traitName == traitName) {
+                    traitFound = true ; 
+                    geneticTraitInterval = geneticDatabase[i].geneticTraitIntervals[j].traitRange; // = geneticDatabase[i].geneticTraitIntervals[j].traitRange ; 
+                }
+                j++ ;
+            }
+        }
+        i++ ; 
+    }
+
+    if (traitFound and speciesFound){
+        int alleleCounter = 0 ; 
+        for(float parentTraitValue : parentsTraitValues){
+            if (parentTraitValue >= geneticTraitInterval[0] and parentTraitValue < geneticTraitInterval[1] ){
+                
+            }
+            else if (parentTraitValue >= geneticTraitInterval[1] and parentTraitValue < geneticTraitInterval[2]) {
+                geneticRand = rand() % 2 ; 
+                if (geneticRand == 1 ) {
+                    alleleCounter ++ ; 
+                }
+            }
+            else if (parentTraitValue >= geneticTraitInterval[2] and parentTraitValue < geneticTraitInterval[3]) {
+                alleleCounter ++ ; 
+            }
+        }
+        geneticRand = (rand() % 100); 
+        std::cout << "alleleCounter is equal to " << alleleCounter << "corresponding to an interval between " << geneticTraitInterval[alleleCounter] << " and " << geneticTraitInterval[alleleCounter + 1] << "and random increment is " << geneticRand << " percent " <<  std::endl; 
+        //offspringTraitValue = geneticTraitInterval[alleleCounter] + (geneticTraitInterval[alleleCounter + 1] - geneticTraitInterval[alleleCounter]) * geneticRand / 100.0;
+        offspringTraitValue = geneticTraitInterval[alleleCounter] + (geneticTraitInterval[alleleCounter + 1] - geneticTraitInterval[alleleCounter]) * (0.5 + 0.5*std::pow(-1 + 2* geneticRand / 100.0,5 ));
+
+        //FOR NOW UNIFORMLY, but can change distribution if fun, concentrated arround middle of the interval ? Making each of the 3 categories more distinct 
+    }
+
+    return offspringTraitValue ; 
+}

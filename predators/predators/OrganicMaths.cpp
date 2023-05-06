@@ -3,7 +3,6 @@
 #include "OrganicMaths.h"
 #include <SFML/Graphics.hpp>
 
-
 float distanceSquared (Organism* target1 , Organism* target2 ) {
     return std::pow(target1->getPosX() - target2->getPosX(), 2) + std::pow(target1->getPosY() - target2->getPosY(), 2);
 //    return std::pow(target1->getShape().getPosition().x - target2->getShape().getPosition().x,2) + std::pow(target1->getShape().getPosition().y - target2->getShape().getPosition().y,2);

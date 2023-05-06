@@ -4,24 +4,28 @@
 #include "Prey.h"
 #include "Flora.h"
 #include <iostream>
-#include <unordered_set>
 #include <string>
+#include "OrganicMaths.h"
+#include <chrono>
+#include <ctime>   
 
-int numberOfPrey = 0;
 int numberOfPredators = 0;
+int numberOfPrey = 0;
 int numberOfFlora = 0;
-
 //TODO: Decide on intialisation in main class of two vectors Fauna and Flora and then we loop through all Faunas, then all Floras? I think so
 //TODO: Implement update for Prey and Flora
 
 int main()
 {
+    std::time_t seed = std::time(nullptr);
+
+    srand(seed);
     //test age of predator any prey make sure they inherit it and the value is 0
+    float geneticTest=0.0 ; 
+    geneticTest= geneticEngine("Prey", "Speed", 2.0 , 3.0) ; 
 
 
     std::vector<Organism*> organismVector;
-
-
 
 
     //Predator* myPredator = new Predator(500, 500, 5, 750, true, 1, 10, 1, 50, 400);
@@ -29,8 +33,8 @@ int main()
     //Predator* myPredator2 = new Predator(475, 596, 5, 750, false, 1, 10, 1, 50, 800);
     //organismVector.push_back(myPredator2);
 
-    Predator* myPredator3 = new Predator(500, 290, 5, 750, true, 1, 10, 1, 50, 800);
-    organismVector.push_back(myPredator3);
+    //Predator* myPredator3 = new Predator(500, 290, 5, 750, true, 1, 10, 1, 50, 800);
+    //organismVector.push_back(myPredator3);
 
     Prey* myPrey = new Prey(400, 460, 7, 900, true, 2, 10, 0.1, 50, 900, 1);
     organismVector.push_back(myPrey);
@@ -38,13 +42,13 @@ int main()
     Prey* myPrey2 = new Prey(100, 400, 7, 750, false, 2, 10, 0.1, 50, 900, 1);
     organismVector.push_back(myPrey2);
 
-    Flora* myFlora = new Flora(500, 190, 10, 1000, 2);
+    Flora* myFlora = new Flora(500, 190, 10, 1000, 10);
     organismVector.push_back(myFlora);
 
     //Flora* myFlora2 = new Flora(900, 900, 10, 1000, 2);
     //organismVector.push_back(myFlora2);
 
-    srand(time(NULL));
+   
     /*
     //std::cout << organismVector.at(0)->getType() << std::endl;
     for (int i = 0; i < numberOfPredators; i++) {
@@ -125,10 +129,7 @@ int main()
     }
     */
     // Create a window
-    sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Prey vs Predator");
-
-    //text.setOrigin(0, 0);
-    
+    sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Prey vs Predator"); 
    
     //Predator myPredator(500, 500, 20, 100, true, 10, 5, 80, 1.5f, 50, 100);
 
@@ -138,17 +139,6 @@ int main()
     // Set the movement speed of the pixel
     float moveSpeed = 1.0f;
 
-    /* sf::Text populationDisplay;
-     populationDisplay.setCharacterSize(24);
-     populationDisplay.setPosition(500, 1000);
-     populationDisplay.setFillColor(sf::Color::Red);
-     populationDisplay.setString("Population size: ");
-
-     std::string populationDisplayText ;
- */
-
-
-    
     // start the game loop
     while (window.isOpen()) {
         // handle events
@@ -159,15 +149,13 @@ int main()
         }
 
 
-        //for (Organism* organism : organismVector) {
-           // organism->update(organismVector);//make update return the number of added fauna so that we can 
-          //                                   //increment the iterator by that amount
-        //}
         for (int i = 0; i < organismVector.size(); i++) {
 
             organismVector.at(i)->update(organismVector);
         }
+        
 
+        // Print statistics at the top left corner
         sf::Text text;
         sf::Font font;
         font.loadFromFile("aerial.ttf");
@@ -182,78 +170,17 @@ int main()
         // +std::to_string(organismVector.size()));
         text.setCharacterSize(14);
         text.setFillColor(sf::Color::Black);
-        //text.setPosition(0, 0);
         
 
         // clear the window
         window.clear(sf::Color::White);
 
-        // draw the circles
+        // draw the organisms and the text
         for (Organism* organism : organismVector) {
             window.draw(organism->getShape());
             window.draw(text);
         }
 
-        //std::cout << "population size : " << organismVector.size() << std::endl; 
-        //std::cout << organismVector.at(1)->getEnergy() << std::endl;
-       // populationDisplayText = "Total population: " + organismVector.size(); 
-
-        //populationDisplay.setString(populationDisplayText);
-        //window.draw(populationDisplay); 
-
-        // display the window
         window.display();
     }
 }
-/*
-
-    //----------------
-
-    // Create a window
-    sf::RenderWindow window(sf::VideoMode(1000, 1000), "Prey vs Predator");
-
-    //Predator myPredator(500, 500, 20, 100, true, 10, 5, 80, 1.5f, 50, 100);
-
-    // Set the frame rate to 60 frames per second
-    window.setFramerateLimit(60);
-
-    // Set the movement speed of the pixel
-    float moveSpeed = 1.0f;
-
-    while (window.isOpen())
-    {
-        // Check for events
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-            {
-                window.close();
-            }
-        }
-        for (int i = 0; i < organismVector.size(); i++) {
-            //NEED TO CHECK TYPE FIRST
-            organismVector.at(i)->getShape().setPosition(organismVector.at(i)->getShape().getPosition().x, organismVector.at(i)->getShape().getPosition().y);
-
-            // Move the circle up
-            organismVector.at(i)->getShape().move(0, -5);
-
-            // Clear the window
-            window.clear(sf::Color::White);
-
-            // Draw the circle
-            window.draw(organismVector.at(i)->getShape());
-
-            // Display the window
-            window.display();
-        }
-    }
-
-    return 0;
-}
-
-   */
-
-
-
-

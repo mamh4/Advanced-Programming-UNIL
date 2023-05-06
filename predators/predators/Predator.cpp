@@ -130,15 +130,29 @@ void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organi
 		float baseReproductionEnergyCost;
 		baseReproductionEnergyCost = 250.0; 
 		float energy = 500;//rand() % 100 + 1; 2* BASEREPRODZCTION COST 
-		bool sex = false;//rand() % 2 == 0 ? true : false;
+		bool sex; //= false;//rand() % 2 == 0 ? true : false;
+
+		int randomSexDetermination ; 
+		randomSexDetermination = rand() % 2 ; 
+		sex = (randomSexDetermination== 0 ); 
+
 		int speed = 1;//rand() % 10 + 1;
-		float hungerSensitivity = 1;//rand() % 100 + 1;
+		speed = static_cast<int> (geneticEngine ("Predator", "Speed", this->getSpeed(), myPred->getSpeed() ))  ; 
+		std::cout << "Speed test genetics Engine " << speed << std::endl; 
+
+		float hungerSensitivity = 1;//rand() % 100 + 1
+		hungerSensitivity = geneticEngine ("Predator", "Hunger Sensitivity", this->getHungerSensitivity(), myPred->getHungerSensitivity() ); 
+		std::cout << "Hunger Sensitivity test genetics Engine " << hungerSensitivity << std::endl; 
+
 		float metabolicRate = 0.1;//static_cast<float>(rand() % 10 + 1) / 10.0f;
+		metabolicRate = geneticEngine ("Predator", "Metabolic Rate", this->getMetabolicRate(), myPred->getMetabolicRate() ); 
+		std::cout << "Metabolic Rate test genetics Engine " << metabolicRate << std::endl; 
+
 		int lustLevel = 50;//rand() % 100 + 1;
 		int visionRange = 300; //rand() % 100 + 1;
 		float predatorAversion = 1;//static_cast<float>(rand() % 10 + 1) / 10.0f;
 		this->setEnergy(this->getEnergy() - baseReproductionEnergyCost);
-		targetOrganism->setEnergy(targetOrganism->getEnergy() - baseReproductionEnergyCost);  // MOVE TO AFTER CHEcK IF REPRO POSSIBLE 
+		targetOrganism->setEnergy(targetOrganism->getEnergy() - baseReproductionEnergyCost);  // MOVE TO AFTER CHEcK IF REPRO POSSIBLE ELSE ENERGY TAKEN WITH NO OFFSPRING 
 		// CHECK EMPTY SPACE
 		//float childRadius = 5.0;
 		//float posXBirthPlace = (this->getPosX() + targetOrganism->getPosX()) / 2.0; // avg of parents position 

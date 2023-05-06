@@ -146,21 +146,21 @@
     <ClInclude Include="Fauna.h" />
     <ClInclude Include="Flora.h" />
     <ClInclude Include="Gameboard.h" />
+    <ClInclude Include="GeneticIntervals.h" />
     <ClInclude Include="OrganicMaths.h" />
     <ClInclude Include="Organism.h" />
     <ClInclude Include="Predator.h" />
     <ClInclude Include="Prey.h" />
-    <ClInclude Include="test_SFML.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Fauna.cpp" />
     <ClCompile Include="Flora.cpp" />
     <ClCompile Include="Gameboard.cpp" />
+    <ClCompile Include="GeneticIntervals.cpp" />
     <ClCompile Include="OrganicMaths.cpp" />
     <ClCompile Include="Organism.cpp" />
     <ClCompile Include="Predator.cpp" />
     <ClCompile Include="Prey.cpp" />
-    <ClCompile Include="test_SFML.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

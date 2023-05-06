@@ -10,5 +10,7 @@ private:
 public:
 	Flora(float myPosX, float myPosY, float myRadius, float myEnergy, float myGrowthRate);
 
-	void update();
+	float getGrowthRate();
+
+	virtual void update(std::vector<Organism*>& organismVector);
 };
