@@ -2,9 +2,7 @@
 #include "Organism.h"
 #include "OrganicMaths.h"
 #include <SFML/Graphics.hpp>
-#define M_PI 3.14159265358979323846
-#define angleSectionNumber 12
-#define stepSize  1.0
+
 
 float distanceSquared (Organism* target1 , Organism* target2 ) {
     return std::pow(target1->getPosX() - target2->getPosX(), 2) + std::pow(target1->getPosY() - target2->getPosY(), 2);

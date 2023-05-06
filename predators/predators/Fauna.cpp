@@ -3,6 +3,7 @@
 #include "OrganicMaths.h"
 #include "Predator.h"
 #include "Prey.h"
+#include "Gameboard.h"
 
 
 #pragma once
@@ -84,6 +85,7 @@
         auto it = std::remove(organismVector.begin(), organismVector.end(), this);
         organismVector.erase(it, organismVector.end());
         delete this;
+        numberOfPredators-=1;
     }
 
     //void Fauna::update(std::vector<Organism*> organismVector) {
@@ -130,12 +132,12 @@ void Fauna::move(int directionIndicator){
     
     //std::cout << "my speed is " << Fauna::getSpeed() << "my coordinates are: " << Fauna::getPosX() << " "<< Fauna::getPosY << std::endl;
     float energyCostOfMovement; 
-    energyCostOfMovement = 1.0 ; 
+    energyCostOfMovement = 0.1 ; 
     // as Class constant later on ? 
     //Fauna::getShape().setPosition(Fauna::getShape().getPosition().x + stepSize * cos((directionIndicator + 0.5) * M_PI * 2 / 12),
     //    Fauna::getShape().getPosition().y + stepSize * sin((directionIndicator + 0.5) * M_PI * 2 / 12)); 
-    this->setPosX(this->getPosX() + stepSize * cos((directionIndicator + 0.5) * M_PI * 2 / 12));
-    this->setPosY(this->getPosY() + stepSize * sin((directionIndicator + 0.5) * M_PI * 2 / 12));
+    this->setPosX(this->getPosX() + stepSize * cos((directionIndicator + 0.5) * M_PI * 2 / angleSectionNumber));
+    this->setPosY(this->getPosY() + stepSize * sin((directionIndicator + 0.5) * M_PI * 2 / angleSectionNumber));
     this->setEnergy( this->getEnergy() - energyCostOfMovement ); 
 }
 
@@ -153,16 +155,18 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
     //Maybe separate function
     //a:delete the pointer
     //Predator* offspring = new Predator(79.0, 515.0, 10.0, 1, false, 60, 10, 1, 0, 600);//Above parameters cause program failure!
-    
+
+    //std::cout << "I am a " << this->getSex() << "My current energy level is " << this->getEnergy() << std::endl; 
     if ((1.0 * (rand() % 100) < (100 * std::pow(((1 + this->getAge()) / 6000), 10)) or (this->getEnergy() <= 0))) {
-        this->dies(organismVector);
+      this->dies(organismVector);
+      
     }
     else {
-        int minFertilityAge = 50 ; 
-        int maxFertilityAge = 100 ; 
-        if (( 1.0 * (rand() % 100) < std::max( 0.0 , (100 * std::pow((( this->getAge() - minFertilityAge) / (maxFertilityAge - minFertilityAge )), 10) )) )  and not this->getFertile() ) {
-            this->setFertile(true) ; 
-            std::cout << "Fertility Unlocked " << std::endl; 
+        int minFertilityAge = 50;
+        int maxFertilityAge = 100;
+        if ((1.0 * (rand() % 100) < std::max(0.0, (100 * std::pow(((this->getAge() - minFertilityAge) / (maxFertilityAge - minFertilityAge)), 10)))) and not this->getFertile()) {
+            this->setFertile(true);
+            std::cout << "Fertility Unlocked " << std::endl;
         }
         for (int k = 0; k <= this->getSpeed(); k++) { // BEGINING OF TURN LOOP 
 
@@ -176,7 +180,7 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
             Organism* maxInteractionUtilityTarget = nullptr;
             int maxDirectionalUtilityTarget = 0;
 
-            
+
 
 
             std::vector<float> directionalUtility(angleSectionNumber, 0.0);
@@ -186,45 +190,58 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
                 //TRY organismVector.at(i)->getRadius() print maybe
                 distSquare = distanceSquared(organismVector.at(i), this);//organismvector at get radius is read as an uninitialised organism
                 if ((distSquare > 0.0001) and (distSquare < std::pow(this->getVisionRange() - organismVector.at(i)->getRadius(), 2))) {
-                //   this->computeUtility(distSquare, organismVector.at(i), directionalUtility, maxDirectionalUtility , maxDirectionalUtilityTarget , possibleCollisions, maxInteractionUtility , maxInteractionUtilityTarget ); 
-                this->computeUtility(distSquare, organismVector.at(i), directionalUtility , possibleCollisions, maxInteractionUtility , maxInteractionUtilityTarget ); 
-
+                    //   this->computeUtility(distSquare, organismVector.at(i), directionalUtility, maxDirectionalUtility , maxDirectionalUtilityTarget , possibleCollisions, maxInteractionUtility , maxInteractionUtilityTarget ); 
+                    this->computeUtility(distSquare, organismVector.at(i), directionalUtility, possibleCollisions, maxInteractionUtility, maxInteractionUtilityTarget);
                 }
             }
+            //check
+            //if (possibleCollisions.size() == 2) {
+                //std::cout << "stop here!";
+            //}
             for (int i = 0; i < possibleCollisions.size(); i++) {
                 for (int j = 0; j < directionalUtility.size(); j++) {
-                    // ELIMINATION 
-                    if (std::pow(this->getPosX() - possibleCollisions.at(i)->getPosX() + stepSize * cos(2 * M_PI * (j + 0.5) / directionalUtility.size()), 2)
+                    // ELIMINATION
+                    float newPosX = this->getPosX() + stepSize * cos(2 * M_PI * (j + 0.5) / directionalUtility.size());
+                    float newPosY = this->getPosY() + stepSize * sin(2 * M_PI * (j + 0.5) / directionalUtility.size());
+                    if (std::pow(newPosX - possibleCollisions.at(i)->getPosX(), 2) + pow(newPosY - possibleCollisions.at(i)->getPosY(), 2) <
+                        std::pow((this->getRadius() + possibleCollisions.at(i)->getRadius()), 2)) {
+
+                        /* if (std::pow(this->getPosX() - possibleCollisions.at(i)->getPosX() + stepSize * cos(2 * M_PI * (j + 0.5) / directionalUtility.size()), 2)
                         + std::pow(this->getPosY() - possibleCollisions.at(i)->getPosX() + stepSize * sin(2 * M_PI * (j + 0.5) / directionalUtility.size()), 2)
                         < std::pow((this->getRadius() + possibleCollisions.at(i)->getRadius()), 2)) {
                         //angleBetween = angle(possibleCollisions.at(i), this);//was missing
-                        //directionalUtility[angleSorting(angleBetween)] = -10000;
-                        directionalUtility.at(j) = -1000000.0;
+                        directionalUtility[angleSorting(angleBetween)] = -10000;
+                        */
+                        directionalUtility.at(j) = -1000.0;
                     }
                 }
             }
+            //remain in grid
             for (int i = 0; i < directionalUtility.size(); i++) {
-                if ( ( this->getPosX()  + stepSize * cos(2 * M_PI * (i + 0.5) / directionalUtility.size()) > 1000 ) or ( this->getPosX()  + stepSize * cos(2 * M_PI * (i + 0.5) / directionalUtility.size()) < 0 ) or ( this->getPosY()  + stepSize * sin(2 * M_PI * (i + 0.5) / directionalUtility.size()) > 1000 ) or ( this->getPosY()  + stepSize * sin(2 * M_PI * (i + 0.5) / directionalUtility.size()) < 0  )  ) {
-                    directionalUtility.at(i) = -1000000.0;
+                if ((this->getPosX() + stepSize * cos(2 * M_PI * (i + 0.5) / directionalUtility.size()) > windowWidth - this->getRadius()) or
+                    (this->getPosX() + stepSize * cos(2 * M_PI * (i + 0.5) / directionalUtility.size()) < 0 + this->getRadius()) or
+                    (this->getPosY() + stepSize * sin(2 * M_PI * (i + 0.5) / directionalUtility.size()) > windowHeight - this->getRadius()) or
+                    (this->getPosY() + stepSize * sin(2 * M_PI * (i + 0.5) / directionalUtility.size()) < 0 + this->getRadius())) {
+                    directionalUtility.at(i) = -10000.0;
                 }
             }
 
-            std::cout << " my directional utility is: " ; 
-            for (int i = 0; i < directionalUtility.size(); i++) {
-                std::cout << directionalUtility.at(i) << "     " ; 
-            }
-            std::cout << " " << std::endl;
+            //std::cout << " my directional utility is: ";
+            //for (int i = 0; i < directionalUtility.size(); i++) {
+             //   std::cout << directionalUtility.at(i) << "     ";
+            //}
+            //std::cout << " " << std::endl;
 
-            maxDirectionalUtility = directionalUtility.at(0); 
-            maxDirectionalUtilityTarget = 0 ; 
-            bool noDirectionalUtility= true ; 
+            maxDirectionalUtility = directionalUtility.at(0);
+            maxDirectionalUtilityTarget = 0;
+            bool noDirectionalUtility = true;
             for (int i = 0; i < directionalUtility.size(); i++) {
-                if (directionalUtility.at(i) != 0.0 ){
-                    noDirectionalUtility = false ; 
-                } 
-                if (maxDirectionalUtility < directionalUtility.at(i)){
-                    maxDirectionalUtility = directionalUtility.at(i); 
-                    maxDirectionalUtilityTarget = i ; 
+                if (directionalUtility.at(i) != 0.0) {
+                    noDirectionalUtility = false;
+                }
+                if (maxDirectionalUtility < directionalUtility.at(i)) {
+                    maxDirectionalUtility = directionalUtility.at(i);
+                    maxDirectionalUtilityTarget = i;
                 }
             }
 
