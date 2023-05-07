@@ -22,7 +22,7 @@ int numberOfFlora = 0;
 
 int main()
 {
-/*
+    /*
     sf::RenderWindow window(sf::VideoMode(400, 300), "Input Box Example");
 
     sf::Font font;
@@ -33,50 +33,49 @@ int main()
     }
 
     //Number of predators input box
-    sf::Text text;
-    text.setFont(font);
-    text.setCharacterSize(20);
-    text.setFillColor(sf::Color::Black);
-    text.setString("Enter number of predators:");
+    sf::Text numberOfPredatorsTxtPrompt;
+    numberOfPredatorsTxtPrompt.setFont(font);
+    numberOfPredatorsTxtPrompt.setCharacterSize(20);
+    numberOfPredatorsTxtPrompt.setFillColor(sf::Color::Black);
+    numberOfPredatorsTxtPrompt.setString("Number of predators:");
 
-    sf::RectangleShape inputBox(sf::Vector2f(50.f, 20.f));
-    inputBox.setFillColor(sf::Color::White);
-    inputBox.setOutlineThickness(2.f);
-    inputBox.setOutlineColor(sf::Color::Black);
-    inputBox.setPosition(260.f, 3.f);
+    sf::RectangleShape predatorInputBox(sf::Vector2f(50.f, 20.f));
+    predatorInputBox.setFillColor(sf::Color::White);
+    predatorInputBox.setOutlineThickness(2.f);
+    predatorInputBox.setOutlineColor(sf::Color::Black);
+    predatorInputBox.setPosition(260.f, 3.f);
 
-    std::string inputString;
-    sf::Text inputText;
-    inputText.setFont(font);
-    inputText.setCharacterSize(20);
-    inputText.setFillColor(sf::Color::Black);
-    inputText.setString("");
-    inputText.setPosition(262.f, 2.f);
+    std::string predatorInputString;
+    sf::Text predatorInputText;
+    predatorInputText.setFont(font);
+    predatorInputText.setCharacterSize(20);
+    predatorInputText.setFillColor(sf::Color::Black);
+    predatorInputText.setString("0");
+    predatorInputText.setPosition(262.f, 2.f);
     
     //Number of prey
-    sf::Text text2;
-    text2.setFont(font);
-    text2.setCharacterSize(20);
-    text2.setFillColor(sf::Color::Black);
-    text2.setString("Enter number of prey:");
+    sf::Text numberOfPreyTxtPrompt;
+    numberOfPreyTxtPrompt.setFont(font);
+    numberOfPreyTxtPrompt.setCharacterSize(20);
+    numberOfPreyTxtPrompt.setFillColor(sf::Color::Black);
+    numberOfPreyTxtPrompt.setString("Enter number of prey:");
+    numberOfPreyTxtPrompt.setPosition(20, 20);
 
-    sf::RectangleShape inputBox2(sf::Vector2f(50.f, 30.f));
-    inputBox2.setFillColor(sf::Color::White);
-    inputBox2.setOutlineThickness(2.f);
-    inputBox2.setOutlineColor(sf::Color::Black);
-    inputBox2.setPosition(260.f, 3.f);
+    sf::RectangleShape preyInputBox(sf::Vector2f(50.f, 20.f));
+    preyInputBox.setFillColor(sf::Color::White);
+    preyInputBox.setOutlineThickness(2.f);
+    preyInputBox.setOutlineColor(sf::Color::Black);
+    preyInputBox.setPosition(260.f, 30.f);
 
-    std::string inputString2;
-    sf::Text inputText2;
-    inputText2.setFont(font);
-    inputText2.setCharacterSize(20);
-    inputText2.setFillColor(sf::Color::Black);
-    inputText2.setString("");
-    inputText2.setPosition(262.f, 2.f);
+    std::string preyInputString;
+    sf::Text preyInputText;
+    preyInputText.setFont(font);
+    preyInputText.setCharacterSize(20);
+    preyInputText.setFillColor(sf::Color::Black);
+    preyInputText.setString("0");
+    preyInputText.setPosition(262.f, 29.f);
 
 
-    std::string inputTextString = "0";
-    std::string inputTextString2 = "0";
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -86,63 +85,52 @@ int main()
             }
             else if (event.type == sf::Event::TextEntered) {
                 //predator
-                if (event.text.unicode == '\b' && inputString.size() > 0) {
+                if (event.text.unicode == '\b' && predatorInputString.size() > 0) {
                     // Backspace was pressed
-                    inputString.pop_back();
-                    inputText.setString(inputString);
-                }
-                //prey
-                if (event.text.unicode == '\b' && inputString2.size() > 0) {
-                    // Backspace was pressed
-                    inputString2.pop_back();
-                    inputText2.setString(inputString2);
+                    predatorInputString.pop_back();
+                    predatorInputText.setString(predatorInputString);
+                    //predator
                 }
 
                 else if (event.text.unicode == '\r') {
                     // predator
-                    if (!inputString.empty()) {
-                        inputTextString = inputText.getString();
+                    if (!predatorInputString.empty()) {
+                        predatorInputString = predatorInputText.getString();
                     }
                     //prey
-                    if (!inputString2.empty()) {
-                        inputTextString2 = inputText2.getString();
-                    }
                     window.close();
                 }
-                else if (inputString.size() < 3 && event.text.unicode >= '0' && event.text.unicode <= '9') {
+                else if (predatorInputString.size() < 3 && event.text.unicode >= '0' && event.text.unicode <= '9') {
                     // Input character is a digit and input string is less than 3 characters
-                    inputString += static_cast<char>(event.text.unicode);
-                    inputText.setString(inputString);
+                    predatorInputString += static_cast<char>(event.text.unicode);
+                    predatorInputText.setString(predatorInputString);
                 }
-                else if (inputString2.size() < 3 && event.text.unicode >= '0' && event.text.unicode <= '9') {
+                else if (predatorInputString.size() < 3 && event.text.unicode >= '0' && event.text.unicode <= '9') {
 					// Input character is a digit and input string is less than 3 characters
-					inputString2 += static_cast<char>(event.text.unicode);
-					inputText2.setString(inputString2);
+                    predatorInputString += static_cast<char>(event.text.unicode);
+					predatorInputText.setString(predatorInputString);
                 }
             }
         }
 
         window.clear(sf::Color::White);
         //Predator
-        window.draw(text);
-        window.draw(inputBox);
-        window.draw(inputText);
+        window.draw(numberOfPredatorsTxtPrompt);
+        window.draw(predatorInputBox);
+        window.draw(predatorInputText);
         //prey
-        window.draw(text2);
-        window.draw(inputBox2);
-        window.draw(inputText2);
 
         window.display();
     }
 
    
 
-    numberOfPredators = std::stoi(inputTextString);
-    numberOfPrey = std::stoi(inputTextString2);
+    numberOfPredators = std::stoi(predatorInputString);
+    //numberOfPrey = std::stoi(inputTextString2);
     std::cout << "Number of predators: " << numberOfPredators << std::endl;
-    std::cout << "Number of prey: " << numberOfPrey << std::endl;
+    //std::cout << "Number of prey: " << numberOfPrey << std::endl;
+    
     */
-
     
     std::time_t seed = std::time(nullptr);
 
@@ -155,13 +143,13 @@ int main()
     std::vector<Organism*> organismVector;
 
 
-    //Predator* myPredator = new Predator(500, 500, 5, 750, true, 1, 10, 1, 50, 400);
-    //organismVector.push_back(myPredator);
-    //Predator* myPredator2 = new Predator(475, 596, 5, 750, false, 1, 10, 1, 50, 800);
-    //organismVector.push_back(myPredator2);
+    Predator* myPredator = new Predator(500, 500, 5, 750, true, 1, 10, 1, 50, 400);
+    organismVector.push_back(myPredator);
+    Predator* myPredator2 = new Predator(475, 596, 5, 750, false, 1, 10, 1, 50, 800);
+    organismVector.push_back(myPredator2);
 
-    //Predator* myPredator3 = new Predator(500, 290, 5, 750, true, 1, 10, 1, 50, 800);
-    //organismVector.push_back(myPredator3);
+    Predator* myPredator3 = new Predator(500, 290, 5, 750, true, 1, 10, 1, 50, 800);
+    organismVector.push_back(myPredator3);
 
     Prey* myPrey = new Prey(400, 460, 7, 200, true, 2, 10, 0.1, 50, 900, 1);
     organismVector.push_back(myPrey);
@@ -172,8 +160,8 @@ int main()
     Flora* myFlora = new Flora(500, 190, 10, 1000, 10);
     organismVector.push_back(myFlora);
 
-    //Flora* myFlora2 = new Flora(900, 900, 10, 1000, 2);
-    //organismVector.push_back(myFlora2);
+    Flora* myFlora2 = new Flora(900, 900, 10, 1000, 2);
+    organismVector.push_back(myFlora2);
     
 
     /*
@@ -312,10 +300,7 @@ int main()
 
         window.display();
     }
-    
-
-
-
+   
 
     return 0;
 }

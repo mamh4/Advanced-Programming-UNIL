@@ -5,6 +5,8 @@
 #include "Prey.h"
 #include "Gameboard.h"
 #include "GeneticIntervals.h"
+#include <string>
+
 #pragma once
 
 
@@ -173,6 +175,9 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
         }
         for (int k = 0; k <= this->getSpeed(); k++) { // BEGINING OF TURN LOOP 
 
+            int boostingMomentTracker = 0 ; 
+            std::string boostingReport = "Boosting report: "; 
+
             float distSquare;
             float angleBetween = 0.0;
 
@@ -187,6 +192,7 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
 
 
             std::vector<float> directionalUtility(angleSectionNumber, 0.0);
+            std::vector<bool> directionalSelector(angleSectionNumber, true);
             std::vector<Organism*> possibleCollisions;
 
             for (int i = 0; i < organismVector.size(); i++) {
@@ -215,7 +221,8 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
                         //angleBetween = angle(possibleCollisions.at(i), this);//was missing
                         directionalUtility[angleSorting(angleBetween)] = -10000;
                         */
-                        directionalUtility.at(j) = -1000.0;
+                        // directionalUtility.at(j) = -1000.0;
+                        directionalSelector.at(j) = false ; 
                     }
                 }
             }
@@ -225,7 +232,8 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
                     (this->getPosX() + stepSize * cos(2 * M_PI * (i + 0.5) / directionalUtility.size()) < 0 + this->getRadius()) or
                     (this->getPosY() + stepSize * sin(2 * M_PI * (i + 0.5) / directionalUtility.size()) > windowHeight - this->getRadius()) or
                     (this->getPosY() + stepSize * sin(2 * M_PI * (i + 0.5) / directionalUtility.size()) < 0 + this->getRadius())) {
-                    directionalUtility.at(i) = -10000.0;
+                    //directionalUtility.at(i) = -10000.0;
+                   directionalSelector.at(i) = false ; 
                 }
             }
 
@@ -234,6 +242,8 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
              //   std::cout << directionalUtility.at(i) << "     ";
             //}
             //std::cout << " " << std::endl;
+
+            /*/
 
             maxDirectionalUtility = directionalUtility.at(0);
             maxDirectionalUtilityTarget = 0;
@@ -260,10 +270,98 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
                 //} 
             }
         }
-    }
+    } /*/
 
+
+            
+            
+            
+            maxDirectionalUtility = 0.0 ; 
+            //maxDirectionalUtilityTarget = 0;
+            // INITIALIZE MAXDIRECTIONAL UTILITY 
+            bool noDirectionalUtility = true;
+            bool validDirectionFound = false ; 
+            for (int i = 0; i < directionalUtility.size(); i++) {
+                if (directionalUtility.at(i) != 0.0) {
+                    noDirectionalUtility = false; // CHECK VALIDITY OR NOT ? 
+                }
+                if (not validDirectionFound and directionalSelector.at(i)){
+                    validDirectionFound = true ; 
+                    maxDirectionalUtility = directionalUtility.at(i) ; 
+                }
+            }
+            if (validDirectionFound){ // MAYBE ADD VALUES WITH COMPARABLE UTILITIES TO THE LIST ? INSTEAD OF JUST THE EQUAL ONES ? STANDARD DEVIATION KIND OF 
+                for (int i = 0; i < directionalUtility.size(); i++) {
+                    if (directionalUtility.at(i) != 0.0) {
+                        noDirectionalUtility = false;
+                    }
+                    if (maxDirectionalUtility < directionalUtility.at(i) and directionalSelector.at(i)) { // we have never met a VALID direction with such Utility
+                        maxDirectionalUtility = directionalUtility.at(i);
+                        //maxDirectionalUtilityTarget = i; // no longer useful ? 
+                        // NEED TO INVALIDATE ALL THE PREVIOUS UTILITIES, as they are of lower utility 
+                        for (int j = 0 ; j < i ; j ++ ){
+                            directionalSelector.at(j) = false; 
+                        }
+                    }
+                    else if (maxDirectionalUtility == directionalUtility.at(i) and directionalSelector.at(i)) {
+                        // DO NOTHING, DIRECTION STAYS VALID 
+                    }
+                    else if (maxDirectionalUtility > directionalUtility.at(i) and directionalSelector.at(i)) {
+                        // INVALIDATE CURRENT DIRECTION AS IT HAS LOWER UTILITY 
+                        directionalSelector.at(i) = false; 
+                    }
+                }
+            }
+
+            if (maxDirectionalUtility >= maxInteractionUtility) { // O by default, eliminates negative utility interactions 
+                if (not noDirectionalUtility and validDirectionFound) {
+                    //RANDOM PICK AMONG ¨
+                    int numberOfValidMaxUtilityDirections  = 0 ;
+                    boostingReport = boostingReport +  "I am looking for my next move " ; 
+                    for (int i = 0; i < directionalSelector.size(); i++) {
+                        if (directionalSelector.at(i)){
+                            numberOfValidMaxUtilityDirections ++ ; 
+                        }
+                    }
+                    boostingReport = boostingReport +  " - the number of valid directions with max utility is : " + std::to_string( numberOfValidMaxUtilityDirections)  ; 
+                    int decsionalCounter = 0 ;                     
+                    int decisionalRand = 0 ; 
+                    decisionalRand = (rand() % numberOfValidMaxUtilityDirections) ; 
+                    boostingReport = boostingReport +  " - the random number is : " +  std::to_string(decisionalRand) ; 
+                    for (int i = 0; i < directionalSelector.size(); i++){
+                        if (directionalSelector.at(i)){
+                            boostingReport = boostingReport + "   - the direction " +  std::to_string(i) + "is valid -  "; 
+                            if (decsionalCounter == decisionalRand){
+                                this->move(i);
+                                decsionalCounter ++ ; 
+                                boostingMomentTracker ++ ; 
+                                boostingReport = boostingReport +  "   - counter is equal to. " +  std::to_string(decsionalCounter)  + "  matching the random number " +   std::to_string(decisionalRand) + "   I am moving towards   "  + std::to_string(  i ) +  "  -  " ; 
+                            }
+                            else {
+                                decsionalCounter ++ ; 
+                                boostingReport = boostingReport + "  -  counter is equal to.  " +  std::to_string( (decsionalCounter -1)  ) + "   NOT matching the random number.  " +  std::to_string( decisionalRand ) +  "   I am NOT moving towards    "  + std::to_string( i  ) +  "  -  " ; 
+                            }
+                        }
+                        else{
+                            boostingReport = boostingReport + "   - the direction "  + std::to_string( i ) + "is NOT valid -  ";
+                        }
+                    } 
+                }
+            }
+            else {
+                //std::cout << "Interaction" << std::endl;
+                //if (maxInteractionUtilityTarget != nullptr) {
+                this->interact(maxInteractionUtilityTarget, organismVector);
+                //} 
+            }
+    if (boostingMomentTracker > 1 ){
+        std::cout << "WARNING !!! BOOSTING DETECTED - NUMBER OF STEPS IN SINGLE SPEED ITEM IS:  " << boostingMomentTracker << std::endl;
+        std::cout << boostingReport << std::endl; 
+    } 
     
     // vvv COLOR AS A FUNCTION OF ENERGY vvv
+
+    }
 
     float maxEnergy = 200.0; 
     sf::CircleShape newShape;
@@ -297,7 +395,7 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
     this->setShape(newShape);
     // ^^^ COLOR AS A FUNCTION OF ENERGY ^^^
 
-
+    }
 }////VERY IMPORTANT: interact is not being called from the predator class 
 //Issue 1) Is compute utility correct to the class?????
 //Issue 2) Check if the correct inherited method is being called, possibly I would need to create a predator instance and call
