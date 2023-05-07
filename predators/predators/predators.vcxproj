@@ -148,6 +148,7 @@
     <ClInclude Include="Gameboard.h" />
     <ClInclude Include="GeneticIntervals.h" />
     <ClInclude Include="OrganicMaths.h" />
+    <ClInclude Include="OrganicStats.h" />
     <ClInclude Include="Organism.h" />
     <ClInclude Include="Predator.h" />
     <ClInclude Include="Prey.h" />
@@ -158,6 +159,7 @@
     <ClCompile Include="Gameboard.cpp" />
     <ClCompile Include="GeneticIntervals.cpp" />
     <ClCompile Include="OrganicMaths.cpp" />
+    <ClCompile Include="OrganicStats.cpp" />
     <ClCompile Include="Organism.cpp" />
     <ClCompile Include="Predator.cpp" />
     <ClCompile Include="Prey.cpp" />

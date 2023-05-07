@@ -3,9 +3,10 @@
 #include "OrganicMaths.h"
 #include "Predator.h"
 #include "Prey.h"
-#include "Gameboard.h"
+#include "organicStats.h"
 #include "GeneticIntervals.h"
 #include <string>
+#include "Gameboard.h"
 
 #pragma once
 
@@ -86,11 +87,16 @@
 
     //TODO implement this function
     void Fauna::dies(std::vector<Organism*>& organismVector){
+
+        if (Predator* myPredator = dynamic_cast<Predator*>(this)) {
+            numberOfPredators -=1;
+        }
+        else if (Prey* myPrey = dynamic_cast<Prey*>(this)) {
+            numberOfPrey -= 1;
+        }
         auto it = std::remove(organismVector.begin(), organismVector.end(), this);
         organismVector.erase(it, organismVector.end());
-        delete this;
-
-        numberOfPredators += 1;
+        delete this;    
     }
 
     //void Fauna::update(std::vector<Organism*> organismVector) {
@@ -396,10 +402,7 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
     // ^^^ COLOR AS A FUNCTION OF ENERGY ^^^
 
     }
-}////VERY IMPORTANT: interact is not being called from the predator class 
-//Issue 1) Is compute utility correct to the class?????
-//Issue 2) Check if the correct inherited method is being called, possibly I would need to create a predator instance and call
-// the compute utility method and interact method from there
+}
 	
 
 

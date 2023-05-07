@@ -8,6 +8,8 @@
 #include "OrganicMaths.h"
 #include <chrono>
 #include <ctime>
+#include <cmath>
+#include "OrganicStats.h"
 
 #include <random>
 #include <thread>
@@ -22,8 +24,10 @@ int numberOfFlora = 0;
 
 int main()
 {
-    /*
-    sf::RenderWindow window(sf::VideoMode(400, 300), "Input Box Example");
+    
+    //////////////////////////////////////////////////////// USER INPUT //////////////////////////////////////////////////////////////
+    
+    sf::RenderWindow windowParam(sf::VideoMode(350, 300), "Input Box Example");
 
     sf::Font font;
     if (!font.loadFromFile("arial.ttf"))
@@ -32,12 +36,13 @@ int main()
         return -1;
     }
 
-    //Number of predators input box
+    //Number of predators
     sf::Text numberOfPredatorsTxtPrompt;
     numberOfPredatorsTxtPrompt.setFont(font);
     numberOfPredatorsTxtPrompt.setCharacterSize(20);
     numberOfPredatorsTxtPrompt.setFillColor(sf::Color::Black);
     numberOfPredatorsTxtPrompt.setString("Number of predators:");
+    numberOfPredatorsTxtPrompt.setPosition(5, 0);
 
     sf::RectangleShape predatorInputBox(sf::Vector2f(50.f, 20.f));
     predatorInputBox.setFillColor(sf::Color::White);
@@ -50,7 +55,7 @@ int main()
     predatorInputText.setFont(font);
     predatorInputText.setCharacterSize(20);
     predatorInputText.setFillColor(sf::Color::Black);
-    predatorInputText.setString("0");
+    predatorInputText.setString("");
     predatorInputText.setPosition(262.f, 2.f);
     
     //Number of prey
@@ -58,91 +63,222 @@ int main()
     numberOfPreyTxtPrompt.setFont(font);
     numberOfPreyTxtPrompt.setCharacterSize(20);
     numberOfPreyTxtPrompt.setFillColor(sf::Color::Black);
-    numberOfPreyTxtPrompt.setString("Enter number of prey:");
-    numberOfPreyTxtPrompt.setPosition(20, 20);
+    numberOfPreyTxtPrompt.setString("Number of prey:");
+    numberOfPreyTxtPrompt.setPosition(5, 30);
 
     sf::RectangleShape preyInputBox(sf::Vector2f(50.f, 20.f));
     preyInputBox.setFillColor(sf::Color::White);
     preyInputBox.setOutlineThickness(2.f);
     preyInputBox.setOutlineColor(sf::Color::Black);
-    preyInputBox.setPosition(260.f, 30.f);
+    preyInputBox.setPosition(260.f, 33.f);
 
     std::string preyInputString;
     sf::Text preyInputText;
     preyInputText.setFont(font);
     preyInputText.setCharacterSize(20);
     preyInputText.setFillColor(sf::Color::Black);
-    preyInputText.setString("0");
-    preyInputText.setPosition(262.f, 29.f);
+    preyInputText.setString("");
+    preyInputText.setPosition(262.f, 32.f);
+
+    //Number of flora
+    sf::Text numberOfFloraTxtPrompt;
+    numberOfFloraTxtPrompt.setFont(font);
+    numberOfFloraTxtPrompt.setCharacterSize(20);
+    numberOfFloraTxtPrompt.setFillColor(sf::Color::Black);
+    numberOfFloraTxtPrompt.setString("Number of flora:");
+    numberOfFloraTxtPrompt.setPosition(5, 60);
+
+    sf::RectangleShape floraInputBox(sf::Vector2f(50.f, 20.f));
+    floraInputBox.setFillColor(sf::Color::White);
+    floraInputBox.setOutlineThickness(2.f);
+    floraInputBox.setOutlineColor(sf::Color::Black);
+    floraInputBox.setPosition(260.f, 63.f);
+
+    std::string floraInputString;
+    sf::Text floraInputText;
+    floraInputText.setFont(font);
+    floraInputText.setCharacterSize(20);
+    floraInputText.setFillColor(sf::Color::Black);
+    floraInputText.setString("");
+    floraInputText.setPosition(262.f, 62.f);
+
+    bool isPredatorInputFocused = false;
+    bool isPreyInputFocused = false;
+    bool isFloraInputFocused = false;
 
 
-    while (window.isOpen()) {
+    while (windowParam.isOpen()) {
         sf::Event event;
-        while (window.pollEvent(event)) {
+        while (windowParam.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
-                window.close();
+                windowParam.close();
                 exit(1);
             }
-            else if (event.type == sf::Event::TextEntered) {
-                //predator
-                if (event.text.unicode == '\b' && predatorInputString.size() > 0) {
-                    // Backspace was pressed
-                    predatorInputString.pop_back();
-                    predatorInputText.setString(predatorInputString);
-                    //predator
+            else if (event.type == sf::Event::MouseButtonPressed) {
+                // Check if the mouse is clicked on one of the input boxes
+                sf::Vector2i mousePos = sf::Mouse::getPosition(windowParam);
+                if (predatorInputBox.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                    isPredatorInputFocused = true;
+                    isPreyInputFocused = false;
+                    isFloraInputFocused = false;
                 }
+                else if (preyInputBox.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                    isPredatorInputFocused = false;
+                    isPreyInputFocused = true;
+                    isFloraInputFocused = false;
+                }
+                //flora
+                else if (floraInputBox.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                    isPredatorInputFocused = false;
+                    isPreyInputFocused = false;
+                    isFloraInputFocused = true;
+                }
+                else {
+                    isPredatorInputFocused = false;
+                    isPreyInputFocused = false;
+                    isFloraInputFocused = false;
 
-                else if (event.text.unicode == '\r') {
-                    // predator
-                    if (!predatorInputString.empty()) {
-                        predatorInputString = predatorInputText.getString();
+                }
+            }
+            else if (event.type == sf::Event::TextEntered) {
+                if (isPredatorInputFocused) {
+                    if (event.text.unicode == '\b' && predatorInputString.size() > 0) {
+                        // Backspace was pressed
+                        predatorInputString.pop_back();
+                        predatorInputText.setString(predatorInputString);
+                        //predator
                     }
-                    //prey
-                    window.close();
-                }
-                else if (predatorInputString.size() < 3 && event.text.unicode >= '0' && event.text.unicode <= '9') {
-                    // Input character is a digit and input string is less than 3 characters
-                    predatorInputString += static_cast<char>(event.text.unicode);
-                    predatorInputText.setString(predatorInputString);
-                }
-                else if (predatorInputString.size() < 3 && event.text.unicode >= '0' && event.text.unicode <= '9') {
-					// Input character is a digit and input string is less than 3 characters
-                    predatorInputString += static_cast<char>(event.text.unicode);
-					predatorInputText.setString(predatorInputString);
+
+                    else if (event.text.unicode == '\r') {
+                        // predator
+                        if (!predatorInputString.empty()) {
+                            predatorInputString = predatorInputText.getString();
+                        }
+                        windowParam.close();
+                    }
+                    else if (predatorInputString.size() < 3 && event.text.unicode >= '0' && event.text.unicode <= '9') {
+                        predatorInputString += static_cast<char>(event.text.unicode);
+                        predatorInputText.setString(predatorInputString);
+                        if (predatorInputString.empty()) {
+                            numberOfPredators = 0;
+                        }
+                        else {
+                            numberOfPredators = std::stoi(predatorInputString);
+                        }
+                        try {
+                            if (numberOfPredators > 50) {
+                                throw std::runtime_error("Input value too large! Maximum is 50");
+                            }
+                        }
+                        catch (std::runtime_error& e) {
+                            std::cout << "Exception caught: " << e.what() << std::endl;
+                        }
+                        
+                    }
+                }//Prey
+                else if (isPreyInputFocused) {
+                    if (event.text.unicode == '\b' && preyInputString.size() > 0) {
+                        // Backspace was pressed
+                        preyInputString.pop_back();
+                        preyInputText.setString(preyInputString);
+                        //predator
+                    }
+
+                    else if (event.text.unicode == '\r') {
+                        // predator
+                        if (!preyInputString.empty()) {
+                            preyInputString = preyInputText.getString();
+                        }
+                        windowParam.close();
+                    }
+                    else if (preyInputString.size() < 3 && event.text.unicode >= '0' && event.text.unicode <= '9') {
+                        preyInputString += static_cast<char>(event.text.unicode);
+                        preyInputText.setString(preyInputString);
+                        if (preyInputString.empty()) {
+                            numberOfPrey = 0;
+                        }
+                        else {
+                            numberOfPrey = std::stoi(preyInputString);
+                        }
+                        try {
+                            if (numberOfPrey > 50) {
+                                throw std::runtime_error("Input value too large! Maximum is 50");
+                            }
+                        }
+                        catch (std::runtime_error& e) {
+                            std::cout << "Exception caught: " << e.what() << std::endl;
+                        }
+                    }
+                }//Flora
+                else if (isFloraInputFocused) {
+                    if (event.text.unicode == '\b' && floraInputString.size() > 0) {
+                        // Backspace was pressed
+                        floraInputString.pop_back();
+                        floraInputText.setString(floraInputString);
+                        //predator
+                    }
+
+                    else if (event.text.unicode == '\r') {
+                        // predator
+                        if (!floraInputString.empty()) {
+                            floraInputString = floraInputText.getString();
+                        }
+                        windowParam.close();
+                    }
+                    else if (floraInputString.size() < 3 && event.text.unicode >= '0' && event.text.unicode <= '9') {
+                        floraInputString += static_cast<char>(event.text.unicode);
+                        floraInputText.setString(floraInputString);
+                        if (floraInputString.empty()) {
+                            numberOfFlora = 0;
+                        }
+                        else {
+                            numberOfFlora = std::stoi(floraInputString);
+                        }
+                        try {
+                            if (numberOfFlora > 50) {
+                                throw std::runtime_error("Input value too large! Maximum is 50");
+                            }
+                        }
+                        catch (std::runtime_error& e) {
+                            std::cout << "Exception caught: " << e.what() << std::endl;
+                        }
+
+                    }
                 }
             }
         }
 
-        window.clear(sf::Color::White);
+        windowParam.clear(sf::Color::White);
         //Predator
-        window.draw(numberOfPredatorsTxtPrompt);
-        window.draw(predatorInputBox);
-        window.draw(predatorInputText);
+        windowParam.draw(numberOfPredatorsTxtPrompt);
+        windowParam.draw(predatorInputBox);
+        windowParam.draw(predatorInputText);
         //prey
+        windowParam.draw(numberOfPreyTxtPrompt);
+        windowParam.draw(preyInputBox);
+        windowParam.draw(preyInputText);
+        //flora
+        windowParam.draw(numberOfFloraTxtPrompt);
+        windowParam.draw(floraInputBox);
+        windowParam.draw(floraInputText);
 
-        window.display();
+        windowParam.display();
     }
 
+    //////////////////////////////////////////////////////// USER INPUT END //////////////////////////////////////////////////////////////
    
+    /////////////////////////////////////////////////// Variable Initialisations /////////////////////////////////////////////////////////
 
-    numberOfPredators = std::stoi(predatorInputString);
-    //numberOfPrey = std::stoi(inputTextString2);
-    std::cout << "Number of predators: " << numberOfPredators << std::endl;
-    //std::cout << "Number of prey: " << numberOfPrey << std::endl;
-    
-    */
-    
     std::time_t seed = std::time(nullptr);
-
     srand(seed);
-    //test age of predator any prey make sure they inherit it and the value is 0
-    float geneticTest=0.0 ;
-    geneticTest= geneticEngine("Prey", "Speed", 2.0 , 3.0) ;
+
 
 
     std::vector<Organism*> organismVector;
+    std::vector<float> dataPoints;
 
-
+    
+    //TO BE DELETED Below
     Predator* myPredator = new Predator(500, 500, 5, 750, true, 1, 10, 1, 50, 400);
     organismVector.push_back(myPredator);
     Predator* myPredator2 = new Predator(475, 596, 5, 750, false, 1, 10, 1, 50, 800);
@@ -160,10 +296,10 @@ int main()
     Flora* myFlora = new Flora(500, 190, 10, 1000, 10);
     organismVector.push_back(myFlora);
 
-    Flora* myFlora2 = new Flora(900, 900, 10, 1000, 2);
+    Flora* myFlora2 = new Flora(900, 500, 10, 1000, 2);
     organismVector.push_back(myFlora2);
+    //To be deleted Above
     
-
     /*
     //std::cout << organismVector.at(0)->getType() << std::endl;
     for (int i = 0; i < numberOfPredators; i++) {
@@ -242,19 +378,51 @@ int main()
         Flora* myFlora = new Flora(posX, posY, radius, energy, growthRate);
         organismVector.push_back(myFlora);
     }
-    */
+    UNCOMMENT*/
 
-    
-    // Create a window
-    sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Prey vs Predator");
 
-    //Predator myPredator(500, 500, 20, 100, true, 10, 5, 80, 1.5f, 50, 100);
+    sf::RenderWindow window(sf::VideoMode(windowWidth+300, windowHeight), "Prey vs Predator");
+
+
+    /////////////////////////////////////////////// Statistics ////////////////////////////////////////////////////
+    sf::RectangleShape pane(sf::Vector2f(300.f, 720.f));
+    pane.setPosition(sf::Vector2f(980.f, 0.f));
+    pane.setFillColor(sf::Color::Magenta);
+
+    //plotting stuff
+    float plotHeight = 120.0;
+    float plotWidth = 250.0;
+
+    float plotX = 1010.0; // lower corner 
+    float plotY = 170.0;
+
+    float maxDataPoint = 0.0;
+    float minDataPoint = 0.0;
+
+    int timeWindow = 500; // Number of Data Points 
+
+
+    sf::VertexArray xcoord(sf::LineStrip, 2);
+    xcoord.setPrimitiveType(sf::LinesStrip);
+    xcoord[0].position = sf::Vector2f(plotX, plotY);
+    xcoord[1].position = sf::Vector2f(plotX + plotWidth, plotY);
+    xcoord[0].color = sf::Color::Black;
+    xcoord[1].color = sf::Color::Black;
+
+
+    sf::VertexArray ycoord(sf::LineStrip, 2);
+    ycoord.setPrimitiveType(sf::LinesStrip);
+    ycoord[0].position = sf::Vector2f(plotX, plotY);
+    ycoord[1].position = sf::Vector2f(plotX, plotY - plotHeight-30);
+    ycoord[0].color = sf::Color::Black;
+    ycoord[1].color = sf::Color::Black;
+
+    sf::VertexArray chartLines(sf::LineStrip, timeWindow);
+    chartLines.setPrimitiveType(sf::LinesStrip);
+
 
     // Set the frame rate
     window.setFramerateLimit(60);
-
-    // Set the movement speed of the pixel
-    float moveSpeed = 1.0f;
 
     // start the game loop
     while (window.isOpen()) {
@@ -269,7 +437,48 @@ int main()
         for (int i = 0; i < organismVector.size(); i++) {
 
             organismVector.at(i)->update(organismVector);
+
         }
+
+        dataPoints.push_back(organismVector.size());
+
+
+        ///
+        float newDataPoint = 1.0*organismVector.size();
+
+        if (dataPoints.size() > timeWindow  ) {
+            for (int i = 0; i < (dataPoints.size() - 1) ; i++) {
+                dataPoints[i] = dataPoints[i + 1];
+            }
+            dataPoints[dataPoints.size() -1 ] = newDataPoint;
+        }
+        else {
+            dataPoints.push_back(newDataPoint);
+        }
+
+        for (int i = 0; i < dataPoints.size(); i++) {
+            if (maxDataPoint < dataPoints[i]) {
+                maxDataPoint = dataPoints[i];
+            }
+            if (minDataPoint > dataPoints[i]) {
+                minDataPoint = dataPoints[i];
+            }
+        }
+        if ((maxDataPoint - minDataPoint) != 0.0 and timeWindow != 0.0) {
+            for (int i = 0; i < std::min(static_cast<int>(dataPoints.size()), timeWindow); i++) {
+                chartLines[i].position = sf::Vector2f(plotX + 1.0 * i * plotWidth / (timeWindow * 1.0), plotY - plotHeight * dataPoints[i] / (maxDataPoint - minDataPoint));
+                chartLines[i].color = sf::Color::Black;
+            }
+            if (static_cast<int>(dataPoints.size()) < timeWindow ){
+                for (int i = (static_cast<int>(dataPoints.size())) ; i < std::max(static_cast<int>(dataPoints.size()), timeWindow); i++) {
+                    chartLines[i].position = sf::Vector2f(plotX + 1.0 * (static_cast<int>(dataPoints.size()) -1)  * plotWidth / (timeWindow * 1.0), plotY - plotHeight * dataPoints[dataPoints.size()-1] / (maxDataPoint - minDataPoint));
+                    chartLines[i].color = sf::Color::Black;
+                }// CHECK SOLIDITY AS THIS WAS BUILT LAZILY 
+            }
+        }
+
+
+        ///
 
 
         // Print statistics at the top left corner
@@ -295,12 +504,16 @@ int main()
         // draw the organisms and the text
         for (Organism* organism : organismVector) {
             window.draw(organism->getShape());
+            window.draw(pane);
+            //window.draw(grid);
             window.draw(text);
+            window.draw(xcoord);
+            window.draw(ycoord);
+            window.draw(chartLines);
         }
 
         window.display();
     }
-   
 
     return 0;
 }

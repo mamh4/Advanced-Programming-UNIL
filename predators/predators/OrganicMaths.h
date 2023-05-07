@@ -8,10 +8,6 @@
 #define angleSectionNumber 12
 #define stepSize  1.0
 
-//int numberOfPredators = 0;
-//int numberOfPrey = 0;
-//int numberOfFlora = 0;
-
 float distanceSquared (Organism* target1 , Organism* target2 ) ;
 
 float l2NormSquared (Organism* target) ;

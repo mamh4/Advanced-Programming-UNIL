@@ -4,6 +4,7 @@
 #include "Predator.h"
 #include "Flora.h"
 #include "Gameboard.h"
+#include "OrganicStats.h"
 
 Prey::Prey(float myPosX, float myPosY, float myRadius, float myEnergy,bool mySex,
 	int mySpeed, float myHungerSensitivity,
@@ -212,6 +213,7 @@ void Prey::interact(Organism* targetOrganism, std::vector<Organism*>& organismVe
 			Prey* offspring = new Prey(candidateBirthPlaceX, candidateBirthPlaceY,
 		childRadius, energy, sex, speed, hungerSensitivity, metabolicRate, lustLevel, visionRange,predatorAversion);//Above parameters cause program failure!
 		organismVector.push_back(offspring);
+		numberOfPrey += 1;
 		} 
 		else{
 			std::cout << "no valid birthplace arround mother" << std::endl; 
