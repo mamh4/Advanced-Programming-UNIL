@@ -148,9 +148,14 @@ void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organi
 		metabolicRate = geneticEngine ("Predator", "Metabolic Rate", this->getMetabolicRate(), myPred->getMetabolicRate() ); 
 		std::cout << "Metabolic Rate test genetics Engine " << metabolicRate << std::endl; 
 
-		int lustLevel = 50;//rand() % 100 + 1;
-		int visionRange = 300; //rand() % 100 + 1;
-		float predatorAversion = 1;//static_cast<float>(rand() % 10 + 1) / 10.0f;
+		int lustLevel = 1;//rand() % 100 + 1;
+		lustLevel = geneticEngine ("Predator", "Lust Level", this->getLustLevel(), myPred->getLustLevel() ); 
+		std::cout << "Lust Level test genetics Engine " << lustLevel << std::endl; 
+
+		int visionRange = 250; //rand() % 100 + 1;
+		visionRange = geneticEngine ("Predator", "Vision Range", this->getVisionRange(), myPred->getVisionRange() ); 
+		std::cout << "Vision Range test genetics Engine " << visionRange << std::endl; 
+
 		this->setEnergy(this->getEnergy() - baseReproductionEnergyCost);
 		targetOrganism->setEnergy(targetOrganism->getEnergy() - baseReproductionEnergyCost);  // MOVE TO AFTER CHEcK IF REPRO POSSIBLE ELSE ENERGY TAKEN WITH NO OFFSPRING 
 		// CHECK EMPTY SPACE

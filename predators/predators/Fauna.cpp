@@ -262,6 +262,42 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
         }
     }
 
+    
+    // vvv COLOR AS A FUNCTION OF ENERGY vvv
+
+    float maxEnergy = 200.0; 
+    sf::CircleShape newShape;
+    newShape = this->getShape(); 
+    int newColorCode ;
+    float approximateColorCode ; 
+    if (this->getEnergy() <= 0 ){
+        approximateColorCode = 100.0 ; 
+    }
+    else if (this->getEnergy()  <=  maxEnergy * this->getRadius() ) {
+        approximateColorCode = 100.0 + (this->getEnergy()*155.0/(maxEnergy * this->getRadius())) ; 
+       // std::cout << "My energy is " << this->getEnergy() << " which is the following percentage of the max " << (this->getEnergy()*100.0/(maxEnergy * this->getRadius())) << std::endl; 
+    }
+    else {
+        approximateColorCode = 255.0 ; 
+    }
+    newColorCode = static_cast<int> (approximateColorCode ); 
+    newColorCode = newColorCode % 256 ; 
+    uint8_t actualColorCode ; 
+    actualColorCode = newColorCode ; 
+    // std::cout << "actual Color Code is now " << actualColorCode << std::endl ; 
+
+    if (Prey* myPrey = dynamic_cast<Prey*>(this)) {
+        newShape.setFillColor(sf::Color::Color( 0 , 0, actualColorCode , 255 )); 
+
+    }
+    else if (Predator* myPredator = dynamic_cast<Predator*>(this)) {
+        newShape.setFillColor(sf::Color::Color( actualColorCode ,0 , 0 , 255 )); 
+
+    }
+    this->setShape(newShape);
+    // ^^^ COLOR AS A FUNCTION OF ENERGY ^^^
+
+
 }////VERY IMPORTANT: interact is not being called from the predator class 
 //Issue 1) Is compute utility correct to the class?????
 //Issue 2) Check if the correct inherited method is being called, possibly I would need to create a predator instance and call
