@@ -12,6 +12,16 @@ Predator::Predator(float myPosX, float myPosY, float myRadius, float myEnergy,bo
 		mySex, mySpeed, myHungerSensitivity,
 		myMetabolicRate, myLustLevel, myVisionRange) {
 	shape.setFillColor(sf::Color::Red);
+	totalEnergyPredator += myEnergy;
+	numberOfPredators += 1;
+
+	if (mySex) {
+		numberOfFemalePredator += 1;
+	}
+	else {
+		numberOfMalePredator += 1;
+	}
+
 }
 
 void Predator::computeUtility(float distanceSquared, Organism* targetOrganism, std::vector<float>& directionalUtility , std::vector<Organism*>& possibleCollisions, 
@@ -124,6 +134,8 @@ void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organi
 		absorbedEnergy = std::min(energyAbsorbtionSpeed, targetOrganism->getEnergy());
 		targetOrganism->setEnergy(targetOrganism->getEnergy() - absorbedEnergy);
 		this->setEnergy(this->getEnergy() + absorbedEnergy);
+		totalEnergyPredator += absorbedEnergy;
+		totalEnergyPrey -= absorbedEnergy;
 	}
 	else if (Predator* myPred = dynamic_cast<Predator*>(targetOrganism)) {
 
@@ -159,6 +171,7 @@ void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organi
 
 		this->setEnergy(this->getEnergy() - baseReproductionEnergyCost);
 		targetOrganism->setEnergy(targetOrganism->getEnergy() - baseReproductionEnergyCost);  // MOVE TO AFTER CHEcK IF REPRO POSSIBLE ELSE ENERGY TAKEN WITH NO OFFSPRING 
+		totalEnergyPredator-= baseReproductionEnergyCost;
 		// CHECK EMPTY SPACE
 		//float childRadius = 5.0;
 		//float posXBirthPlace = (this->getPosX() + targetOrganism->getPosX()) / 2.0; // avg of parents position 
@@ -260,7 +273,6 @@ void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organi
 			Predator* offspring = new Predator(candidateBirthPlaceX, candidateBirthPlaceY,
 		childRadius, energy, sex, speed, hungerSensitivity, metabolicRate, lustLevel, visionRange);//Above parameters cause program failure!
 		organismVector.push_back(offspring);
-		numberOfPredators += 1;
 		} 
 		else{
 			std::cout << "no valid birthplace arround mother" << std::endl; 

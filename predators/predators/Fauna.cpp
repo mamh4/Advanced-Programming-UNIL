@@ -90,9 +90,35 @@
 
         if (Predator* myPredator = dynamic_cast<Predator*>(this)) {
             numberOfPredators -=1;
+            std::cout << "I am a predator, my energy level before dying is  " << this->energy << " total energy before dying is : " << totalEnergyPredator
+                << std::endl;
+            if (this->energy > 0) {
+                totalEnergyPredator -= this->energy;
+            }
+
+            std::cout << "total energy after pred death is " << totalEnergyPredator << std::endl;
+            if (this->sex) {
+                numberOfFemalePredator -= 1;
+            }
+            else {
+                numberOfMalePredator -= 1;
+            }
         }
         else if (Prey* myPrey = dynamic_cast<Prey*>(this)) {
             numberOfPrey -= 1;
+            std::cout << "I am a prey, my energy level before dying is  " << this->energy << " total energy before dying is : " << totalEnergyPrey
+                << std::endl;
+            if (this->energy > 0) {
+                totalEnergyPrey -= this->energy;
+            }
+
+            std::cout << "total energy after pred death is " << totalEnergyPredator << std::endl;
+            if (this->sex) {
+                numberOfFemalePrey -= 1;
+            }
+            else {
+                numberOfMalePrey -= 1;
+            }
         }
         auto it = std::remove(organismVector.begin(), organismVector.end(), this);
         organismVector.erase(it, organismVector.end());
@@ -143,17 +169,25 @@ void Fauna::move(int directionIndicator){
     
     //std::cout << "my speed is " << Fauna::getSpeed() << "my coordinates are: " << Fauna::getPosX() << " "<< Fauna::getPosY << std::endl;
     float energyCostOfMovement; 
-    energyCostOfMovement = 0.1 ; 
+    energyCostOfMovement = std::min( 0.1f, this->energy); 
     // as Class constant later on ? 
     //Fauna::getShape().setPosition(Fauna::getShape().getPosition().x + stepSize * cos((directionIndicator + 0.5) * M_PI * 2 / 12),
     //    Fauna::getShape().getPosition().y + stepSize * sin((directionIndicator + 0.5) * M_PI * 2 / 12)); 
     this->setPosX(this->getPosX() + stepSize * cos((directionIndicator + 0.5) * M_PI * 2 / angleSectionNumber));
     this->setPosY(this->getPosY() + stepSize * sin((directionIndicator + 0.5) * M_PI * 2 / angleSectionNumber));
-    this->setEnergy( this->getEnergy() - energyCostOfMovement ); 
+    this->setEnergy( this->getEnergy() - energyCostOfMovement);
+
+    if (Predator* myPredator = dynamic_cast<Predator*>(this)) {
+        totalEnergyPredator -= energyCostOfMovement;
+    }
+    else if (Prey* myPrey = dynamic_cast<Prey*>(this)) {
+        totalEnergyPrey -= energyCostOfMovement;
+    }
 }
 
 void Fauna::ageing() {
     age ++ ;
+    //TODO: Update total age parameters
     this->setRadius(this->getRadius() + 0.001);
 }
 
@@ -161,7 +195,15 @@ void Fauna::ageing() {
 
 void Fauna::update(std::vector<Organism*>& organismVector) {
     this->ageing(); // CHANGE TO DATE OF BIRTH 
-    this->setEnergy(this->getEnergy() - this->getMetabolicRate());
+    this->setEnergy(this->getEnergy() - std::min(this->getMetabolicRate(),this->energy));
+     
+    if (Predator* myPredator = dynamic_cast<Predator*>(this)) {
+        totalEnergyPredator -= std::min(this->getMetabolicRate(), this->energy);
+    }
+    else if (Prey* myPrey = dynamic_cast<Prey*>(this)) {
+        totalEnergyPrey -= std::min(this->getMetabolicRate(), this->energy);
+    }
+
     // with arbitrary 100 seconds (6000 frames ) max lifespan, arbitrary function with certain death at 6000 
     //Maybe separate function
     //a:delete the pointer

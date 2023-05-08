@@ -14,6 +14,15 @@ Prey::Prey(float myPosX, float myPosY, float myRadius, float myEnergy,bool mySex
     
     predatorAversion = myPredatorAversion;
 	shape.setFillColor(sf::Color::Blue);
+	numberOfPrey += 1;
+	totalEnergyPrey += myEnergy;
+
+	if (mySex) {
+		numberOfFemalePrey += 1;
+	}
+	else {
+		numberOfMalePrey += 1;
+	}
 }
 
 float Prey::getPredatorAversion() {
@@ -49,6 +58,8 @@ void Prey::interact(Organism* targetOrganism, std::vector<Organism*>& organismVe
 		absorbedEnergy = std::min(energyAbsorbtionSpeed, targetOrganism->getEnergy());
 		targetOrganism->setEnergy(targetOrganism->getEnergy() - absorbedEnergy);
 		this->setEnergy(this->getEnergy() + absorbedEnergy);
+		totalEnergyPrey += absorbedEnergy;
+		totalEnergyFlora -= absorbedEnergy;
 	}
 	else if (Prey* myPrey = dynamic_cast<Prey*>(targetOrganism)) {
 		//NEW!! Age must be greater than 30 to reproduce
@@ -112,7 +123,9 @@ void Prey::interact(Organism* targetOrganism, std::vector<Organism*>& organismVe
 		std::cout << "Predator Aversion test genetics Engine " << predatorAversion << std::endl; 
 
 		this->setEnergy(this->getEnergy() - baseReproductionEnergyCost);
-		targetOrganism->setEnergy(targetOrganism->getEnergy() - baseReproductionEnergyCost);  // MOVE TO AFTER CHEcK IF REPRO POSSIBLE ELSE ENERGY TAKEN WITH NO OFFSPRING 
+		targetOrganism->setEnergy(targetOrganism->getEnergy() - baseReproductionEnergyCost);
+		totalEnergyPrey -= baseReproductionEnergyCost;
+		// MOVE TO AFTER CHEcK IF REPRO POSSIBLE ELSE ENERGY TAKEN WITH NO OFFSPRING 
 		// CHECK EMPTY SPACE
 		//float childRadius = 5.0;
 		//float posXBirthPlace = (this->getPosX() + targetOrganism->getPosX()) / 2.0; // avg of parents position 
@@ -211,10 +224,9 @@ void Prey::interact(Organism* targetOrganism, std::vector<Organism*>& organismVe
 		/*/
 		if (validCandidateBirthPlace) {
 			Prey* offspring = new Prey(candidateBirthPlaceX, candidateBirthPlaceY,
-		childRadius, energy, sex, speed, hungerSensitivity, metabolicRate, lustLevel, visionRange,predatorAversion);//Above parameters cause program failure!
-		organismVector.push_back(offspring);
-		numberOfPrey += 1;
-		} 
+				childRadius, energy, sex, speed, hungerSensitivity, metabolicRate, lustLevel, visionRange, predatorAversion);//Above parameters cause program failure!
+			organismVector.push_back(offspring);
+		}
 		else{
 			std::cout << "no valid birthplace arround mother" << std::endl; 
 		}

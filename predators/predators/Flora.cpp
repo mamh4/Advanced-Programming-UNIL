@@ -1,10 +1,12 @@
 #include "Flora.h"
-//#include <stdint.h>
+#include "OrganicStats.h"
 	
 	Flora::Flora(float myPosX, float myPosY, float myRadius, float myEnergy, float myGrowthRate) :
 		Organism(myPosX, myPosY, myRadius, myEnergy) {
 		growthRate = myGrowthRate;
 		shape.setFillColor(sf::Color::Green);
+        numberOfFlora += 1;
+        totalEnergyFlora += myEnergy;
 	}
 
     float Flora::getGrowthRate() {
@@ -15,8 +17,8 @@
     //std::cout << "I am a plant and I am Updating " << std::endl ; 
     float maxEnergy = 500.0 ; 
     
-	this->setEnergy( std::min( maxEnergy * this->getRadius(), (this->getEnergy() +  this->getGrowthRate() )) );
-
+	//this->setEnergy( std::min( maxEnergy * this->getRadius(), (this->getEnergy() +  this->getGrowthRate() )) );
+    //totalEnergyFlora += std::min(maxEnergy * this->getRadius(), (this->getEnergy() + this->getGrowthRate()));
 
     // vvv COLOR AS A FUNCTION OF ENERGY vvv
     sf::CircleShape newShape;
