@@ -90,9 +90,23 @@
 
         if (Predator* myPredator = dynamic_cast<Predator*>(this)) {
             numberOfPredators -=1;
+            totalEnergyPredator -= this->energy;
+            if (this->sex) {
+                numberOfFemalePredator -= 1;
+            }
+            else {
+                numberOfMalePredator -= 1;
+            }
         }
         else if (Prey* myPrey = dynamic_cast<Prey*>(this)) {
             numberOfPrey -= 1;
+            totalEnergyPrey -= this->energy;
+            if (this->sex) {
+                numberOfFemalePrey -= 1;
+            }
+            else {
+                numberOfMalePrey -= 1;
+            }
         }
         auto it = std::remove(organismVector.begin(), organismVector.end(), this);
         organismVector.erase(it, organismVector.end());
@@ -149,11 +163,19 @@ void Fauna::move(int directionIndicator){
     //    Fauna::getShape().getPosition().y + stepSize * sin((directionIndicator + 0.5) * M_PI * 2 / 12)); 
     this->setPosX(this->getPosX() + stepSize * cos((directionIndicator + 0.5) * M_PI * 2 / angleSectionNumber));
     this->setPosY(this->getPosY() + stepSize * sin((directionIndicator + 0.5) * M_PI * 2 / angleSectionNumber));
-    this->setEnergy( this->getEnergy() - energyCostOfMovement ); 
+    this->setEnergy( this->getEnergy() - energyCostOfMovement );
+
+    if (Predator* myPredator = dynamic_cast<Predator*>(this)) {
+        totalEnergyPredator -= energyCostOfMovement;
+    }
+    else if (Prey* myPrey = dynamic_cast<Prey*>(this)) {
+        totalEnergyPrey -= energyCostOfMovement;
+    }
 }
 
 void Fauna::ageing() {
     age ++ ;
+    //TODO: Update total age parameters
     this->setRadius(this->getRadius() + 0.001);
 }
 
