@@ -511,8 +511,8 @@ Plot4 pieChart(float posX, float posY,std::vector<float> dataPoints, std::vector
             }
             else {
                 chartlineVector[i][1].position = sf::Vector2f(posX + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
-                chartlineVector[i][0].color = sf::Color(0, 0, 100);
-                chartlineVector[i][1].color = sf::Color(0, 0, 100);
+                chartlineVector[i][0].color = sf::Color(173, 216, 230);
+                chartlineVector[i][1].color = sf::Color(173, 216, 230);
             }
         }
     } else {
