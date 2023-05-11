@@ -102,7 +102,7 @@ Plot linePlot(float posX, float posY, std::vector<float> dataPoints,
 }
 
 
-Plot2 twoLinesPlot(float posX, float posY, std::vector<float> dataPoints, std::vector<float>& dataPoints2, std::vector<float>& dataPoints3,
+Plot2 twoLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, std::vector<float>& dataPoints3,
     sf::Font& font, std::string title, float height, float width, int timeSpan) {
     Plot2 myPlot;
 
@@ -136,9 +136,10 @@ Plot2 twoLinesPlot(float posX, float posY, std::vector<float> dataPoints, std::v
     sf::Text theTitle;
     theTitle.setFont(font);
     theTitle.setCharacterSize(12);
-    theTitle.setPosition(posX+width/2 , posY - height-10);
+    theTitle.setPosition(posX +width/2 - theTitle.getLocalBounds().width,posY-height);//posX+width/2 , posY - height-20);
     theTitle.setFillColor(sf::Color::Black);
     theTitle.setString(title);
+    theTitle.setOrigin(theTitle.getLocalBounds().width, theTitle.getLocalBounds().height);
 
 
     //initialise axes string
@@ -188,55 +189,72 @@ Plot2 twoLinesPlot(float posX, float posY, std::vector<float> dataPoints, std::v
         }
         dataPoints3.pop_back();
     }
-    //dataPoints3.pop_back();
+
+
+
 
     //Was commented
+    //if (dataPoints.size() > 0 ){
+      //  maxDataPoint = dataPoints[0] ; 
+     //   minDataPoint = dataPoints[0] ; 
+    //}
+    //std::vector<float> maximumVector;
+    //for (int i = 0; i < dataPoints2.size();i++) {
+     //   maximumVector.push_back(std::max(dataPoints2[i], dataPoints3[i]));
+    //}
 
-    for (int i = 0; i < dataPoints.size(); i++) {
-        if (maxDataPoint < dataPoints[i]) {
-            maxDataPoint = dataPoints[i];
+    //for (int i = 0; i < dataPoints.size(); i++) {
+     //   if (maxDataPoint < dataPoints[i] ) {
+      //      maxDataPoint = dataPoints[i] ;
+       // }
+        //if (minDataPoint > dataPoints[i]) {
+         //   minDataPoint = dataPoints[i];
+        //}
+    //}
+    
+    for (int i = 0; i < dataPoints2.size(); i++) {
+        if (maxDataPoint < std::max(dataPoints2[i], dataPoints3[i])) {
+            maxDataPoint = std::max(dataPoints2[i], dataPoints3[i]);
+        }
+        if (minDataPoint > std::min(dataPoints2[i], dataPoints3[i])) {
+			minDataPoint = std::min(dataPoints2[i], dataPoints3[i]);
+		}
+    }
 
-            std::stringstream stream;
-            stream << std::fixed << std::setprecision(1) << maxDataPoint;
-            std::string max = stream.str();
-            yAxisMax.setString(max);
+    std::stringstream stream;
+    stream << std::fixed << std::setprecision(1) << maxDataPoint;
+    std::string max = stream.str();
+    yAxisMax.setString(max);
 
 
-            std::stringstream stream2;
-            stream2 << std::fixed << std::setprecision(1) << (maxDataPoint / 2.0);
-            std::string mid = stream2.str();
-            yAxisMid.setString(mid);
+    std::stringstream stream2;
+    stream2 << std::fixed << std::setprecision(1) << (minDataPoint + ( maxDataPoint - minDataPoint) / 2.0);
+    std::string mid = stream2.str();
+    yAxisMid.setString(mid);
         
             
-            std::stringstream stream3;
-            stream3 << std::fixed << std::setprecision(1) << (maxDataPoint * 1 / 4.0);
-            std::string m25 = stream3.str();
-            yAxis25.setString(m25);
+    std::stringstream stream3;
+    stream3 << std::fixed << std::setprecision(1) << (minDataPoint + ( maxDataPoint - minDataPoint) / 4.0);
+    std::string m25 = stream3.str();
+    yAxis25.setString(m25);
 
 
-            std::stringstream stream4;
-            stream4 << std::fixed << std::setprecision(1) << (maxDataPoint * 3.0 / 4.0);
-            std::string m75 = stream4.str();
-            yAxis75.setString(m75);
-        
-        
-        }
-        if (minDataPoint > dataPoints[i]) {
-            minDataPoint = dataPoints[i];
-        }
-    }
+    std::stringstream stream4;
+    stream4 << std::fixed << std::setprecision(1) << (minDataPoint + ( maxDataPoint - minDataPoint) * 3.0 / 4.0);
+    std::string m75 = stream4.str();
+    yAxis75.setString(m75);
 
     //Twice
     if((maxDataPoint - minDataPoint) != 0.0) {//Removed if timeframe==0
         for (int i = 0; i < std::min(static_cast<int>(dataPoints2.size()), timeSpan); i++) {
             chartLines[i].position = sf::Vector2f(posX + 1.0 * i * width / (timeSpan * 1.0),
-                posY - height * dataPoints2[i] / (maxDataPoint - minDataPoint));
+                posY - height * (dataPoints2[i]- minDataPoint) / (maxDataPoint - minDataPoint));
             chartLines[i].color = sf::Color::Red;
         }
         if (static_cast<int>(dataPoints2.size()) < timeSpan) {
             for (int i = (static_cast<int>(dataPoints2.size())); i < std::max(static_cast<int>(dataPoints2.size()), timeSpan); i++) {
                 chartLines[i].position = sf::Vector2f(posX + 1.0 * (static_cast<int>(dataPoints2.size()) - 1) * width / (timeSpan * 1.0),
-                    posY - height * dataPoints2[dataPoints2.size() - 1] / (maxDataPoint - minDataPoint));
+                    posY - height * (dataPoints2[dataPoints2.size() - 1] - minDataPoint)/ (maxDataPoint - minDataPoint));
                 chartLines[i].color = sf::Color::Red;
             }// CHECK SOLIDITY AS THIS WAS BUILT LAZILY 
         }
@@ -245,13 +263,13 @@ Plot2 twoLinesPlot(float posX, float posY, std::vector<float> dataPoints, std::v
     if ((maxDataPoint - minDataPoint) != 0.0) {//Removed if timeframe==0
         for (int i = 0; i < std::min(static_cast<int>(dataPoints3.size()), timeSpan); i++) {
             chartLines2[i].position = sf::Vector2f(posX + 1.0 * i * width / (timeSpan * 1.0),
-                posY - height * dataPoints3[i] / (maxDataPoint - minDataPoint));
+                posY - height * (dataPoints3[i]- minDataPoint) / (maxDataPoint - minDataPoint));
             chartLines2[i].color = sf::Color::Blue;
         }
         if (static_cast<int>(dataPoints3.size()) < timeSpan) {
             for (int i = (static_cast<int>(dataPoints3.size())); i < std::max(static_cast<int>(dataPoints3.size()), timeSpan); i++) {
                 chartLines2[i].position = sf::Vector2f(posX + 1.0 * (static_cast<int>(dataPoints3.size()) - 1) * width / (timeSpan * 1.0),
-                    posY - height * dataPoints3[dataPoints3.size() - 1] / (maxDataPoint - minDataPoint));
+                    posY - height * (dataPoints3[dataPoints3.size() - 1] - minDataPoint)/ (maxDataPoint - minDataPoint));
                 chartLines2[i].color = sf::Color::Blue;
             }// CHECK SOLIDITY AS THIS WAS BUILT LAZILY 
         }
@@ -275,7 +293,7 @@ Plot2 twoLinesPlot(float posX, float posY, std::vector<float> dataPoints, std::v
 
 }
 
-Plot3 threeLinesPlot(float posX, float posY, std::vector<float> dataPoints, std::vector<float>& dataPoints2, std::vector<float>& dataPoints3,
+Plot3 threeLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, std::vector<float>& dataPoints3,
     std::vector<float>& dataPoints4, sf::Font& font, std::string title, float height, float width, int timeSpan) {
 
     Plot3 myPlot;
@@ -328,7 +346,7 @@ Plot3 threeLinesPlot(float posX, float posY, std::vector<float> dataPoints, std:
     sf::Text yAxis75;
     yAxis75.setFont(font);
     yAxis75.setCharacterSize(12);
-    yAxis75.setPosition(posX - 7, posY - (height *3.0/4.0));
+    yAxis75.setPosition(posX - 7, posY - (height * 3.0 / 4.0));
     yAxis75.setFillColor(sf::Color::Black);
 
 
@@ -360,36 +378,40 @@ Plot3 threeLinesPlot(float posX, float posY, std::vector<float> dataPoints, std:
         dataPoints4.pop_back();
     }
 
-    for (int i = 0; i < dataPoints.size(); i++) {
-        if (maxDataPoint < dataPoints[i]) {
-            maxDataPoint = dataPoints[i];
-            std::stringstream stream;
-            stream << std::fixed << std::setprecision(1) << maxDataPoint;
-            std::string max = stream.str();
-            yAxisMax.setString(max);
-
-
-            std::stringstream stream2;
-            stream2 << std::fixed << std::setprecision(1) << (maxDataPoint / 2.0);
-            std::string mid = stream2.str();
-            yAxisMid.setString(mid);
-
-
-            std::stringstream stream3;
-            stream3 << std::fixed << std::setprecision(1) << (maxDataPoint * 1 / 4.0);
-            std::string m25 = stream3.str();
-            yAxis25.setString(m25);
-
-
-            std::stringstream stream4;
-            stream4 << std::fixed << std::setprecision(1) << (maxDataPoint * 3.0 / 4.0);
-            std::string m75 = stream4.str();
-            yAxis75.setString(m75);
+    for (int i = 0; i < dataPoints2.size(); i++) {
+        if (maxDataPoint < std::max(dataPoints2[i], std::max(dataPoints3[i], dataPoints4[i]))) {
+            maxDataPoint = std::max(dataPoints2[i], std::max(dataPoints3[i], dataPoints4[i]));
         }
-        if (minDataPoint > dataPoints[i]) {
-            minDataPoint = dataPoints[i];
-        }
+        if (minDataPoint > std::min(dataPoints2[i], std::min(dataPoints3[i], dataPoints4[i]))) {
+			minDataPoint = std::min(dataPoints2[i], std::min(dataPoints3[i], dataPoints4[i]));
+		}
     }
+
+
+
+    std::stringstream stream;
+    stream << std::fixed << std::setprecision(1) << maxDataPoint;
+    std::string max = stream.str();
+    yAxisMax.setString(max);
+
+
+    std::stringstream stream2;
+    stream2 << std::fixed << std::setprecision(1) << (maxDataPoint / 2.0);
+    std::string mid = stream2.str();
+    yAxisMid.setString(mid);
+
+
+    std::stringstream stream3;
+    stream3 << std::fixed << std::setprecision(1) << (maxDataPoint * 1 / 4.0);
+    std::string m25 = stream3.str();
+    yAxis25.setString(m25);
+
+
+    std::stringstream stream4;
+    stream4 << std::fixed << std::setprecision(1) << (maxDataPoint * 3.0 / 4.0);
+    std::string m75 = stream4.str();
+    yAxis75.setString(m75);
+
 
     //Thrice
     if ((maxDataPoint - minDataPoint) != 0.0) {//Removed if timeframe==0
@@ -497,9 +519,13 @@ Plot4 pieChart(float posX, float posY,std::vector<float> dataPoints, std::vector
     std::stringstream stream;
     stream << std::fixed << std::setprecision(2) << (percentageOfFemale*100.0);
     std::string percentage = stream.str();
-    theLabel.setString(percentage + " %");
+    std::stringstream stream2;
+    stream2 << std::fixed << std::setprecision(2) << (100.0 - (percentageOfFemale * 100.0));
+    std::string percentageComplement = stream2.str();
+    theLabel.setString("Female: " +percentage + " %" +"\n"+
+                        "Male: " + percentageComplement + " %");
     theLabel.setPosition(posX, posY + radius + 50);
-    theLabel.setOrigin(radius/2, radius);
+    theLabel.setOrigin(radius, radius);
 
     //pie charting
     if (dataPoints[dataPoints.size()-1]!=0) {
@@ -524,8 +550,86 @@ Plot4 pieChart(float posX, float posY,std::vector<float> dataPoints, std::vector
 
    myPlot.chartlinesVector = chartlineVector;
    myPlot.circle = circle ; 
-   myPlot.title = theTitle;
+   //myPlot.title = theTitle;
    myPlot.xlabel = theLabel;
    return myPlot;
 }
 
+TraitSummaryStatistics preySpeedSummaryStatistics = {
+    "Speed",
+    {0.0 , 0.0, 0.0 }, 
+	{0.0 , 0.0, 0.0 }, 
+	{0.0 , 0.0, 0.0 }
+};
+TraitSummaryStatistics preyHungerSensitivitySummaryStatistics = {
+    "Hunger Sensitivity", 
+    {0.0 , 0.0, 0.0 }, 
+	{0.0 , 0.0, 0.0 }, 
+	{0.0 , 0.0, 0.0 }
+};
+TraitSummaryStatistics preyMetabolicRateSummaryStatistics = {
+    "Metabolic Rate", 
+    {0.0 , 0.0, 0.0 }, 
+	{0.0 , 0.0, 0.0 }, 
+	{0.0 , 0.0, 0.0 }
+};
+TraitSummaryStatistics preyLustLevelSummaryStatistics = {
+    "Lust Level",
+    {0.0 , 0.0, 0.0 }, 
+	{0.0 , 0.0, 0.0 }, 
+	{0.0 , 0.0, 0.0 }
+};
+TraitSummaryStatistics preyVisionRangeSummaryStatistics = {
+    "Vision Range",
+    {0.0 , 0.0, 0.0 }, 
+	{0.0 , 0.0, 0.0 }, 
+	{0.0 , 0.0, 0.0 }
+};
+TraitSummaryStatistics preyPredatorAversionSummaryStatistics = {
+    "Predator Aversion",
+    {0.0 , 0.0, 0.0 }, 
+	{0.0 , 0.0, 0.0 }, 
+	{0.0 , 0.0, 0.0 }
+};
+TraitSummaryStatistics predatorSpeedSummaryStatistics = {
+    "Speed",
+    {0.0 , 0.0, 0.0 }, 
+	{0.0 , 0.0, 0.0 }, 
+	{0.0 , 0.0, 0.0 }
+};
+TraitSummaryStatistics predatorHungerSensitivitySummaryStatistics = {
+    "Hunger Sensitivity", 
+    {0.0 , 0.0, 0.0 }, 
+	{0.0 , 0.0, 0.0 }, 
+	{0.0 , 0.0, 0.0 }
+};
+TraitSummaryStatistics predatorMetabolicRateSummaryStatistics = {
+    "Metabolic Rate", 
+    {0.0 , 0.0, 0.0 }, 
+	{0.0 , 0.0, 0.0 }, 
+	{0.0 , 0.0, 0.0 }
+};
+TraitSummaryStatistics predatorLustLevelSummaryStatistics = {
+    "Lust Level",
+    {0.0 , 0.0, 0.0 }, 
+	{0.0 , 0.0, 0.0 }, 
+	{0.0 , 0.0, 0.0 }
+};
+TraitSummaryStatistics predatorVisionRangeSummaryStatistics = {
+    "Vision Range",
+    {0.0 , 0.0, 0.0 }, 
+	{0.0 , 0.0, 0.0 }, 
+	{0.0 , 0.0, 0.0 }
+};
+
+SpeciesSummaryStatistics preySummaryStatistics = {
+    "Prey" ,
+    {preySpeedSummaryStatistics, preyHungerSensitivitySummaryStatistics, preyMetabolicRateSummaryStatistics, preyLustLevelSummaryStatistics, preyVisionRangeSummaryStatistics, preyPredatorAversionSummaryStatistics }
+};
+
+SpeciesSummaryStatistics predatorSummaryStatistics = {
+     "Predator",
+    {predatorSpeedSummaryStatistics, predatorHungerSensitivitySummaryStatistics, predatorMetabolicRateSummaryStatistics, predatorLustLevelSummaryStatistics, predatorVisionRangeSummaryStatistics }
+};
+
+std::vector<SpeciesSummaryStatistics> summaryStatistics = { preySummaryStatistics, predatorSummaryStatistics };

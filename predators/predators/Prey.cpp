@@ -57,9 +57,6 @@ void Prey::interact(Organism* targetOrganism, std::vector<Organism*>& organismVe
 		float absorbedEnergy;
 		absorbedEnergy = std::min(energyAbsorbtionSpeed, targetOrganism->getEnergy());
 		targetOrganism->setEnergy(targetOrganism->getEnergy() - absorbedEnergy);
-		this->setEnergy(this->getEnergy() + absorbedEnergy);
-		totalEnergyPrey += absorbedEnergy;
-		totalEnergyFlora -= absorbedEnergy;
 	}
 	else if (Prey* myPrey = dynamic_cast<Prey*>(targetOrganism)) {
 		//NEW!! Age must be greater than 30 to reproduce
@@ -122,9 +119,6 @@ void Prey::interact(Organism* targetOrganism, std::vector<Organism*>& organismVe
 		predatorAversion = geneticEngine ("Prey", "Predator Aversion", this->getPredatorAversion(), myPrey->getPredatorAversion() ); 
 		std::cout << "Predator Aversion test genetics Engine " << predatorAversion << std::endl; 
 
-		this->setEnergy(this->getEnergy() - baseReproductionEnergyCost);
-		targetOrganism->setEnergy(targetOrganism->getEnergy() - baseReproductionEnergyCost);
-		totalEnergyPrey -= baseReproductionEnergyCost;
 		// MOVE TO AFTER CHEcK IF REPRO POSSIBLE ELSE ENERGY TAKEN WITH NO OFFSPRING 
 		// CHECK EMPTY SPACE
 		//float childRadius = 5.0;
@@ -226,6 +220,14 @@ void Prey::interact(Organism* targetOrganism, std::vector<Organism*>& organismVe
 			Prey* offspring = new Prey(candidateBirthPlaceX, candidateBirthPlaceY,
 				childRadius, energy, sex, speed, hungerSensitivity, metabolicRate, lustLevel, visionRange, predatorAversion);//Above parameters cause program failure!
 			organismVector.push_back(offspring);
+
+			this->setEnergy(this->getEnergy() - baseReproductionEnergyCost);
+			targetOrganism->setEnergy(targetOrganism->getEnergy() - baseReproductionEnergyCost);
+			totalEnergyPrey -= 2 * baseReproductionEnergyCost;
+			this->setNumberOfOffspring(this->getNumberOfOffspring() + 1);
+			if (Prey* myPrey = dynamic_cast<Prey*>(this)) {
+				myPrey->setNumberOfOffspring(myPrey->getNumberOfOffspring() + 1);
+			}
 		}
 		else{
 			std::cout << "no valid birthplace arround mother" << std::endl; 

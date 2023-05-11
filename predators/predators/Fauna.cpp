@@ -21,6 +21,7 @@
         speed = mySpeed;
         // Possibly replaced with date of birth (turn of birth ) then access age as the difference between current turn and turn of birth 
         age = 0;
+        numberOfOffspring = 0;
         hungerSensitivity = myHungerSensitivity;
         metabolicRate = myMetabolicRate;
         lustLevel = myLustLevel;
@@ -60,6 +61,14 @@
 		return this->visionRange;
 	}
 
+    void Fauna::setNumberOfOffspring(int numberOfOffspring) {
+		this->numberOfOffspring = numberOfOffspring;
+	}
+
+    int Fauna::getNumberOfOffspring() {
+        return this->numberOfOffspring;
+    }
+
 
     float Fauna::getMetabolicRate() {
         return this->metabolicRate;
@@ -87,7 +96,7 @@
 
     //TODO implement this function
     void Fauna::dies(std::vector<Organism*>& organismVector){
-
+        this->deathReport(); 
         if (Predator* myPredator = dynamic_cast<Predator*>(this)) {
             numberOfPredators -=1;
             std::cout << "I am a predator, my energy level before dying is  " << this->energy << " total energy before dying is : " << totalEnergyPredator
@@ -187,6 +196,13 @@ void Fauna::move(int directionIndicator){
 
 void Fauna::ageing() {
     age ++ ;
+
+    if (Predator* myPredator = dynamic_cast<Predator*>(this)) {
+        totalAgePredator += 1;
+    }
+    else if (Prey* myPrey = dynamic_cast<Prey*>(this)) {
+		totalAgePrey += 1;
+	}
     //TODO: Update total age parameters
     this->setRadius(this->getRadius() + 0.001);
 }
@@ -196,6 +212,11 @@ void Fauna::ageing() {
 void Fauna::update(std::vector<Organism*>& organismVector) {
     this->ageing(); // CHANGE TO DATE OF BIRTH 
     this->setEnergy(this->getEnergy() - std::min(this->getMetabolicRate(),this->energy));
+
+    float childRadius = 3.0; 
+    float adultRadius = 6.0 ; // Prey or Predator Specific ? 
+    int maxAge = 12000 ; // 100 seconds at 60 fps / Prey or Predator Specific ? 
+    this->setRadius(childRadius + log( 20*(1.0*this->getAge()/maxAge) + 1)*(adultRadius - childRadius))   ; // CHECK PARAMETERS 
      
     if (Predator* myPredator = dynamic_cast<Predator*>(this)) {
         totalEnergyPredator -= std::min(this->getMetabolicRate(), this->energy);
@@ -629,4 +650,75 @@ float geneticEngine (std::string speciesName, std::string traitName, float paren
     }
 
     return offspringTraitValue ; 
+}
+
+
+void Fauna::deathReport() {
+	std::string currentSpecies; 
+	std::vector<std::string> traitNameList ; 
+	std::vector<float> traitValueList ; 
+	if (Prey* myPrey = dynamic_cast<Prey*>(this)) {
+		currentSpecies = "Prey"; 
+		traitNameList = {"Speed", "Hunger Sensitivity", "Metabolic Rate", "Lust Level", "Vision Range", "Predator Aversion"}; 
+		traitValueList =  {1.0f*myPrey->getSpeed(), myPrey->getHungerSensitivity(), myPrey->getMetabolicRate(), myPrey->getLustLevel(), myPrey->getVisionRange(), myPrey->getPredatorAversion()}; 
+	}
+	if (Predator* myPredator = dynamic_cast<Predator*>(this)) {
+		currentSpecies = "Predator"; 
+		traitNameList = {"Speed", "Hunger Sensitivity", "Metabolic Rate", "Lust Level", "Vision Range"}; 
+		traitValueList =  {1.0f*myPredator->getSpeed(), myPredator->getHungerSensitivity(), myPredator->getMetabolicRate(), myPredator->getLustLevel(), myPredator->getVisionRange()}; 
+	}
+	std::string currentTrait; 
+	float currentValue ; 
+	int classIndex = 0; 
+	for (int k = 0; k < traitNameList.size() ; k++){
+		int i = 0 ; 
+		bool speciesFound = false ; 
+		currentTrait = traitNameList[k] ; 
+		currentValue = traitValueList[k] ; 
+		while  (i < geneticDatabase.size() and not speciesFound) {
+			if (geneticDatabase[i].speciesName == currentSpecies){ 
+				speciesFound = true ; 
+				int j = 0 ; 
+                bool traitFound = false; 
+				while (j < geneticDatabase[i].geneticTraitIntervals.size() and not traitFound) {
+					if (geneticDatabase[i].geneticTraitIntervals[j].traitName == currentTrait) {
+						traitFound = true ; 
+						// TEST FOR CLASSINDEX HERE :) 
+						if (currentValue >= 1.0f*geneticDatabase[i].geneticTraitIntervals[j].traitRange[0] and currentValue < 1.0f*geneticDatabase[i].geneticTraitIntervals[j].traitRange[1] ){
+							classIndex = 0 ; 
+						}
+						else if (currentValue >= 1.0f*geneticDatabase[i].geneticTraitIntervals[j].traitRange[1] and currentValue < 1.0f*geneticDatabase[i].geneticTraitIntervals[j].traitRange[2]) {
+							classIndex = 1 ; 
+						}
+						else if (currentValue >= 1.0f*geneticDatabase[i].geneticTraitIntervals[j].traitRange[2] and currentValue < 1.0f*geneticDatabase[i].geneticTraitIntervals[j].traitRange[3]) {
+							classIndex = 2 ;
+						}
+					}
+					j++ ;
+				}
+			}
+			i++ ; 
+		}
+		if (classIndex == 0 or classIndex == 1 or classIndex == 2){
+			i=0 ; 
+			speciesFound = false ; 
+			while (i < summaryStatistics.size() and not speciesFound) {
+				if (summaryStatistics[i].speciesName == currentSpecies){
+					speciesFound = true ; 
+					int j = 0 ; 
+					bool traitFound = false; 
+					while (j < summaryStatistics[i].traitSummaryStatisticVector.size() and not traitFound) {
+						if (summaryStatistics[i].traitSummaryStatisticVector[j].traitName == currentTrait) {
+						traitFound = true ; 
+						summaryStatistics[i].traitSummaryStatisticVector[j].population[classIndex] += 1.0 ; 
+						summaryStatistics[i].traitSummaryStatisticVector[j].sumOfAgesAtDeath[classIndex] += this->getAge() ; 
+						summaryStatistics[i].traitSummaryStatisticVector[j].sumOfOffsprings[classIndex] += this->getNumberOfOffspring() ; 
+						}
+					j++ ;
+					}
+				}
+				i++; 
+			}
+		}
+	}
 }

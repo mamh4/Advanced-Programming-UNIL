@@ -28,7 +28,7 @@ GeneticTraitInterval preyVisionRangeRange = {
 };
 
 GeneticTraitInterval preyPredatorAversionRange = {
-    "Lust Level",
+    "Predator Aversion",
     {0.2 , 0.5 , 2 , 5 }
 };
 

@@ -169,9 +169,6 @@ void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organi
 		visionRange = geneticEngine ("Predator", "Vision Range", this->getVisionRange(), myPred->getVisionRange() ); 
 		std::cout << "Vision Range test genetics Engine " << visionRange << std::endl; 
 
-		this->setEnergy(this->getEnergy() - baseReproductionEnergyCost);
-		targetOrganism->setEnergy(targetOrganism->getEnergy() - baseReproductionEnergyCost);  // MOVE TO AFTER CHEcK IF REPRO POSSIBLE ELSE ENERGY TAKEN WITH NO OFFSPRING 
-		totalEnergyPredator-= baseReproductionEnergyCost;
 		// CHECK EMPTY SPACE
 		//float childRadius = 5.0;
 		//float posXBirthPlace = (this->getPosX() + targetOrganism->getPosX()) / 2.0; // avg of parents position 
@@ -272,7 +269,15 @@ void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organi
 		if (validCandidateBirthPlace) {
 			Predator* offspring = new Predator(candidateBirthPlaceX, candidateBirthPlaceY,
 		childRadius, energy, sex, speed, hungerSensitivity, metabolicRate, lustLevel, visionRange);//Above parameters cause program failure!
-		organismVector.push_back(offspring);
+			organismVector.push_back(offspring);
+
+			this->setEnergy(this->getEnergy() - baseReproductionEnergyCost);
+			targetOrganism->setEnergy(targetOrganism->getEnergy() - baseReproductionEnergyCost);  // MOVE TO AFTER CHEcK IF REPRO POSSIBLE ELSE ENERGY TAKEN WITH NO OFFSPRING 
+			totalEnergyPredator -= 2 * baseReproductionEnergyCost;
+			this->setNumberOfOffspring(this->getNumberOfOffspring() + 1);
+			if (Predator* myPredator = dynamic_cast<Predator*>(this)){
+				myPredator->setNumberOfOffspring(myPredator->getNumberOfOffspring() + 1);
+			}
 		} 
 		else{
 			std::cout << "no valid birthplace arround mother" << std::endl; 

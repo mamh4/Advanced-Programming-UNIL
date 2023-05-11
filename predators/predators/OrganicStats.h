@@ -21,6 +21,50 @@ extern int numberOfFemalePredator;
 extern int numberOfMalePrey;
 extern int numberOfFemalePrey;
 
+extern float totalAgePredator;
+extern float totalAgePrey;
+
+
+struct TraitSummaryStatistics {
+    std::string traitName;
+    float population [3]; 
+	float sumOfAgesAtDeath [3];
+	float sumOfOffsprings [3];
+};
+
+struct SpeciesSummaryStatistics {
+    std::string speciesName;
+    std::vector<TraitSummaryStatistics> traitSummaryStatisticVector;
+};
+
+
+extern TraitSummaryStatistics preySpeedSummaryStatistics ;
+
+extern TraitSummaryStatistics preyHungerSensitivitySummaryStatistics ;
+
+extern TraitSummaryStatistics preyMetabolicRateSummaryStatistics;
+
+extern TraitSummaryStatistics preyLustLevelSummaryStatistics;
+
+extern TraitSummaryStatistics preyVisionRangeSummaryStatistics;
+
+extern TraitSummaryStatistics preyPredatorAversionSummaryStatistics;
+
+extern TraitSummaryStatistics predatorSpeedSummaryStatistics ;
+
+extern TraitSummaryStatistics predatorHungerSensitivitySummaryStatistics ;
+
+extern TraitSummaryStatistics predatorMetabolicRateSummaryStatistics;
+
+extern TraitSummaryStatistics predatorLustLevelSummaryStatistics;
+
+extern TraitSummaryStatistics predatorVisionRangeSummaryStatistics;
+
+extern SpeciesSummaryStatistics preySummaryStatistics ;
+
+extern SpeciesSummaryStatistics predatorSummaryStatistics ;
+
+extern std::vector<SpeciesSummaryStatistics> summaryStatistics ; 
 
 struct Plot {
     sf::VertexArray xcoord;
@@ -75,11 +119,11 @@ Plot linePlot(float posX, float posY, std::vector<float> dataPoints, sf::Font& f
     std::string title, float height = 120.0, float width = 225.0, int timeSpan = 500);
 
 
-Plot2 twoLinesPlot(float posX, float posY, std::vector<float> dataPoints, std::vector<float>& dataPoints2, std::vector<float>& dataPoints3,
-    sf::Font& font, std::string title, float height = 120.0, float width = 225.0, int timeSpan = 500);
+Plot2 twoLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, std::vector<float>& dataPoints3,
+    sf::Font& font, std::string title, float height = 100.0, float width = 225.0, int timeSpan = 500);
 
-Plot3 threeLinesPlot(float posX, float posY, std::vector<float> dataPoints, std::vector<float>& dataPoints2, std::vector<float>& dataPoints3,
-    std::vector<float>& dataPoints4, sf::Font& font, std::string title, float height = 120.0, float width = 225.0, int timeSpan = 500);
+Plot3 threeLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, std::vector<float>& dataPoints3,
+    std::vector<float>& dataPoints4, sf::Font& font, std::string title, float height = 100.0, float width = 225.0, int timeSpan = 500);
 
 Plot4 pieChart(float posX, float posY,std::vector<float> dataPoints, std::vector<float> dataPoints2 
     ,sf::Font& font, std::string title, float radius = 50.0);

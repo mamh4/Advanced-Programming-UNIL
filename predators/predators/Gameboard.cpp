@@ -15,6 +15,8 @@
 #include <random>
 #include <thread>
 
+int simulationTime = 0;
+
 int numberOfPredators = 0;
 int numberOfPrey = 0;
 int numberOfFlora = 0;
@@ -29,12 +31,18 @@ int numberOfFemalePredator = 0;
 int numberOfMalePrey = 0;
 int numberOfFemalePrey = 0;
 
+float totalAgePredator = 0.0;
+float totalAgePrey = 0.0;
+float avgAgePredator = 0.0;
+float avgAgePrey = 0.0;
+
 
 //TODO: Decide on intialisation in main class of two vectors Fauna and Flora and then we loop through all Faunas, then all Floras? I think so
 //TODO: Implement update for Prey and Flora
 
 int main()
-{    
+{   
+    
     //////////////////////////////////////////////////////// USER INPUT //////////////////////////////////////////////////////////////
     int inputNrPred = 0;
     int inputNrPrey = 0;
@@ -326,6 +334,8 @@ int main()
         windowParam.draw(standardMode);
         windowParam.draw(standardModeTextPrompt);
 
+
+
         windowParam.display();
     }
 
@@ -339,74 +349,42 @@ int main()
 
     std::vector<Organism*> organismVector;
 
-    //Data vectors initialisations:
-
-    std::vector<float> numberOfFaunaAtTimeT;
-    float totalNumberOfFauna = numberOfPrey + numberOfPredators;
-    numberOfFaunaAtTimeT.push_back(totalNumberOfFauna);
-
-    std::vector<float> numberOfPredatorsAtTimeT;
-    numberOfPredatorsAtTimeT.push_back(numberOfPredators);
-    
-    std::vector<float> numberOfPreyAtTimeT;
-    numberOfPreyAtTimeT.push_back(numberOfPrey);
-
-    std::vector<float> totalEnergyOfPredatorAtTimeT;
-    totalEnergyOfPredatorAtTimeT.push_back(totalEnergyPredator);
-
-    std::vector<float> totalEnergyOfPreyAtTimeT;
-    totalEnergyOfPreyAtTimeT.push_back(totalEnergyPrey);
-
-    std::vector<float> totalEnergyOfFloraAtTimeT;
-    totalEnergyOfFloraAtTimeT.push_back(totalEnergyFlora);
-
-    float totalEnergy = totalEnergyFlora + totalEnergyPrey + totalEnergyPredator;
-    std::vector<float> totalEnergyAtTimeT;
-    totalEnergyAtTimeT.push_back(totalEnergy);
-
-    std::vector<float> numberOfFemalePredatorsAtTimeT;
-    numberOfFemalePredatorsAtTimeT.push_back(numberOfFemalePredator);
-
-    std::vector<float> numberOfFemalePreyAtTimeT;
-    numberOfFemalePreyAtTimeT.push_back(numberOfFemalePrey);
-
-
     
     //TO BE DELETED Below
-    Predator* myPredator = new Predator(500, 500, 5, 400, true, 1, 10, 1, 50, 400);
+    Predator* myPredator = new Predator(500, 600, 5, 2000, true, 1, 10, 1, 50, 800);
     organismVector.push_back(myPredator);
-    Predator* myPredator2 = new Predator(475, 596, 5, 100, false, 1, 10, 1, 50, 800);
+    Predator* myPredator2 = new Predator(475, 596, 5, 1000, false, 1, 10, 1, 50, 800);
     organismVector.push_back(myPredator2);
 
-    Predator* myPredator3 = new Predator(500, 290, 5, 290, true, 1, 10, 1, 50, 800);
+    Predator* myPredator3 = new Predator(500, 290, 2, 500, true, 1, 10, 1, 50, 800);
     organismVector.push_back(myPredator3);
 
-    Predator* myPredator4 = new Predator(500, 290, 5, 290, true, 1, 10, 1, 50, 800);
+    Predator* myPredator4 = new Predator(500, 290, 2, 600, true, 1, 10, 1, 50, 800);
     organismVector.push_back(myPredator4);
 
-    Predator* myPredator5 = new Predator(330, 290, 5, 290, true, 1, 10, 1, 50, 800);
+    Predator* myPredator5 = new Predator(330, 290, 2, 500, true, 1, 10, 1, 50, 800);
     organismVector.push_back(myPredator5);
 
-    Prey* myPrey = new Prey(400, 460, 7, 200, true, 2, 10, 0.1, 50, 900, 1);
+    Prey* myPrey = new Prey(400, 460, 7, 600, true, 2, 10, 0.1, 50, 900, 1);
     organismVector.push_back(myPrey);
 
-    Prey* myPrey2 = new Prey(700, 700, 7, 200, true, 2, 10, 0.1, 50, 900, 1);
+    Prey* myPrey2 = new Prey(700, 700, 7, 600, true, 3, 10, 0.1, 50, 300, 1);
     organismVector.push_back(myPrey2);
 
     Prey* myPrey3 = new Prey(50, 660, 7, 200, false, 2, 10, 0.1, 50, 900, 1);
     organismVector.push_back(myPrey3);
 
-    Flora* myFlora = new Flora(500, 190, 10, 50, 0.5);
+    Flora* myFlora = new Flora(300, 800, 10, 50, 0.5);
     organismVector.push_back(myFlora);
 
-    Flora* myFlora2 = new Flora(900, 500, 10, 50, 0.5);
+    Flora* myFlora2 = new Flora(300, 800, 10, 50, 0.5);
     organismVector.push_back(myFlora2);
 
-    Flora* myFlora3 = new Flora(100, 600, 10, 50, 0.5);
+    Flora* myFlora3 = new Flora(500, 500, 10, 1000, 0.5);
     organismVector.push_back(myFlora3);
     //To be deleted Above
     
-    /*
+    /*UNCOMMENT
     //std::cout << organismVector.at(0)->getType() << std::endl;
     for (int i = 0; i < numberOfPredators; i++) {
         bool validRespawnPlace = false;
@@ -487,49 +465,47 @@ int main()
     UNCOMMENT*/
 
 
+    std::vector<float> numberOfFaunaAtTimeT;
+    float totalNumberOfFauna = numberOfPrey + numberOfPredators;
+    numberOfFaunaAtTimeT.push_back(totalNumberOfFauna);
+
+    std::vector<float> numberOfPredatorsAtTimeT;
+    numberOfPredatorsAtTimeT.push_back(numberOfPredators);
+
+    std::vector<float> numberOfPreyAtTimeT;
+    numberOfPreyAtTimeT.push_back(numberOfPrey);
+
+    std::vector<float> totalEnergyOfPredatorAtTimeT;
+    totalEnergyOfPredatorAtTimeT.push_back(totalEnergyPredator);
+
+    std::vector<float> totalEnergyOfPreyAtTimeT;
+    totalEnergyOfPreyAtTimeT.push_back(totalEnergyPrey);
+
+    std::vector<float> totalEnergyOfFloraAtTimeT;
+    totalEnergyOfFloraAtTimeT.push_back(totalEnergyFlora);
+
+    std::vector<float> numberOfFemalePredatorsAtTimeT;
+    numberOfFemalePredatorsAtTimeT.push_back(numberOfFemalePredator);
+
+    std::vector<float> numberOfFemalePreyAtTimeT;
+    numberOfFemalePreyAtTimeT.push_back(numberOfFemalePrey);
+
+    std::vector<float> avgAgePredatorAtTimeT;
+    std::vector<float> avgAgePreyAtTimeT;
+
+
+
+    /////////////////////////////////////////////// Simulation Window ////////////////////////////////////////////////////
+
     sf::RenderWindow window(sf::VideoMode(windowWidth+paneWidth, windowHeight), "Prey vs Predator");
 
-
-    /////////////////////////////////////////////// Statistics ////////////////////////////////////////////////////
 
     //Overlay on top of each other population counts!!!! with different colour plots based on flora, prey and pred
     sf::RectangleShape pane(sf::Vector2f(paneWidth, 720.f));
     pane.setPosition(sf::Vector2f(980.f, 0.f));
     pane.setFillColor(sf::Color(128,128,128));
 
-    /*
-    //plotting stuff
-    float plotHeight = 120.0;
-    float plotWidth = 250.0;
-
-    float plotX = 1010.0; // lower corner 
-    float plotY = 170.0;
-
-    float maxDataPoint = 0.0;
-    float minDataPoint = 0.0;
-
-    int timeWindow = 500; // Number of Data Points 
-
-
-    sf::VertexArray xcoord(sf::LineStrip, 2);
-    xcoord.setPrimitiveType(sf::LinesStrip);
-    xcoord[0].position = sf::Vector2f(plotX, plotY);
-    xcoord[1].position = sf::Vector2f(plotX + plotWidth, plotY);
-    xcoord[0].color = sf::Color::Black;
-    xcoord[1].color = sf::Color::Black;
-
-
-    sf::VertexArray ycoord(sf::LineStrip, 2);
-    ycoord.setPrimitiveType(sf::LinesStrip);
-    ycoord[0].position = sf::Vector2f(plotX, plotY);
-    ycoord[1].position = sf::Vector2f(plotX, plotY - plotHeight-30);
-    ycoord[0].color = sf::Color::Black;
-    ycoord[1].color = sf::Color::Black;
-
-    sf::VertexArray chartLines(sf::LineStrip, timeWindow);
-    chartLines.setPrimitiveType(sf::LinesStrip);
-
-    */
+    
     // Set the frame rate
     window.setFramerateLimit(60);
 
@@ -563,55 +539,17 @@ int main()
         totalEnergyOfFloraAtTimeT.push_back(totalEnergyFlora);
         totalEnergyOfPredatorAtTimeT.push_back(totalEnergyPredator);
         totalEnergyOfPreyAtTimeT.push_back(totalEnergyPrey);
-        totalEnergy = totalEnergyPredator + totalEnergyPrey + totalEnergyFlora;
-        totalEnergyAtTimeT.push_back(totalEnergy);
 
         numberOfFemalePredatorsAtTimeT.push_back(numberOfFemalePredator);
-        
-        ///dataPointvectors
-        
-        
-        /*
-        //float newDataPoint = 1.0*organismVector.size();
-
-//        if (dataPoints.size() > timeWindow  ) {
- //           for (int i = 0; i < (dataPoints.size() - 1) ; i++) {
-  //              dataPoints[i] = dataPoints[i + 1];
-   //         }
-    //        dataPoints[dataPoints.size() -1 ] = newDataPoint;
-     //   }
-      //  else {
-       //     dataPoints.push_back(newDataPoint);
-        //}
-
-        for (int i = 0; i < dataPoints.size(); i++) {
-            if (maxDataPoint < dataPoints[i]) {
-                maxDataPoint = dataPoints[i];
-            }
-            if (minDataPoint > dataPoints[i]) {
-                minDataPoint = dataPoints[i];
-            }
-        }
-        if ((maxDataPoint - minDataPoint) != 0.0) {//Removed if timeframe==0
-            for (int i = 0; i < std::min(static_cast<int>(dataPoints.size()), timeWindow); i++) { 
-                chartLines[i].position = sf::Vector2f(plotX + 1.0 * i * plotWidth / (timeWindow * 1.0),
-                    plotY - plotHeight * dataPoints[i] / (maxDataPoint - minDataPoint));
-                chartLines[i].color = sf::Color::Black;
-            }
-            if (static_cast<int>(dataPoints.size()) < timeWindow ){
-                for (int i = (static_cast<int>(dataPoints.size())) ; i < std::max(static_cast<int>(dataPoints.size()), timeWindow); i++) {
-                    chartLines[i].position = sf::Vector2f(plotX + 1.0 * (static_cast<int>(dataPoints.size()) -1)  * plotWidth / (timeWindow * 1.0),
-                        plotY - plotHeight * dataPoints[dataPoints.size()-1] / (maxDataPoint - minDataPoint));
-                    chartLines[i].color = sf::Color::Black;
-                }// CHECK SOLIDITY AS THIS WAS BUILT LAZILY 
-            }
-        }
-        */
-        
-        ///Trial
+        numberOfFemalePreyAtTimeT.push_back(numberOfFemalePrey);
 
 
-        //
+        avgAgePredator = totalAgePredator / numberOfPredators;
+        avgAgePrey = totalAgePrey / numberOfPrey;
+        avgAgePredatorAtTimeT.push_back(avgAgePredator);
+        avgAgePreyAtTimeT.push_back(avgAgePrey);
+        
+
 
         // Print statistics at the top left corner
         sf::Text text;
@@ -621,7 +559,8 @@ int main()
            
         }
         text.setFont(font);
-        text.setString("Population size: " + std::to_string(organismVector.size()) + "\n" +
+        text.setString("Simulation Time: " + std::to_string(simulationTime/60) + "\n" +
+            "Population size: " + std::to_string(organismVector.size()) + "\n" +
             "Predators: " + std::to_string(numberOfPredators) + "\n" +
             "Prey: " + std::to_string(numberOfPrey) + "\n" +
             "Flora: " + std::to_string(numberOfFlora));
@@ -634,11 +573,14 @@ int main()
         window.clear(sf::Color::White);
         
         //Plot linePlot1 = linePlot(1010.0, 170.0,numberOfPredatorsAtTimeT, font,"Hello",120.0,250.0,2000);
-        Plot2 mixedPlot = twoLinesPlot(1030.0, 170.0, numberOfFaunaAtTimeT,numberOfPredatorsAtTimeT, numberOfPreyAtTimeT
-            , font, "Hello", 120.0, 230.0, 2000);
+        Plot2 mixedPlot = twoLinesPlot(1030.0, 170.0,numberOfPredatorsAtTimeT, numberOfPreyAtTimeT
+            , font, "Total Population", 120.0, 230.0, 2000);
 
-        Plot3 mixedPlot2 = threeLinesPlot(1030.0, 370.0, totalEnergyAtTimeT, totalEnergyOfPredatorAtTimeT, totalEnergyOfPreyAtTimeT,
+        Plot3 mixedPlot2 = threeLinesPlot(1030.0, 330.0, totalEnergyOfPredatorAtTimeT, totalEnergyOfPreyAtTimeT,
             totalEnergyOfFloraAtTimeT, font, "Hello", 120.0, 230.0, 2000);
+
+        Plot2 mixedPlot3 = twoLinesPlot(1030.0, 490.0 ,avgAgePredatorAtTimeT, avgAgePreyAtTimeT,
+            font, "Average Age",120.0, 230.0, 2000);
         
         Plot4 myPieChart = pieChart(1065.0, 570.0, numberOfPredatorsAtTimeT, numberOfFemalePredatorsAtTimeT,font,"% Female Predator");
         Plot4 myPieChart2 = pieChart(1200.0, 570.0, numberOfPreyAtTimeT, numberOfFemalePreyAtTimeT, font, "% Female Prey");
@@ -647,49 +589,126 @@ int main()
         for (Organism* organism : organismVector) {
             window.draw(organism->getShape());
         }
-            window.draw(pane);
-            window.draw(text);
+        window.draw(pane);
+        window.draw(text);
+        window.draw(mixedPlot.xcoord);
+        window.draw(mixedPlot.ycoord);
+        window.draw(mixedPlot.chartLine);
+        window.draw(mixedPlot.chartLine2);
+        window.draw(mixedPlot.maxValue);
+        window.draw(mixedPlot.midValue);
+        window.draw(mixedPlot.percentile25);
+        window.draw(mixedPlot.percentile75);
+        window.draw(mixedPlot.title);
 
-            window.draw(mixedPlot.xcoord);
-            window.draw(mixedPlot.ycoord);
-            window.draw(mixedPlot.chartLine);
-            window.draw(mixedPlot.chartLine2);
-            window.draw(mixedPlot.maxValue);
-            window.draw(mixedPlot.midValue);
-            window.draw(mixedPlot.percentile25);
-            window.draw(mixedPlot.percentile75);
-            window.draw(mixedPlot.title);
+        window.draw(mixedPlot2.xcoord);
+        window.draw(mixedPlot2.ycoord);
+        window.draw(mixedPlot2.chartLine);
+        window.draw(mixedPlot2.chartLine2);
+        window.draw(mixedPlot2.chartLine3);
+        window.draw(mixedPlot2.maxValue);
+        window.draw(mixedPlot2.midValue);
+        window.draw(mixedPlot2.percentile25);
+        window.draw(mixedPlot2.percentile75);
 
-            window.draw(mixedPlot2.xcoord);
-            window.draw(mixedPlot2.ycoord);
-            window.draw(mixedPlot2.chartLine);
-            window.draw(mixedPlot2.chartLine2);
-            window.draw(mixedPlot2.chartLine3);
-            window.draw(mixedPlot2.maxValue);
-            window.draw(mixedPlot2.midValue);
-            window.draw(mixedPlot2.percentile25);
-            window.draw(mixedPlot2.percentile75);
+        window.draw(mixedPlot3.xcoord);
+        window.draw(mixedPlot3.ycoord);
+        window.draw(mixedPlot3.chartLine);
+        window.draw(mixedPlot3.chartLine2);
+        window.draw(mixedPlot3.maxValue);
+        window.draw(mixedPlot3.midValue);
+        window.draw(mixedPlot3.percentile25);
+        window.draw(mixedPlot3.percentile75);
             
             
-            window.draw(myPieChart.circle);
-            window.draw(myPieChart.title);
-            window.draw(myPieChart.xlabel);
-            for (int i = 0; i < myPieChart.chartlinesVector.size(); i++) {
-                window.draw(myPieChart.chartlinesVector[i]);
-            }
+        window.draw(myPieChart.circle);
+        window.draw(myPieChart.title);
+        window.draw(myPieChart.xlabel);
+        for (int i = 0; i < myPieChart.chartlinesVector.size(); i++) {
+            window.draw(myPieChart.chartlinesVector[i]);
+        }
 
-            window.draw(myPieChart2.circle);
-            window.draw(myPieChart2.title);
-            window.draw(myPieChart2.xlabel);
-            for (int i = 0; i < myPieChart2.chartlinesVector.size(); i++) {
-                window.draw(myPieChart2.chartlinesVector[i]);
-            }
+        window.draw(myPieChart2.circle);
+        window.draw(myPieChart2.title);
+        window.draw(myPieChart2.xlabel);
+        for (int i = 0; i < myPieChart2.chartlinesVector.size(); i++) {
+            window.draw(myPieChart2.chartlinesVector[i]);
+        }
 
+        //Line Plots legend
+        sf::RectangleShape predatorBox(sf::Vector2f(8.f, 8.f));
+        predatorBox.setFillColor(sf::Color::Red);
+        predatorBox.setPosition(1040, 500);
+        
+        sf::RectangleShape preyBox(sf::Vector2f(8.f, 8.f));
+        preyBox.setFillColor(sf::Color::Blue);
+        preyBox.setPosition(1110, 500);
+
+        sf::RectangleShape floraBox(sf::Vector2f(8.f, 8.f));
+        floraBox.setFillColor(sf::Color::Green);
+        floraBox.setPosition(1165, 500);
+
+        sf::Text predatorTextString;
+        predatorTextString.setFont(font);
+        predatorTextString.setCharacterSize(12);
+        predatorTextString.setFillColor(sf::Color::Black);
+        predatorTextString.setString("Predator");
+        predatorTextString.setPosition(1050, 496);
+
+        sf::Text preyTextString;
+        preyTextString.setFont(font);
+        preyTextString.setCharacterSize(12);
+        preyTextString.setFillColor(sf::Color::Black);
+        preyTextString.setString("Prey");
+        preyTextString.setPosition(1120, 496);
+
+
+        sf::Text floraTextString;
+        floraTextString.setFont(font);
+        floraTextString.setCharacterSize(12);
+        floraTextString.setFillColor(sf::Color::Black);
+        floraTextString.setString("Flora");
+        floraTextString.setPosition(1175, 496);
+
+        window.draw(predatorBox);
+        window.draw(preyBox);
+        window.draw(floraBox);
+        window.draw(predatorTextString);
+        window.draw(preyTextString);
+        window.draw(floraTextString);
+
+        //Pie Chart Legend
+        sf::RectangleShape maleBox(sf::Vector2f(8.f, 8.f));
+        maleBox.setFillColor(sf::Color(173, 216, 230));
+        maleBox.setPosition(1070, 680);
+
+        sf::RectangleShape femaleBox(sf::Vector2f(8.f, 8.f));
+        femaleBox.setFillColor(sf::Color::Magenta);
+        femaleBox.setPosition(1130, 680);
+
+        sf::Text maleTextString;
+        maleTextString.setFont(font);
+        maleTextString.setCharacterSize(12);
+        maleTextString.setFillColor(sf::Color::Black);
+        maleTextString.setString("Male");
+        maleTextString.setPosition(1080, 676);
+
+        sf::Text femaleTextString;
+        femaleTextString.setFont(font);
+        femaleTextString.setCharacterSize(12);
+        femaleTextString.setFillColor(sf::Color::Black);
+        femaleTextString.setString("Female");
+        femaleTextString.setPosition(1140, 676);
+
+        window.draw(maleBox);
+        window.draw(femaleBox);
+        window.draw(maleTextString);
+        window.draw(femaleTextString);
             //window.draw(linePlot(1010.0, 170.0, dataPoints, "Hello")[1]);
             //window.draw(linePlot(1010.0, 170.0, dataPoints, "Hello")[2]);
 
         
-
+        simulationTime ++ ; 
         window.display();
     }
     
