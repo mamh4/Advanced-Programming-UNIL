@@ -574,16 +574,16 @@ int main()
         
         //Plot linePlot1 = linePlot(1010.0, 170.0,numberOfPredatorsAtTimeT, font,"Hello",120.0,250.0,2000);
         Plot2 mixedPlot = twoLinesPlot(1030.0, 170.0,numberOfPredatorsAtTimeT, numberOfPreyAtTimeT
-            , font, "Total Population", 120.0, 230.0, 2000);
+            , font, "Total Population", 110.0, 225.0, 1800);
 
         Plot3 mixedPlot2 = threeLinesPlot(1030.0, 330.0, totalEnergyOfPredatorAtTimeT, totalEnergyOfPreyAtTimeT,
-            totalEnergyOfFloraAtTimeT, font, "Hello", 120.0, 230.0, 2000);
+            totalEnergyOfFloraAtTimeT, font, "Total Energy", 110.0, 225.0, 1800);
 
         Plot2 mixedPlot3 = twoLinesPlot(1030.0, 490.0 ,avgAgePredatorAtTimeT, avgAgePreyAtTimeT,
-            font, "Average Age",120.0, 230.0, 2000);
+            font, "Average Age",110.0, 225.0, 1800);
         
-        Plot4 myPieChart = pieChart(1065.0, 570.0, numberOfPredatorsAtTimeT, numberOfFemalePredatorsAtTimeT,font,"% Female Predator");
-        Plot4 myPieChart2 = pieChart(1200.0, 570.0, numberOfPreyAtTimeT, numberOfFemalePreyAtTimeT, font, "% Female Prey");
+        Plot4 myPieChart = pieChart(1065.0, 605.0, numberOfPredatorsAtTimeT, numberOfFemalePredatorsAtTimeT,font,"% Female Predator");
+        Plot4 myPieChart2 = pieChart(1200.0, 605.0, numberOfPreyAtTimeT, numberOfFemalePreyAtTimeT, font, "% Female Prey");
 
         // draw the organisms and the text
         for (Organism* organism : organismVector) {
@@ -600,6 +600,10 @@ int main()
         window.draw(mixedPlot.percentile25);
         window.draw(mixedPlot.percentile75);
         window.draw(mixedPlot.title);
+        window.draw(mixedPlot.maxXValue);
+        window.draw(mixedPlot.midXValue);
+        window.draw(mixedPlot.percentile25XValue);
+        window.draw(mixedPlot.percentile75XValue);
 
         window.draw(mixedPlot2.xcoord);
         window.draw(mixedPlot2.ycoord);
@@ -610,6 +614,11 @@ int main()
         window.draw(mixedPlot2.midValue);
         window.draw(mixedPlot2.percentile25);
         window.draw(mixedPlot2.percentile75);
+        window.draw(mixedPlot2.maxXValue);
+        window.draw(mixedPlot2.midXValue);
+        window.draw(mixedPlot2.percentile25XValue);
+        window.draw(mixedPlot2.percentile75XValue);
+        window.draw(mixedPlot2.title);
 
         window.draw(mixedPlot3.xcoord);
         window.draw(mixedPlot3.ycoord);
@@ -619,6 +628,12 @@ int main()
         window.draw(mixedPlot3.midValue);
         window.draw(mixedPlot3.percentile25);
         window.draw(mixedPlot3.percentile75);
+        window.draw(mixedPlot3.maxXValue);
+        window.draw(mixedPlot3.midXValue);
+        window.draw(mixedPlot3.percentile25XValue);
+        window.draw(mixedPlot3.percentile75XValue);
+        window.draw(mixedPlot3.title);
+        window.draw(mixedPlot3.ylabel);
             
             
         window.draw(myPieChart.circle);
@@ -638,29 +653,29 @@ int main()
         //Line Plots legend
         sf::RectangleShape predatorBox(sf::Vector2f(8.f, 8.f));
         predatorBox.setFillColor(sf::Color::Red);
-        predatorBox.setPosition(1040, 500);
+        predatorBox.setPosition(1040, 525);
         
         sf::RectangleShape preyBox(sf::Vector2f(8.f, 8.f));
         preyBox.setFillColor(sf::Color::Blue);
-        preyBox.setPosition(1110, 500);
+        preyBox.setPosition(1110, 525);
 
         sf::RectangleShape floraBox(sf::Vector2f(8.f, 8.f));
         floraBox.setFillColor(sf::Color::Green);
-        floraBox.setPosition(1165, 500);
+        floraBox.setPosition(1165, 525);
 
         sf::Text predatorTextString;
         predatorTextString.setFont(font);
         predatorTextString.setCharacterSize(12);
         predatorTextString.setFillColor(sf::Color::Black);
         predatorTextString.setString("Predator");
-        predatorTextString.setPosition(1050, 496);
+        predatorTextString.setPosition(1050, 521);
 
         sf::Text preyTextString;
         preyTextString.setFont(font);
         preyTextString.setCharacterSize(12);
         preyTextString.setFillColor(sf::Color::Black);
         preyTextString.setString("Prey");
-        preyTextString.setPosition(1120, 496);
+        preyTextString.setPosition(1120, 521);
 
 
         sf::Text floraTextString;
@@ -668,7 +683,7 @@ int main()
         floraTextString.setCharacterSize(12);
         floraTextString.setFillColor(sf::Color::Black);
         floraTextString.setString("Flora");
-        floraTextString.setPosition(1175, 496);
+        floraTextString.setPosition(1175, 521);
 
         window.draw(predatorBox);
         window.draw(preyBox);
@@ -680,25 +695,25 @@ int main()
         //Pie Chart Legend
         sf::RectangleShape maleBox(sf::Vector2f(8.f, 8.f));
         maleBox.setFillColor(sf::Color(173, 216, 230));
-        maleBox.setPosition(1070, 680);
+        maleBox.setPosition(1070, 695);
 
         sf::RectangleShape femaleBox(sf::Vector2f(8.f, 8.f));
         femaleBox.setFillColor(sf::Color::Magenta);
-        femaleBox.setPosition(1130, 680);
+        femaleBox.setPosition(1130, 695);
 
         sf::Text maleTextString;
         maleTextString.setFont(font);
         maleTextString.setCharacterSize(12);
         maleTextString.setFillColor(sf::Color::Black);
         maleTextString.setString("Male");
-        maleTextString.setPosition(1080, 676);
+        maleTextString.setPosition(1080, 691);
 
         sf::Text femaleTextString;
         femaleTextString.setFont(font);
         femaleTextString.setCharacterSize(12);
         femaleTextString.setFillColor(sf::Color::Black);
         femaleTextString.setString("Female");
-        femaleTextString.setPosition(1140, 676);
+        femaleTextString.setPosition(1140, 691);
 
         window.draw(maleBox);
         window.draw(femaleBox);

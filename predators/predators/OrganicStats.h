@@ -4,6 +4,8 @@
 #include <SFML/Graphics.hpp>
 #include <variant>
 
+extern int simulationTime;
+
 extern int numberOfPredators;
 extern int numberOfPrey;
 extern int numberOfFlora;
@@ -84,11 +86,15 @@ struct Plot2 {
     sf::VertexArray chartLine2;
     sf::Text title;
     //sf::Text xlabel;
-    //sf::Text ylabel;
+    sf::Text ylabel;
     sf::Text maxValue;
     sf::Text midValue;
     sf::Text percentile25;
     sf::Text percentile75;
+    sf::Text maxXValue;
+    sf::Text midXValue;
+    sf::Text percentile25XValue;
+    sf::Text percentile75XValue;
 };
 
 struct Plot3 {
@@ -97,13 +103,17 @@ struct Plot3 {
     sf::VertexArray chartLine;
     sf::VertexArray chartLine2;
     sf::VertexArray chartLine3;
-    //sf::Text title;
+    sf::Text title;
     //sf::Text xlabel;
     //sf::Text ylabel;
     sf::Text maxValue;
     sf::Text midValue;
     sf::Text percentile25;
     sf::Text percentile75;
+    sf::Text maxXValue;
+    sf::Text midXValue;
+    sf::Text percentile25XValue;
+    sf::Text percentile75XValue;
 };
 
 struct Plot4 {

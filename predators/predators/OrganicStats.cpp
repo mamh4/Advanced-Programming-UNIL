@@ -136,10 +136,84 @@ Plot2 twoLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, std:
     sf::Text theTitle;
     theTitle.setFont(font);
     theTitle.setCharacterSize(12);
-    theTitle.setPosition(posX +width/2 - theTitle.getLocalBounds().width,posY-height);//posX+width/2 , posY - height-20);
+    theTitle.setPosition(posX +(width)/2,posY-height-15);//posX+width/2 , posY - height-20);
     theTitle.setFillColor(sf::Color::Black);
     theTitle.setString(title);
-    theTitle.setOrigin(theTitle.getLocalBounds().width, theTitle.getLocalBounds().height);
+    theTitle.setOrigin(theTitle.getGlobalBounds().width/2, 0);
+    theTitle.setStyle(sf::Text::Italic);
+
+
+
+    //ylabes
+    sf::Text ylabel;
+    ylabel.setFont(font);
+    ylabel.setCharacterSize(12);
+    ylabel.setPosition(posX+width-ylabel.getGlobalBounds().width, posY + 8);
+    ylabel.setFillColor(sf::Color::Black);
+    ylabel.setString("Simulation Time");
+    ylabel.setOrigin(ylabel.getGlobalBounds().width, 0);
+
+
+    //X-axis
+    sf::Text xAxisMax;
+    xAxisMax.setFont(font);
+    xAxisMax.setCharacterSize(12);
+    xAxisMax.setPosition(posX + width, posY +5);
+    xAxisMax.setFillColor(sf::Color::Black);
+    float maxXDataPoint = timeSpan / 60.0;
+
+    sf::Text xAxisMid;
+    xAxisMid.setFont(font);
+    xAxisMid.setCharacterSize(12);
+    xAxisMid.setPosition(posX + width/2, posY + 5);
+    xAxisMid.setFillColor(sf::Color::Black);
+
+    sf::Text xAxis25;
+    xAxis25.setFont(font);
+    xAxis25.setCharacterSize(12);
+    xAxis25.setPosition(posX + width / 4, posY + 5);
+    xAxis25.setFillColor(sf::Color::Black);
+
+    sf::Text xAxis75;
+    xAxis75.setFont(font);
+    xAxis75.setCharacterSize(12);
+    xAxis75.setPosition(posX + 3*width / 4, posY + 5);
+    xAxis75.setFillColor(sf::Color::Black);
+
+
+
+
+
+
+    if (dataPoints2.size() >= timeSpan) {
+        maxXDataPoint = simulationTime / 60.0;
+        }
+
+
+
+    std::stringstream streamx;
+    streamx << std::fixed << std::setprecision(1) << maxXDataPoint;
+    std::string maxX = streamx.str();
+    xAxisMax.setString(maxX);
+
+
+    std::stringstream stream2x;
+    stream2x << std::fixed << std::setprecision(1) << (maxXDataPoint / 2.0);
+    std::string midX = stream2x.str();
+    xAxisMid.setString(midX);
+
+
+    std::stringstream stream3x;
+    stream3x << std::fixed << std::setprecision(1) << (maxXDataPoint / 4.0);
+    std::string m25x = stream3x.str();
+    xAxis25.setString(m25x);
+
+
+    std::stringstream stream4x;
+    stream4x << std::fixed << std::setprecision(1) << (maxXDataPoint * 3.0 / 4.0);
+    std::string m75x = stream4x.str();
+    xAxis75.setString(m75x);
+
 
 
     //initialise axes string
@@ -279,6 +353,11 @@ Plot2 twoLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, std:
     yAxisMid.setOrigin(yAxisMax.getLocalBounds().width, yAxisMax.getLocalBounds().height);
     yAxis25.setOrigin(yAxisMax.getLocalBounds().width, yAxisMax.getLocalBounds().height);
     yAxis75.setOrigin(yAxisMax.getLocalBounds().width, yAxisMax.getLocalBounds().height);
+    xAxisMax.setOrigin(xAxisMax.getLocalBounds().width, xAxisMax.getLocalBounds().height);
+    xAxisMid.setOrigin(xAxisMid.getLocalBounds().width, xAxisMid.getLocalBounds().height);
+    xAxis25.setOrigin(xAxis25.getLocalBounds().width, xAxis25.getLocalBounds().height);
+    xAxis75.setOrigin(xAxis75.getLocalBounds().width, xAxis75.getLocalBounds().height);
+
 
     myPlot.xcoord = xcoord;
     myPlot.ycoord = ycoord;
@@ -289,6 +368,12 @@ Plot2 twoLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, std:
     myPlot.percentile25 = yAxis25;
     myPlot.percentile75 = yAxis75;
     myPlot.title = theTitle;
+    myPlot.maxXValue = xAxisMax;
+    myPlot.midXValue = xAxisMid;
+    myPlot.percentile25XValue  = xAxis25;
+    myPlot.percentile75XValue = xAxis75;
+    myPlot.ylabel = ylabel;
+
     return myPlot;
 
 }
@@ -326,7 +411,77 @@ Plot3 threeLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, st
     sf::VertexArray chartLines3(sf::LineStrip, timeSpan);
     chartLines3.setPrimitiveType(sf::LinesStrip);
 
+    //title
+    sf::Text theTitle;
+    theTitle.setFont(font);
+    theTitle.setCharacterSize(12);
+    theTitle.setPosition(posX + width / 2, posY - height - 15);//posX+width/2 , posY - height-20);
+    theTitle.setFillColor(sf::Color::Black);
+    theTitle.setString(title);
+    theTitle.setOrigin(theTitle.getGlobalBounds().width / 2, 0);
+    theTitle.setStyle(sf::Text::Italic);
+
     //initialise axes string
+
+        //X-axis
+    sf::Text xAxisMax;
+    xAxisMax.setFont(font);
+    xAxisMax.setCharacterSize(12);
+    xAxisMax.setPosition(posX + width, posY + 5);
+    xAxisMax.setFillColor(sf::Color::Black);
+    float maxXDataPoint = timeSpan / 60.0;
+
+    sf::Text xAxisMid;
+    xAxisMid.setFont(font);
+    xAxisMid.setCharacterSize(12);
+    xAxisMid.setPosition(posX + width / 2, posY + 5);
+    xAxisMid.setFillColor(sf::Color::Black);
+
+    sf::Text xAxis25;
+    xAxis25.setFont(font);
+    xAxis25.setCharacterSize(12);
+    xAxis25.setPosition(posX + width / 4, posY + 5);
+    xAxis25.setFillColor(sf::Color::Black);
+
+    sf::Text xAxis75;
+    xAxis75.setFont(font);
+    xAxis75.setCharacterSize(12);
+    xAxis75.setPosition(posX + 3 * width / 4, posY + 5);
+    xAxis75.setFillColor(sf::Color::Black);
+
+
+
+
+    if (dataPoints2.size() >= timeSpan) {
+        maxXDataPoint = simulationTime / 60.0;
+    }
+
+
+
+    std::stringstream streamx;
+    streamx << std::fixed << std::setprecision(1) << maxXDataPoint;
+    std::string maxX = streamx.str();
+    xAxisMax.setString(maxX);
+
+
+    std::stringstream stream2x;
+    stream2x << std::fixed << std::setprecision(1) << (maxXDataPoint / 2.0);
+    std::string midX = stream2x.str();
+    xAxisMid.setString(midX);
+
+
+    std::stringstream stream3x;
+    stream3x << std::fixed << std::setprecision(1) << (maxXDataPoint / 4.0);
+    std::string m25x = stream3x.str();
+    xAxis25.setString(m25x);
+
+
+    std::stringstream stream4x;
+    stream4x << std::fixed << std::setprecision(1) << (maxXDataPoint * 3.0 / 4.0);
+    std::string m75x = stream4x.str();
+    xAxis75.setString(m75x);
+
+
 
     //Y-axis
     sf::Text yAxisMax;
@@ -463,6 +618,10 @@ Plot3 threeLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, st
     yAxisMid.setOrigin(yAxisMax.getLocalBounds().width, yAxisMax.getLocalBounds().height);
     yAxis25.setOrigin(yAxisMax.getLocalBounds().width, yAxisMax.getLocalBounds().height);
     yAxis75.setOrigin(yAxisMax.getLocalBounds().width, yAxisMax.getLocalBounds().height);
+    xAxisMax.setOrigin(xAxisMax.getLocalBounds().width, xAxisMax.getLocalBounds().height);
+    xAxisMid.setOrigin(xAxisMid.getLocalBounds().width, xAxisMid.getLocalBounds().height);
+    xAxis25.setOrigin(xAxis25.getLocalBounds().width, xAxis25.getLocalBounds().height);
+    xAxis75.setOrigin(xAxis75.getLocalBounds().width, xAxis75.getLocalBounds().height);
 
     myPlot.xcoord = xcoord;
     myPlot.ycoord = ycoord;
@@ -473,6 +632,11 @@ Plot3 threeLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, st
     myPlot.midValue = yAxisMid;
     myPlot.percentile25 = yAxis25;
     myPlot.percentile75 = yAxis75;
+    myPlot.maxXValue = xAxisMax;
+    myPlot.midXValue = xAxisMid;
+    myPlot.percentile25XValue = xAxis25;
+    myPlot.percentile75XValue = xAxis75;
+    myPlot.title = theTitle;
     return myPlot;
 
 }
