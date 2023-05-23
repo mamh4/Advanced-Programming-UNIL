@@ -730,11 +730,6 @@ Plot5 pieChart2(float posX, float posY, std::vector<float> dataPoints, std::vect
     float percentageOfFemale = dataPoints2[dataPoints2.size() - 1] / dataPoints[dataPoints.size() - 1];
     float percentageOfFertileFemale = dataPoints3[dataPoints3.size() - 1] / dataPoints2[dataPoints2.size() - 1];
     float percentageOfFertileMale = dataPoints4[dataPoints4.size() - 1] / (dataPoints[dataPoints.size() - 1] - dataPoints2[dataPoints2.size() - 1]);
-
-    //std::cout << "percentageFemale: " << percentageOfFemale << std::endl;
-    //std::cout << "percentageFertileFemale" <<percentageOfFertileFemale << std::endl;
-    std::cout << "percentageFertileMaleNum" << dataPoints4[dataPoints4.size() - 1] << std::endl;
-    std::cout << "percentageFertileMaleDenom" << (dataPoints[dataPoints.size() - 1] - dataPoints2[dataPoints2.size() - 1]) << std::endl;
     
     float degrees = 360;
 
@@ -791,15 +786,15 @@ Plot5 pieChart2(float posX, float posY, std::vector<float> dataPoints, std::vect
     float additionalRadius = 15;
     //pie charting
     if (dataPoints[dataPoints.size() - 1] != 0) {
-        for (int i = 0; i < degrees; i++) {
+        for (int i = degrees-1; i >= 0; i--) {
             chartlineVector[i][1].position = sf::Vector2f(posX + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
             chartlineVector2[i][1].position = sf::Vector2f(posX + (radius + additionalRadius) * cos(2 * M_PI * i / degrees), posY + (radius + additionalRadius) * sin(2 * M_PI * i / degrees));
-            if (i <= percentageOfFemale * degrees) {
+            if (i >= degrees-( percentageOfFemale * degrees)) {
                 //chartlineVector[i][1].position = sf::Vector2f(posX + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
                 chartlineVector[i][0].color = sf::Color::Magenta;//female colour
                 chartlineVector[i][1].color = sf::Color::Magenta;
                 //bigger plots
-                if (i <= percentageOfFertileFemale * degrees) {
+                if (i >= degrees - ( percentageOfFertileFemale * degrees)) {
 					chartlineVector2[i][0].color = sf::Color::Color(255, 165, 0);//fertile colour
 					chartlineVector2[i][1].color = sf::Color::Color(255, 165, 0);
                 }
@@ -814,7 +809,7 @@ Plot5 pieChart2(float posX, float posY, std::vector<float> dataPoints, std::vect
                 chartlineVector[i][0].color = sf::Color(173, 216, 230);//male colour
                 chartlineVector[i][1].color = sf::Color(173, 216, 230);
                 //bigger plots 
-                if (i <= percentageOfFertileMale * degrees) {
+                if (i >= degrees -( percentageOfFertileMale * degrees)) {
                     //chartlineVector2[i][1].position = sf::Vector2f(posX + (radius + additionalRadius) * cos(2 * M_PI * i / degrees), posY + (radius + additionalRadius) * sin(2 * M_PI * i / degrees));
                     chartlineVector2[i][0].color = sf::Color::Color(255, 165, 0);
                     chartlineVector2[i][1].color = sf::Color::Color(255, 165, 0);
