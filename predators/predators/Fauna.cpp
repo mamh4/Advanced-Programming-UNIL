@@ -99,8 +99,8 @@
         this->deathReport(); 
         if (Predator* myPredator = dynamic_cast<Predator*>(this)) {
             numberOfPredators -=1;
-            std::cout << "I am a predator, my energy level before dying is  " << this->energy << " total energy before dying is : " << totalEnergyPredator
-                << std::endl;
+            //std::cout << "I am a predator, my energy level before dying is  " << this->energy << " total energy before dying is : " << totalEnergyPredator
+             //   << std::endl;
             if (this->energy > 0) {
                 totalEnergyPredator -= this->energy;
             }
@@ -108,9 +108,15 @@
             std::cout << "total energy after pred death is " << totalEnergyPredator << std::endl;
             if (this->sex) {
                 numberOfFemalePredator -= 1;
+                if (this->fertile) {
+					numberOfFertileFemalePredator -= 1;
+				}
             }
             else {
                 numberOfMalePredator -= 1;
+                if (this->fertile) {
+                    numberOfFertileMalePredator -= 1;
+                }
             }
         }
         else if (Prey* myPrey = dynamic_cast<Prey*>(this)) {
@@ -124,9 +130,16 @@
             std::cout << "total energy after pred death is " << totalEnergyPredator << std::endl;
             if (this->sex) {
                 numberOfFemalePrey -= 1;
+                if (this->fertile) {
+                    numberOfFertileFemalePrey -= 1;
+                }
             }
             else {
                 numberOfMalePrey -= 1;
+                if (this->fertile) {
+                    numberOfFertileMalePrey -= 1;
+
+                }
             }
         }
         auto it = std::remove(organismVector.begin(), organismVector.end(), this);
@@ -240,18 +253,24 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
         int maxFertilityAge = 100;
         if ((1.0 * (rand() % 100) < std::max(0.0, (100 * std::pow(((this->getAge() - minFertilityAge) / (maxFertilityAge - minFertilityAge)), 10)))) and not this->getFertile()) {
             this->setFertile(true);
-            std::cout << "Fertility Unlocked " << std::endl;
+            std::cout << "Fertility Unlocked, I am: "<< this->getSex() <<this->getType()<< "numberOfFertileFemalePred" << numberOfFertileFemalePredator << std::endl;
 
             if (Prey* myPrey = dynamic_cast<Prey*>(this)) {
                 if (this->getSex()) {
                     numberOfFertileFemalePrey += 1;
                 }
-                
-                else if (Predator* myPredator = dynamic_cast<Predator*>(this)) {
-                    if (this->getSex()) {
-                        numberOfFertileFemalePredator += 1;
-                    }
+                else {
+                    numberOfFertileMalePrey += 1;
                 }
+            }
+            else if (Predator* myPredator = dynamic_cast<Predator*>(this)) {
+                if (this->getSex()) {
+                    numberOfFertileFemalePredator += 1;
+                }
+                else {
+                    numberOfFertileMalePredator += 1;
+                }
+              
 			}
 
         }
@@ -655,7 +674,7 @@ float geneticEngine (std::string speciesName, std::string traitName, float paren
             }
         }
         geneticRand = (rand() % 100); 
-        std::cout << "alleleCounter is equal to " << alleleCounter << "corresponding to an interval between " << geneticTraitInterval[alleleCounter] << " and " << geneticTraitInterval[alleleCounter + 1] << "and random increment is " << geneticRand << " percent " <<  std::endl; 
+        //std::cout << "alleleCounter is equal to " << alleleCounter << "corresponding to an interval between " << geneticTraitInterval[alleleCounter] << " and " << geneticTraitInterval[alleleCounter + 1] << "and random increment is " << geneticRand << " percent " <<  std::endl; 
         //offspringTraitValue = geneticTraitInterval[alleleCounter] + (geneticTraitInterval[alleleCounter + 1] - geneticTraitInterval[alleleCounter]) * geneticRand / 100.0;
         offspringTraitValue = geneticTraitInterval[alleleCounter] + (geneticTraitInterval[alleleCounter + 1] - geneticTraitInterval[alleleCounter]) * (0.5 + 0.5*std::pow(-1 + 2* geneticRand / 100.0,5 ));
 

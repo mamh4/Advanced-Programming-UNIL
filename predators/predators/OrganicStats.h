@@ -26,6 +26,9 @@ extern int numberOfFemalePrey;
 extern int numberOfFertileFemalePredator;
 extern int numberOfFertileFemalePrey;
 
+extern int numberOfFertileMalePredator;
+extern int numberOfFertileMalePrey;
+
 extern float totalAgePredator;
 extern float totalAgePrey;
 

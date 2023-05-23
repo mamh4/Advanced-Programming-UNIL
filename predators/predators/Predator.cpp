@@ -151,23 +151,23 @@ void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organi
 
 		int speed = 1;//rand() % 10 + 1;
 		speed = static_cast<int> (geneticEngine ("Predator", "Speed", this->getSpeed(), myPred->getSpeed() ))  ; 
-		std::cout << "Speed test genetics Engine " << speed << std::endl; 
+		//std::cout << "Speed test genetics Engine " << speed << std::endl; 
 
 		float hungerSensitivity = 1;//rand() % 100 + 1
 		hungerSensitivity = geneticEngine ("Predator", "Hunger Sensitivity", this->getHungerSensitivity(), myPred->getHungerSensitivity() ); 
-		std::cout << "Hunger Sensitivity test genetics Engine " << hungerSensitivity << std::endl; 
+		//std::cout << "Hunger Sensitivity test genetics Engine " << hungerSensitivity << std::endl; 
 
 		float metabolicRate = 0.1;//static_cast<float>(rand() % 10 + 1) / 10.0f;
 		metabolicRate = geneticEngine ("Predator", "Metabolic Rate", this->getMetabolicRate(), myPred->getMetabolicRate() ); 
-		std::cout << "Metabolic Rate test genetics Engine " << metabolicRate << std::endl; 
+		//std::cout << "Metabolic Rate test genetics Engine " << metabolicRate << std::endl; 
 
 		int lustLevel = 1;//rand() % 100 + 1;
 		lustLevel = geneticEngine ("Predator", "Lust Level", this->getLustLevel(), myPred->getLustLevel() ); 
-		std::cout << "Lust Level test genetics Engine " << lustLevel << std::endl; 
+		//std::cout << "Lust Level test genetics Engine " << lustLevel << std::endl; 
 
 		int visionRange = 250; //rand() % 100 + 1;
 		visionRange = geneticEngine ("Predator", "Vision Range", this->getVisionRange(), myPred->getVisionRange() ); 
-		std::cout << "Vision Range test genetics Engine " << visionRange << std::endl; 
+		//std::cout << "Vision Range test genetics Engine " << visionRange << std::endl; 
 
 		// CHECK EMPTY SPACE
 		//float childRadius = 5.0;

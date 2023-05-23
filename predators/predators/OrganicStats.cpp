@@ -686,30 +686,31 @@ Plot4 pieChart(float posX, float posY,std::vector<float> dataPoints, std::vector
     std::stringstream stream2;
     stream2 << std::fixed << std::setprecision(2) << (100.0 - (percentageOfFemale * 100.0));
     std::string percentageComplement = stream2.str();
-    theLabel.setString("Female: " +percentage + " %" +"\n"+
+    theLabel.setString( "Female: " +percentage + " %" +"\n"+
                         "Male: " + percentageComplement + " %");
     theLabel.setPosition(posX, posY + radius + 50);
     theLabel.setOrigin(radius, radius);
 
     //pie charting
-    if (dataPoints[dataPoints.size()-1]!=0) {
-        for (int i = 0; i < degrees; i++) {
-            if (i < percentageOfFemale * degrees) {
-                chartlineVector[i][1].position = sf::Vector2f(posX + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
-                chartlineVector[i][0].color = sf::Color::Magenta;
-                chartlineVector[i][1].color = sf::Color::Magenta;
-            }
-            else {
-                chartlineVector[i][1].position = sf::Vector2f(posX + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
-                chartlineVector[i][0].color = sf::Color(173, 216, 230);
-                chartlineVector[i][1].color = sf::Color(173, 216, 230);
-            }
+if (dataPoints[dataPoints.size() - 1] != 0) {
+    for (int i = 0; i < degrees; i++) {
+        if (i < percentageOfFemale * degrees) {
+            chartlineVector[i][1].position = sf::Vector2f(posX + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
+            chartlineVector[i][0].color = sf::Color::Magenta;
+            chartlineVector[i][1].color = sf::Color::Magenta;
         }
-    } else {
-        theLabel.setString("No Data available!");
-        theLabel.setPosition(posX, posY + radius + 50);
-        theLabel.setOrigin(radius, radius);
+        else {
+            chartlineVector[i][1].position = sf::Vector2f(posX + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
+            chartlineVector[i][0].color = sf::Color(173, 216, 230);
+            chartlineVector[i][1].color = sf::Color(173, 216, 230);
+        }
     }
+}
+else {
+    theLabel.setString("No Data available!");
+    theLabel.setPosition(posX, posY + radius + 50);
+    theLabel.setOrigin(radius, radius);
+}
    
 
    myPlot.chartlinesVector = chartlineVector;
@@ -727,9 +728,14 @@ Plot5 pieChart2(float posX, float posY, std::vector<float> dataPoints, std::vect
     Plot5 myPlot;
 
     float percentageOfFemale = dataPoints2[dataPoints2.size() - 1] / dataPoints[dataPoints.size() - 1];
-    float percentageOfFertileFemale = dataPoints3[dataPoints3.size() - 1] / dataPoints4[dataPoints.size() - 1];
-    float percentageOfFertileMale = dataPoints3[dataPoints3.size() - 1] / dataPoints4[dataPoints.size() - 1];
+    float percentageOfFertileFemale = dataPoints3[dataPoints3.size() - 1] / dataPoints2[dataPoints2.size() - 1];
+    float percentageOfFertileMale = dataPoints4[dataPoints4.size() - 1] / (dataPoints[dataPoints.size() - 1] - dataPoints2[dataPoints2.size() - 1]);
 
+    //std::cout << "percentageFemale: " << percentageOfFemale << std::endl;
+    //std::cout << "percentageFertileFemale" <<percentageOfFertileFemale << std::endl;
+    std::cout << "percentageFertileMaleNum" << dataPoints4[dataPoints4.size() - 1] << std::endl;
+    std::cout << "percentageFertileMaleDenom" << (dataPoints[dataPoints.size() - 1] - dataPoints2[dataPoints2.size() - 1]) << std::endl;
+    
     float degrees = 360;
 
     sf::CircleShape circle;
@@ -777,44 +783,46 @@ Plot5 pieChart2(float posX, float posY, std::vector<float> dataPoints, std::vect
     std::stringstream stream2;
     stream2 << std::fixed << std::setprecision(2) << (100.0 - (percentageOfFemale * 100.0));
     std::string percentageComplement = stream2.str();
-    theLabel.setString("Female: " + percentage + " %" + "\n" +
+    theLabel.setString("     " + title +std::string("\n") + "Female: " + percentage + " % " + "\n" +
         "Male: " + percentageComplement + " %");
     theLabel.setPosition(posX, posY + radius + 50);
     theLabel.setOrigin(radius, radius);
 
+    float additionalRadius = 15;
     //pie charting
     if (dataPoints[dataPoints.size() - 1] != 0) {
         for (int i = 0; i < degrees; i++) {
-            if (i < percentageOfFemale * degrees) {
-                chartlineVector[i][1].position = sf::Vector2f(posX + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
-                chartlineVector[i][0].color = sf::Color::Magenta;
+            chartlineVector[i][1].position = sf::Vector2f(posX + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
+            chartlineVector2[i][1].position = sf::Vector2f(posX + (radius + additionalRadius) * cos(2 * M_PI * i / degrees), posY + (radius + additionalRadius) * sin(2 * M_PI * i / degrees));
+            if (i <= percentageOfFemale * degrees) {
+                //chartlineVector[i][1].position = sf::Vector2f(posX + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
+                chartlineVector[i][0].color = sf::Color::Magenta;//female colour
                 chartlineVector[i][1].color = sf::Color::Magenta;
                 //bigger plots
-                if (i < percentageOfFertileFemale * degrees) {
-                    chartlineVector2[i][1].position = sf::Vector2f(posX + 20 + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
-					chartlineVector2[i][0].color = sf::Color::Red;
-					chartlineVector2[i][1].color = sf::Color::Red;
+                if (i <= percentageOfFertileFemale * degrees) {
+					chartlineVector2[i][0].color = sf::Color::Color(255, 165, 0);//fertile colour
+					chartlineVector2[i][1].color = sf::Color::Color(255, 165, 0);
                 }
                 else {
-                    chartlineVector2[i][1].position = sf::Vector2f(posX + 20 + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
-                    chartlineVector2[i][0].color = sf::Color::Green;
-                    chartlineVector2[i][1].color = sf::Color::Green;
+                    //chartlineVector2[i][1].position = sf::Vector2f(posX + (radius + additionalRadius) * cos(2 * M_PI * i / degrees), posY + (radius + additionalRadius) * sin(2 * M_PI * i / degrees));
+                    chartlineVector2[i][0].color = sf::Color(120, 120, 120);
+                    chartlineVector2[i][1].color = sf::Color(120,120,120);
                 }
             }
             else {
-                chartlineVector[i][1].position = sf::Vector2f(posX + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
-                chartlineVector[i][0].color = sf::Color(173, 216, 230);
+                //chartlineVector[i][1].position = sf::Vector2f(posX + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
+                chartlineVector[i][0].color = sf::Color(173, 216, 230);//male colour
                 chartlineVector[i][1].color = sf::Color(173, 216, 230);
                 //bigger plots 
-                if (i < percentageOfFertileFemale * degrees) {
-                    chartlineVector2[i][1].position = sf::Vector2f(posX + 20 + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
-                    chartlineVector2[i][0].color = sf::Color::Red;
-                    chartlineVector2[i][1].color = sf::Color::Red;
+                if (i <= percentageOfFertileMale * degrees) {
+                    //chartlineVector2[i][1].position = sf::Vector2f(posX + (radius + additionalRadius) * cos(2 * M_PI * i / degrees), posY + (radius + additionalRadius) * sin(2 * M_PI * i / degrees));
+                    chartlineVector2[i][0].color = sf::Color::Color(255, 165, 0);
+                    chartlineVector2[i][1].color = sf::Color::Color(255, 165, 0);
                 }
                 else {
-                    chartlineVector2[i][1].position = sf::Vector2f(posX + 20 + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
-                    chartlineVector2[i][0].color = sf::Color::Green;
-                    chartlineVector2[i][1].color = sf::Color::Green;
+                    //chartlineVector2[i][1].position = sf::Vector2f(posX + (radius + additionalRadius) * cos(2 * M_PI * i / degrees), posY + (radius + additionalRadius) * sin(2 * M_PI * i / degrees));
+                    chartlineVector2[i][0].color = sf::Color::Color(120, 120, 120);
+                    chartlineVector2[i][1].color = sf::Color::Color(120, 120, 120);
                 }
             }
         }

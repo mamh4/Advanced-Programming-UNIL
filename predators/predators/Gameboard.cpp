@@ -37,6 +37,9 @@ int numberOfFemalePrey = 0;
 int numberOfFertileFemalePrey = 0;
 int numberOfFertileFemalePredator = 0;
 
+int numberOfFertileMalePrey = 0;
+int numberOfFertileMalePredator = 0;
+
 float totalAgePredator = 0.0;
 float totalAgePrey = 0.0;
 float avgAgePredator = 0.0;
@@ -499,8 +502,14 @@ int main()
     std::vector<float> numberOfFertileFemalePreyAtTimeT;
     numberOfFertileFemalePreyAtTimeT.push_back(numberOfFertileFemalePrey);
 
+    std::vector<float> numberOfFertileMalePreyAtTimeT;
+    numberOfFertileMalePreyAtTimeT.push_back(numberOfFertileMalePrey);
+
     std::vector<float> numberOfFertileFemalePredatorAtTimeT;
     numberOfFertileFemalePredatorAtTimeT.push_back(numberOfFertileFemalePredator);
+
+    std::vector<float> numberOfFertileMalePredatorAtTimeT;
+    numberOfFertileMalePredatorAtTimeT.push_back(numberOfFertileMalePredator);
 
     std::vector<float> avgAgePredatorAtTimeT;
     std::vector<float> avgAgePreyAtTimeT;
@@ -519,7 +528,7 @@ int main()
 
     
     // Set the frame rate
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(30);
 
     // start the game loop
     while (window.isOpen()) {
@@ -542,8 +551,7 @@ int main()
         totalNumberOfFauna = numberOfPrey + numberOfPredators;
         numberOfFaunaAtTimeT.push_back(totalNumberOfFauna);
 
-        numberOfFertileFemalePredatorAtTimeT.push_back(numberOfFertileFemalePredator);
-        numberOfFertileFemalePreyAtTimeT.push_back(numberOfFertileFemalePrey);
+
 
         //deal with issues when dying with energy becoming < 0
         //if (totalEnergy < 0) { totalEnergy = 0; }
@@ -557,6 +565,11 @@ int main()
         numberOfFemalePredatorsAtTimeT.push_back(numberOfFemalePredator);
         numberOfFemalePreyAtTimeT.push_back(numberOfFemalePrey);
 
+        numberOfFertileFemalePredatorAtTimeT.push_back(numberOfFertileFemalePredator);
+        numberOfFertileFemalePreyAtTimeT.push_back(numberOfFertileFemalePrey);
+
+        numberOfFertileMalePredatorAtTimeT.push_back(numberOfFertileMalePredator);
+        numberOfFertileMalePreyAtTimeT.push_back(numberOfFertileMalePrey);
 
         avgAgePredator = numberOfPredators == 0 ? 0 : totalAgePredator / numberOfPredators;
         avgAgePrey = numberOfPrey == 0 ? 0 : totalAgePrey / numberOfPrey;
@@ -573,11 +586,18 @@ int main()
            
         }
         text.setFont(font);
-        text.setString("Simulation Time: " + std::to_string(simulationTime/60) + "\n" +
-            "Population size: " + std::to_string(organismVector.size()) + "\n" +
+        text.setString("Simulation Time: " + std::to_string(simulationTime / 60) + "\n" +
+            "Population: " + std::to_string(organismVector.size()) + "\n" +
             "Predators: " + std::to_string(numberOfPredators) + "\n" +
             "Prey: " + std::to_string(numberOfPrey) + "\n" +
-            "Flora: " + std::to_string(numberOfFlora));
+            "Flora: " + std::to_string(numberOfFlora) + "\n" +
+            "Fertile Pred Female: " + std::to_string(numberOfFertileFemalePredator) + "\n" +
+            "Fertile Pred Male: " + std::to_string(numberOfFertileMalePredator) + "\n" +
+            "Fertile Prey Female: " + std::to_string(numberOfFertileFemalePrey) + "\n" +
+            "Fertile Prey Male: " + std::to_string(numberOfFertileMalePrey) + "\n" +
+            "Number of Male Pred: " + std::to_string(numberOfMalePredator) + "\n" +
+            "Number of Female Pred: " + std::to_string(numberOfFemalePredator)
+        );
         // +std::to_string(organismVector.size()));
         text.setCharacterSize(14);
         text.setFillColor(sf::Color::Black);
@@ -598,12 +618,15 @@ int main()
         
 
         //TO BE REPLACED WITH pieChart2 Plot 5 below
-        Plot4 myPieChart = pieChart(1065.0, 605.0, numberOfPredatorsAtTimeT, numberOfFemalePredatorsAtTimeT,font,"% Female Predator");
-        Plot4 myPieChart2 = pieChart(1200.0, 605.0, numberOfPreyAtTimeT, numberOfFemalePreyAtTimeT, font, "% Female Prey");
+        //Plot4 myPieChart = pieChart(1065.0, 605.0, numberOfPredatorsAtTimeT, numberOfFemalePredatorsAtTimeT,font,"% Female Predator");
+        //Plot4 myPieChart2 = pieChart(1200.0, 605.0, numberOfPreyAtTimeT, numberOfFemalePreyAtTimeT, font, "% Female Prey");
 
-        //Plot5 myPieChart3 = pieChart2(1065.0, 605.0, numberOfPredatorsAtTimeT, numberOfFemalePredatorsAtTimeT,
-        //    numberOfFertileFemalePredatorsAtTimeT, numberOfFertileMalePredatorsAtTimeT,font, "% Female Predator", 30);
+        Plot5 myPieChart3 = pieChart2(1065.0, 605.0, numberOfPredatorsAtTimeT, numberOfFemalePredatorsAtTimeT,
+            numberOfFertileFemalePredatorAtTimeT, numberOfFertileMalePredatorAtTimeT,font, "Predator", 30);
 
+        
+        Plot5 myPieChart4 = pieChart2(1200, 605.0, numberOfPreyAtTimeT, numberOfFemalePreyAtTimeT,
+            numberOfFertileFemalePreyAtTimeT, numberOfFertileMalePreyAtTimeT, font, "Prey", 30);
 
         // draw the organisms and the text
         for (Organism* organism : organismVector) {
@@ -611,6 +634,7 @@ int main()
         }
         window.draw(pane);
         window.draw(text);
+        
         window.draw(mixedPlot.xcoord);
         window.draw(mixedPlot.ycoord);
         window.draw(mixedPlot.chartLine);
@@ -654,7 +678,28 @@ int main()
         window.draw(mixedPlot3.percentile75XValue);
         window.draw(mixedPlot3.title);
         window.draw(mixedPlot3.ylabel);
-            
+          
+
+        //tiral new Pie chart
+        window.draw(myPieChart3.circle);
+        window.draw(myPieChart3.title);
+        window.draw(myPieChart3.xlabel);
+        for (int i = 0; i < myPieChart3.chartlinesVector.size(); i++) {
+            window.draw(myPieChart3.chartlinesVector2[i]);
+            window.draw(myPieChart3.chartlinesVector[i]);
+        }
+
+        //tiral new Pie chart
+        window.draw(myPieChart4.circle);
+        window.draw(myPieChart4.title);
+        window.draw(myPieChart4.xlabel);
+        for (int i = 0; i < myPieChart4.chartlinesVector.size(); i++) {
+            window.draw(myPieChart4.chartlinesVector2[i]);
+            window.draw(myPieChart4.chartlinesVector[i]);
+        }
+
+
+
         /*
         window.draw(myPieChart.circle);
         window.draw(myPieChart.title);
@@ -716,30 +761,43 @@ int main()
         //Pie Chart Legend
         sf::RectangleShape maleBox(sf::Vector2f(8.f, 8.f));
         maleBox.setFillColor(sf::Color(173, 216, 230));
-        maleBox.setPosition(1070, 695);
+        maleBox.setPosition(1035, 705);
 
         sf::RectangleShape femaleBox(sf::Vector2f(8.f, 8.f));
         femaleBox.setFillColor(sf::Color::Magenta);
-        femaleBox.setPosition(1130, 695);
+        femaleBox.setPosition(1100, 705);
+
+        sf::RectangleShape fertileBox(sf::Vector2f(8.f, 8.f));
+        femaleBox.setFillColor(sf::Color::Color(255,155,0));
+        femaleBox.setPosition(1180, 705);
 
         sf::Text maleTextString;
         maleTextString.setFont(font);
         maleTextString.setCharacterSize(12);
         maleTextString.setFillColor(sf::Color::Black);
         maleTextString.setString("Male");
-        maleTextString.setPosition(1080, 691);
+        maleTextString.setPosition(1045, 701);
 
         sf::Text femaleTextString;
         femaleTextString.setFont(font);
         femaleTextString.setCharacterSize(12);
         femaleTextString.setFillColor(sf::Color::Black);
         femaleTextString.setString("Female");
-        femaleTextString.setPosition(1140, 691);
+        femaleTextString.setPosition(1110, 701);
+
+        sf::Text fertileTextString;
+        fertileTextString.setFont(font);
+        fertileTextString.setCharacterSize(12);
+        fertileTextString.setFillColor(sf::Color::Black);
+        fertileTextString.setString("Fertile");
+        fertileTextString.setPosition(1190, 701);
 
         window.draw(maleBox);
         window.draw(femaleBox);
         window.draw(maleTextString);
         window.draw(femaleTextString);
+        window.draw(fertileBox);
+        window.draw(fertileTextString);
             //window.draw(linePlot(1010.0, 170.0, dataPoints, "Hello")[1]);
             //window.draw(linePlot(1010.0, 170.0, dataPoints, "Hello")[2]);
 
@@ -843,8 +901,8 @@ int main()
                         stream2 << std::fixed << std::setprecision(2) << ((1.0 * summaryStatistics[i].traitSummaryStatisticVector[j].sumOfAgesAtDeath[k]) / (1.0 * summaryStatistics[i].traitSummaryStatisticVector[j].population[k]));
                         averageAgeAtDeath = stream2.str() ; 
                         std::stringstream stream3;
-                        stream2 << std::fixed << std::setprecision(2) << ((1.0 * summaryStatistics[i].traitSummaryStatisticVector[j].sumOfOffsprings[k]) / (1.0 * summaryStatistics[i].traitSummaryStatisticVector[j].population[k]));
-                        averageAgeAtDeath = stream3.str() ; 
+                        stream3 << std::fixed << std::setprecision(2) << ((1.0 * summaryStatistics[i].traitSummaryStatisticVector[j].sumOfOffsprings[k]) / (1.0 * summaryStatistics[i].traitSummaryStatisticVector[j].population[k]));
+                        averageOffspringNumberAtDeath = stream3.str() ; 
                     }
                     else {
                         averageAgeAtDeath = "No Data";
