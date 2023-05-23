@@ -11,6 +11,8 @@
 #include <cmath>
 #include "OrganicStats.h"
 #include "OrganicStats.h"
+#include <iomanip>
+#include <sstream>
 
 #include <random>
 #include <thread>
@@ -30,6 +32,10 @@ int numberOfFemalePredator = 0;
 
 int numberOfMalePrey = 0;
 int numberOfFemalePrey = 0;
+
+
+int numberOfFertileFemalePrey = 0;
+int numberOfFertileFemalePredator = 0;
 
 float totalAgePredator = 0.0;
 float totalAgePrey = 0.0;
@@ -151,7 +157,7 @@ int main()
     standardModeTextPrompt.setCharacterSize(14);
     standardModeTextPrompt.setFillColor(sf::Color::Black);
     standardModeTextPrompt.setString("Standard");
-    standardModeTextPrompt.setPosition(177.5, 153);
+    standardModeTextPrompt.setPosition(188., 153);
 
 
     bool isPredatorInputFocused = false;
@@ -490,6 +496,12 @@ int main()
     std::vector<float> numberOfFemalePreyAtTimeT;
     numberOfFemalePreyAtTimeT.push_back(numberOfFemalePrey);
 
+    std::vector<float> numberOfFertileFemalePreyAtTimeT;
+    numberOfFertileFemalePreyAtTimeT.push_back(numberOfFertileFemalePrey);
+
+    std::vector<float> numberOfFertileFemalePredatorAtTimeT;
+    numberOfFertileFemalePredatorAtTimeT.push_back(numberOfFertileFemalePredator);
+
     std::vector<float> avgAgePredatorAtTimeT;
     std::vector<float> avgAgePreyAtTimeT;
 
@@ -530,6 +542,8 @@ int main()
         totalNumberOfFauna = numberOfPrey + numberOfPredators;
         numberOfFaunaAtTimeT.push_back(totalNumberOfFauna);
 
+        numberOfFertileFemalePredatorAtTimeT.push_back(numberOfFertileFemalePredator);
+        numberOfFertileFemalePreyAtTimeT.push_back(numberOfFertileFemalePrey);
 
         //deal with issues when dying with energy becoming < 0
         //if (totalEnergy < 0) { totalEnergy = 0; }
@@ -544,8 +558,8 @@ int main()
         numberOfFemalePreyAtTimeT.push_back(numberOfFemalePrey);
 
 
-        avgAgePredator = totalAgePredator / numberOfPredators;
-        avgAgePrey = totalAgePrey / numberOfPrey;
+        avgAgePredator = numberOfPredators == 0 ? 0 : totalAgePredator / numberOfPredators;
+        avgAgePrey = numberOfPrey == 0 ? 0 : totalAgePrey / numberOfPrey;
         avgAgePredatorAtTimeT.push_back(avgAgePredator);
         avgAgePreyAtTimeT.push_back(avgAgePrey);
         
@@ -582,8 +596,14 @@ int main()
         Plot2 mixedPlot3 = twoLinesPlot(1030.0, 490.0 ,avgAgePredatorAtTimeT, avgAgePreyAtTimeT,
             font, "Average Age",110.0, 225.0, 1800);
         
+
+        //TO BE REPLACED WITH pieChart2 Plot 5 below
         Plot4 myPieChart = pieChart(1065.0, 605.0, numberOfPredatorsAtTimeT, numberOfFemalePredatorsAtTimeT,font,"% Female Predator");
         Plot4 myPieChart2 = pieChart(1200.0, 605.0, numberOfPreyAtTimeT, numberOfFemalePreyAtTimeT, font, "% Female Prey");
+
+        //Plot5 myPieChart3 = pieChart2(1065.0, 605.0, numberOfPredatorsAtTimeT, numberOfFemalePredatorsAtTimeT,
+        //    numberOfFertileFemalePredatorsAtTimeT, numberOfFertileMalePredatorsAtTimeT,font, "% Female Predator", 30);
+
 
         // draw the organisms and the text
         for (Organism* organism : organismVector) {
@@ -635,7 +655,7 @@ int main()
         window.draw(mixedPlot3.title);
         window.draw(mixedPlot3.ylabel);
             
-            
+        /*
         window.draw(myPieChart.circle);
         window.draw(myPieChart.title);
         window.draw(myPieChart.xlabel);
@@ -643,13 +663,14 @@ int main()
             window.draw(myPieChart.chartlinesVector[i]);
         }
 
-        window.draw(myPieChart2.circle);
+
+        window.draw(myPieChart2.circle); 
         window.draw(myPieChart2.title);
         window.draw(myPieChart2.xlabel);
         for (int i = 0; i < myPieChart2.chartlinesVector.size(); i++) {
             window.draw(myPieChart2.chartlinesVector[i]);
         }
-
+        */
         //Line Plots legend
         sf::RectangleShape predatorBox(sf::Vector2f(8.f, 8.f));
         predatorBox.setFillColor(sf::Color::Red);
@@ -727,5 +748,123 @@ int main()
         window.display();
     }
     
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////// DEATH REPORT ////////////////////////////////////////////////////////////////// 
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+
+ 
+
+    sf::RenderWindow windowSummary(sf::VideoMode(windowWidth + paneWidth, windowHeight), "Death Summary");
+
+
+    float canvasWidth;
+    float canvasHeight;
+    float newOriginX;
+    float newOriginY;
+    float lineHeight;
+    float columnWidth; 
+
+    canvasWidth = 0.9 * (windowWidth + paneWidth);
+    canvasHeight = 0.9 * windowHeight;
+    newOriginX = 0.05 * (windowWidth + paneWidth);
+    newOriginY = 0.05 * windowHeight;
+    lineHeight = canvasHeight / 14.0;
+    columnWidth = canvasWidth / 20.0;
+
+
+    while (windowSummary.isOpen()) {
+        // handle events
+        sf::Event event;
+        while (windowSummary.pollEvent(event)) {
+            if (event.type == sf::Event::Closed)
+                windowSummary.close();
+        }
+        
+        windowParam.clear(sf::Color::White);
+
+        sf::RectangleShape testBox(sf::Vector2f((windowWidth + paneWidth), windowHeight));
+        testBox.setFillColor(sf::Color::White);
+        testBox.setOutlineThickness(2.f);
+        testBox.setOutlineColor(sf::Color::Black);
+        testBox.setPosition(0.f, 0.f);
+        windowSummary.draw(testBox);
+        
+        
+        sf::Text currentText;
+        currentText.setFont(font);
+        currentText.setCharacterSize(20);
+        currentText.setFillColor(sf::Color::Black);
+        currentText.setString("Population Summary");
+        currentText.setPosition(newOriginX + canvasWidth * 0.5 - (currentText.getLocalBounds().width / 2.0), newOriginY + lineHeight * (1.0) - (currentText.getLocalBounds().height / 2.0));
+        windowSummary.draw(currentText);
+
+        currentText.setCharacterSize(10);
+
+        for (int i = 0; i < summaryStatistics.size(); i++) {
+            currentText.setString(summaryStatistics[i].speciesName);
+            currentText.setPosition(newOriginX + 2.0 * columnWidth, newOriginY + (2.0 + i * 6.0) * lineHeight);
+            windowSummary.draw(currentText);
+            currentText.setString("Species:");
+            currentText.setPosition(newOriginX, newOriginY + (2.0 + i * 6.0) * lineHeight);
+            windowSummary.draw(currentText);
+            currentText.setString("Trait:");
+            currentText.setPosition(newOriginX, newOriginY + (3.0 + i * 6.0) * lineHeight);
+            windowSummary.draw(currentText);
+            currentText.setString("Category:");
+            currentText.setPosition(newOriginX, newOriginY + (4.0 + i * 6.0) * lineHeight);
+            windowSummary.draw(currentText);
+            currentText.setString("Population:");
+            currentText.setPosition(newOriginX, newOriginY + (5.0 + i * 6.0) * lineHeight);
+            windowSummary.draw(currentText);
+            currentText.setString("AVG Age at Death:");
+            currentText.setPosition(newOriginX, newOriginY + (6.0 + i * 6.0) * lineHeight);
+            windowSummary.draw(currentText);
+            currentText.setString("AVG # of Offsprings:");
+            currentText.setPosition(newOriginX, newOriginY + (7.0 + i * 6.0) * lineHeight);
+            windowSummary.draw(currentText);
+
+            for (int j = 0; j < summaryStatistics[i].traitSummaryStatisticVector.size(); j++) {
+                currentText.setString(summaryStatistics[i].traitSummaryStatisticVector[j].traitName);
+                currentText.setPosition(newOriginX + (2.0 + 3.0 * j) * columnWidth, newOriginY + (3.0 + i * 6.0) * lineHeight);
+                    windowSummary.draw(currentText);
+                for (int k = 0; k < 3; k++) {
+                    currentText.setString(std::to_string(k + 1));
+                    currentText.setPosition(newOriginX + (2.0 + 3.0 * j + 1.0 * k) * columnWidth, newOriginY + (4.0 + i * 6.0) * lineHeight);
+                    windowSummary.draw(currentText);
+                    std::stringstream stream1;
+                    stream1 << std::fixed << std::setprecision(0) << (summaryStatistics[i].traitSummaryStatisticVector[j].population[k]); 
+                    currentText.setString(stream1.str());
+                    currentText.setPosition(newOriginX + (2.0 + 3.0 * j + 1.0 * k) * columnWidth, newOriginY + (4.0 + i * 6.0 + 1.0) * lineHeight);
+                    windowSummary.draw(currentText);
+                    std::string averageAgeAtDeath;
+                    std::string averageOffspringNumberAtDeath;
+                    if (not (summaryStatistics[i].traitSummaryStatisticVector[j].population[k] == 0)) {
+                        std::stringstream stream2;
+                        stream2 << std::fixed << std::setprecision(2) << ((1.0 * summaryStatistics[i].traitSummaryStatisticVector[j].sumOfAgesAtDeath[k]) / (1.0 * summaryStatistics[i].traitSummaryStatisticVector[j].population[k]));
+                        averageAgeAtDeath = stream2.str() ; 
+                        std::stringstream stream3;
+                        stream2 << std::fixed << std::setprecision(2) << ((1.0 * summaryStatistics[i].traitSummaryStatisticVector[j].sumOfOffsprings[k]) / (1.0 * summaryStatistics[i].traitSummaryStatisticVector[j].population[k]));
+                        averageAgeAtDeath = stream3.str() ; 
+                    }
+                    else {
+                        averageAgeAtDeath = "No Data";
+                        averageOffspringNumberAtDeath = "No Data";
+                    }
+                    currentText.setString(averageAgeAtDeath);
+                    currentText.setPosition(newOriginX + (2.0 + 3.0 * j + 1.0 * k) * columnWidth, newOriginY + (4.0 + i * 6.0 + 2.0) * lineHeight);
+                    windowSummary.draw(currentText);
+                    currentText.setString(averageOffspringNumberAtDeath);
+                    currentText.setPosition(newOriginX + (2.0 + 3.0 * j + 1.0 * k) * columnWidth, newOriginY + (4.0 + i * 6.0 + 3.0) * lineHeight);
+                    windowSummary.draw(currentText);
+                }
+            }
+        
+        }
+
+
+        windowSummary.display();
+        
+    }
+
     return 0;
 }

@@ -172,19 +172,19 @@
 
 
 
-// 12 assumed to be the number of sections 
-// pass step size as class constant 
-void Fauna::move(int directionIndicator){
-    
+        // 12 assumed to be the number of sections 
+        // pass step size as class constant 
+void Fauna::move(int directionIndicator) {
+
     //std::cout << "my speed is " << Fauna::getSpeed() << "my coordinates are: " << Fauna::getPosX() << " "<< Fauna::getPosY << std::endl;
-    float energyCostOfMovement; 
-    energyCostOfMovement = std::min( 0.1f, this->energy); 
+    float energyCostOfMovement;
+    energyCostOfMovement = std::min(0.1f, this->energy);
     // as Class constant later on ? 
     //Fauna::getShape().setPosition(Fauna::getShape().getPosition().x + stepSize * cos((directionIndicator + 0.5) * M_PI * 2 / 12),
     //    Fauna::getShape().getPosition().y + stepSize * sin((directionIndicator + 0.5) * M_PI * 2 / 12)); 
     this->setPosX(this->getPosX() + stepSize * cos((directionIndicator + 0.5) * M_PI * 2 / angleSectionNumber));
     this->setPosY(this->getPosY() + stepSize * sin((directionIndicator + 0.5) * M_PI * 2 / angleSectionNumber));
-    this->setEnergy( this->getEnergy() - energyCostOfMovement);
+    this->setEnergy(this->getEnergy() - energyCostOfMovement);
 
     if (Predator* myPredator = dynamic_cast<Predator*>(this)) {
         totalEnergyPredator -= energyCostOfMovement;
@@ -195,14 +195,14 @@ void Fauna::move(int directionIndicator){
 }
 
 void Fauna::ageing() {
-    age ++ ;
+    age++;
 
     if (Predator* myPredator = dynamic_cast<Predator*>(this)) {
         totalAgePredator += 1;
     }
     else if (Prey* myPrey = dynamic_cast<Prey*>(this)) {
-		totalAgePrey += 1;
-	}
+        totalAgePrey += 1;
+    }
     //TODO: Update total age parameters
     this->setRadius(this->getRadius() + 0.001);
 }
@@ -211,13 +211,13 @@ void Fauna::ageing() {
 
 void Fauna::update(std::vector<Organism*>& organismVector) {
     this->ageing(); // CHANGE TO DATE OF BIRTH 
-    this->setEnergy(this->getEnergy() - std::min(this->getMetabolicRate(),this->energy));
+    this->setEnergy(this->getEnergy() - std::min(this->getMetabolicRate(), this->energy));
 
-    float childRadius = 3.0; 
-    float adultRadius = 6.0 ; // Prey or Predator Specific ? 
-    int maxAge = 12000 ; // 100 seconds at 60 fps / Prey or Predator Specific ? 
-    this->setRadius(childRadius + log( 20*(1.0*this->getAge()/maxAge) + 1)*(adultRadius - childRadius))   ; // CHECK PARAMETERS 
-     
+    float childRadius = 3.0;
+    float adultRadius = 6.0; // Prey or Predator Specific ? 
+    int maxAge = 12000; // 100 seconds at 60 fps / Prey or Predator Specific ? 
+    this->setRadius(childRadius + log(20 * (1.0 * this->getAge() / maxAge) + 1) * (adultRadius - childRadius)); // CHECK PARAMETERS 
+
     if (Predator* myPredator = dynamic_cast<Predator*>(this)) {
         totalEnergyPredator -= std::min(this->getMetabolicRate(), this->energy);
     }
@@ -232,8 +232,8 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
 
     //std::cout << "I am a " << this->getSex() << "My current energy level is " << this->getEnergy() << std::endl; 
     if ((1.0 * (rand() % 100) < (100 * std::pow(((1 + this->getAge()) / 6000), 10)) or (this->getEnergy() <= 0))) {
-      this->dies(organismVector);
-      
+        this->dies(organismVector);
+
     }
     else {
         int minFertilityAge = 50;
@@ -241,6 +241,19 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
         if ((1.0 * (rand() % 100) < std::max(0.0, (100 * std::pow(((this->getAge() - minFertilityAge) / (maxFertilityAge - minFertilityAge)), 10)))) and not this->getFertile()) {
             this->setFertile(true);
             std::cout << "Fertility Unlocked " << std::endl;
+
+            if (Prey* myPrey = dynamic_cast<Prey*>(this)) {
+                if (this->getSex()) {
+                    numberOfFertileFemalePrey += 1;
+                }
+                
+                else if (Predator* myPredator = dynamic_cast<Predator*>(this)) {
+                    if (this->getSex()) {
+                        numberOfFertileFemalePredator += 1;
+                    }
+                }
+			}
+
         }
         for (int k = 0; k <= this->getSpeed(); k++) { // BEGINING OF TURN LOOP 
 

@@ -268,7 +268,7 @@ void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organi
 		//(float myPosX, float myPosY, float myRadius, float myEnergy,bool mySex, int mySpeed, float myHungerSensitivity, float myMetabolicRate, float myLustLevel, float myVisionRange)
 		if (validCandidateBirthPlace) {
 			Predator* offspring = new Predator(candidateBirthPlaceX, candidateBirthPlaceY,
-		childRadius, energy, sex, speed, hungerSensitivity, metabolicRate, lustLevel, visionRange);//Above parameters cause program failure!
+			childRadius, energy, sex, speed, hungerSensitivity, metabolicRate, lustLevel, visionRange);//Above parameters cause program failure!
 			organismVector.push_back(offspring);
 
 			this->setEnergy(this->getEnergy() - baseReproductionEnergyCost);

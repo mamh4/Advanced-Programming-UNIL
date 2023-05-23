@@ -23,6 +23,9 @@ extern int numberOfFemalePredator;
 extern int numberOfMalePrey;
 extern int numberOfFemalePrey;
 
+extern int numberOfFertileFemalePredator;
+extern int numberOfFertileFemalePrey;
+
 extern float totalAgePredator;
 extern float totalAgePrey;
 
@@ -125,6 +128,16 @@ struct Plot4 {
     //sf::Text percentage;
 };
 
+struct Plot5 {
+    sf::CircleShape circle;
+    std::vector<sf::VertexArray> chartlinesVector;
+    std::vector<sf::VertexArray> chartlinesVector2;
+    sf::Text title;
+    sf::Text xlabel;
+    //sf::Text ylabel;
+    //sf::Text percentage;
+};
+
 Plot linePlot(float posX, float posY, std::vector<float> dataPoints, sf::Font& font,
     std::string title, float height = 120.0, float width = 225.0, int timeSpan = 500);
 
@@ -137,4 +150,7 @@ Plot3 threeLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, st
 
 Plot4 pieChart(float posX, float posY,std::vector<float> dataPoints, std::vector<float> dataPoints2 
     ,sf::Font& font, std::string title, float radius = 50.0);
+
+Plot5 pieChart2(float posX, float posY, std::vector<float> dataPoints, std::vector<float> dataPoints2,
+    std::vector<float> dataPoint3, std::vector<float> dataPoints4, sf::Font& font, std::string title, float radius = 50.0);
 

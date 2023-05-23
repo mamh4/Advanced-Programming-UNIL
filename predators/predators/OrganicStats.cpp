@@ -719,6 +719,126 @@ Plot4 pieChart(float posX, float posY,std::vector<float> dataPoints, std::vector
    return myPlot;
 }
 
+
+
+Plot5 pieChart2(float posX, float posY, std::vector<float> dataPoints, std::vector<float> dataPoints2,
+    std::vector<float> dataPoints3, std::vector<float> dataPoints4,
+    sf::Font& font, std::string title, float radius) {
+    Plot5 myPlot;
+
+    float percentageOfFemale = dataPoints2[dataPoints2.size() - 1] / dataPoints[dataPoints.size() - 1];
+    float percentageOfFertileFemale = dataPoints3[dataPoints3.size() - 1] / dataPoints4[dataPoints.size() - 1];
+    float percentageOfFertileMale = dataPoints3[dataPoints3.size() - 1] / dataPoints4[dataPoints.size() - 1];
+
+    float degrees = 360;
+
+    sf::CircleShape circle;
+    circle.setRadius(radius);
+    circle.setFillColor(sf::Color(120, 120, 120));
+    circle.setOrigin(radius, radius);
+    circle.setPosition(posX, posY);
+    circle.setOutlineColor(sf::Color(120, 120, 120));
+
+    //Create lines
+    std::vector<sf::VertexArray> chartlineVector;
+    std::vector<sf::VertexArray> chartlineVector2;
+    //smaller piechart
+    for (int i = 0; i < degrees; i++) {
+        sf::VertexArray chartLine(sf::LineStrip, 2);
+        chartLine.setPrimitiveType(sf::LineStrip);
+        chartLine[0].position = sf::Vector2f(posX, posY);
+        chartLine[1].position = sf::Vector2f(posX, posY); //will override in the next loop
+        chartlineVector.push_back(chartLine);
+        //bigger piechart
+        sf::VertexArray chartLine2(sf::LineStrip, 2);
+        chartLine2.setPrimitiveType(sf::LineStrip);
+        chartLine2[0].position = sf::Vector2f(posX, posY);
+        chartLine2[1].position = sf::Vector2f(posX, posY); //will override in the next loop
+        chartlineVector2.push_back(chartLine);
+    }
+
+    //Title
+    sf::Text theTitle;
+    theTitle.setFont(font);
+    theTitle.setCharacterSize(12);
+    theTitle.setPosition(posX - radius, posY - radius - 16);
+    theTitle.setFillColor(sf::Color::Black);
+    theTitle.setString(title);
+
+    //Data Label //TODO: add small rectangles with colors Male Female and with percentages next to them.
+    sf::Text theLabel;
+    theLabel.setFont(font);
+    theLabel.setCharacterSize(12);
+    theLabel.setFillColor(sf::Color::Black);
+
+    std::stringstream stream;
+    stream << std::fixed << std::setprecision(2) << (percentageOfFemale * 100.0);
+    std::string percentage = stream.str();
+    std::stringstream stream2;
+    stream2 << std::fixed << std::setprecision(2) << (100.0 - (percentageOfFemale * 100.0));
+    std::string percentageComplement = stream2.str();
+    theLabel.setString("Female: " + percentage + " %" + "\n" +
+        "Male: " + percentageComplement + " %");
+    theLabel.setPosition(posX, posY + radius + 50);
+    theLabel.setOrigin(radius, radius);
+
+    //pie charting
+    if (dataPoints[dataPoints.size() - 1] != 0) {
+        for (int i = 0; i < degrees; i++) {
+            if (i < percentageOfFemale * degrees) {
+                chartlineVector[i][1].position = sf::Vector2f(posX + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
+                chartlineVector[i][0].color = sf::Color::Magenta;
+                chartlineVector[i][1].color = sf::Color::Magenta;
+                //bigger plots
+                if (i < percentageOfFertileFemale * degrees) {
+                    chartlineVector2[i][1].position = sf::Vector2f(posX + 20 + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
+					chartlineVector2[i][0].color = sf::Color::Red;
+					chartlineVector2[i][1].color = sf::Color::Red;
+                }
+                else {
+                    chartlineVector2[i][1].position = sf::Vector2f(posX + 20 + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
+                    chartlineVector2[i][0].color = sf::Color::Green;
+                    chartlineVector2[i][1].color = sf::Color::Green;
+                }
+            }
+            else {
+                chartlineVector[i][1].position = sf::Vector2f(posX + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
+                chartlineVector[i][0].color = sf::Color(173, 216, 230);
+                chartlineVector[i][1].color = sf::Color(173, 216, 230);
+                //bigger plots 
+                if (i < percentageOfFertileFemale * degrees) {
+                    chartlineVector2[i][1].position = sf::Vector2f(posX + 20 + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
+                    chartlineVector2[i][0].color = sf::Color::Red;
+                    chartlineVector2[i][1].color = sf::Color::Red;
+                }
+                else {
+                    chartlineVector2[i][1].position = sf::Vector2f(posX + 20 + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
+                    chartlineVector2[i][0].color = sf::Color::Green;
+                    chartlineVector2[i][1].color = sf::Color::Green;
+                }
+            }
+        }
+    }
+    else {
+        theLabel.setString("No Data available!");
+        theLabel.setPosition(posX, posY + radius + 50);
+        theLabel.setOrigin(radius, radius);
+    }
+
+
+    myPlot.chartlinesVector = chartlineVector;
+    myPlot.chartlinesVector2 = chartlineVector2;
+    myPlot.circle = circle;
+    //myPlot.title = theTitle;
+    myPlot.xlabel = theLabel;
+    return myPlot;
+}
+
+
+
+
+
+
 TraitSummaryStatistics preySpeedSummaryStatistics = {
     "Speed",
     {0.0 , 0.0, 0.0 }, 
