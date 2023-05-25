@@ -46,28 +46,28 @@ float avgAgePredator = 0.0;
 float avgAgePrey = 0.0;
 
 
-/////////////////////////////////////////////////////// Genetic Engine Data //////////////////////////////////////////////////////////
-
-float averagePredatorSpeed = (geneticDatabase[1].geneticTraitIntervals[0].traitRange[1] + geneticDatabase[1].geneticTraitIntervals[0].traitRange[2]) / 2.0;
-float averagePredatorVisionRange = (geneticDatabase[1].geneticTraitIntervals[4].traitRange[1] + geneticDatabase[1].geneticTraitIntervals[4].traitRange[2]) / 2.0;
-float averagePredatorMetabolicRate = (geneticDatabase[1].geneticTraitIntervals[2].traitRange[1] + geneticDatabase[1].geneticTraitIntervals[2].traitRange[2]) / 2.0;
-float averagePredatorLustLevel = (geneticDatabase[1].geneticTraitIntervals[3].traitRange[1] + geneticDatabase[1].geneticTraitIntervals[3].traitRange[2]) / 2.0;
-float averagePredatorHungerSensitivity = (geneticDatabase[1].geneticTraitIntervals[1].traitRange[1] + geneticDatabase[1].geneticTraitIntervals[1].traitRange[2]) / 2.0;
-
-float averagePreySpeed = (geneticDatabase[0].geneticTraitIntervals[0].traitRange[1] + geneticDatabase[0].geneticTraitIntervals[0].traitRange[2]) / 2.0;
-float averagePreyVisionRange = (geneticDatabase[0].geneticTraitIntervals[4].traitRange[1] + geneticDatabase[0].geneticTraitIntervals[4].traitRange[2]) / 2.0;
-float averagePreyMetabolicRate = (geneticDatabase[0].geneticTraitIntervals[2].traitRange[1] + geneticDatabase[0].geneticTraitIntervals[2].traitRange[2]) / 2.0;
-float averagePreyLustLevel = (geneticDatabase[0].geneticTraitIntervals[3].traitRange[1] + geneticDatabase[0].geneticTraitIntervals[3].traitRange[2]) / 2.0;
-float averagePreyHungerSensitivity = (geneticDatabase[0].geneticTraitIntervals[1].traitRange[1] + geneticDatabase[0].geneticTraitIntervals[1].traitRange[2]) / 2.0;
-float averagePreyPredatorAversion = (geneticDatabase[0].geneticTraitIntervals[5].traitRange[1] + geneticDatabase[0].geneticTraitIntervals[5].traitRange[2]) / 2.0;
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 int main()
 {   
-    
+    /////////////////////////////////////////////////////// Genetic Engine Data //////////////////////////////////////////////////////////
+
+    float averagePredatorSpeed = (geneticDatabase[1].geneticTraitIntervals[0].traitRange[1] + geneticDatabase[1].geneticTraitIntervals[0].traitRange[2]) / 2.0;
+    float averagePredatorVisionRange = (geneticDatabase[1].geneticTraitIntervals[4].traitRange[1] + geneticDatabase[1].geneticTraitIntervals[4].traitRange[2]) / 2.0;
+    float averagePredatorMetabolicRate = (geneticDatabase[1].geneticTraitIntervals[2].traitRange[1] + geneticDatabase[1].geneticTraitIntervals[2].traitRange[2]) / 2.0;
+    float averagePredatorLustLevel = (geneticDatabase[1].geneticTraitIntervals[3].traitRange[1] + geneticDatabase[1].geneticTraitIntervals[3].traitRange[2]) / 2.0;
+    float averagePredatorHungerSensitivity = (geneticDatabase[1].geneticTraitIntervals[1].traitRange[1] + geneticDatabase[1].geneticTraitIntervals[1].traitRange[2]) / 2.0;
+
+    float averagePreySpeed = (geneticDatabase[0].geneticTraitIntervals[0].traitRange[1] + geneticDatabase[0].geneticTraitIntervals[0].traitRange[2]) / 2.0;
+    float averagePreyVisionRange = (geneticDatabase[0].geneticTraitIntervals[4].traitRange[1] + geneticDatabase[0].geneticTraitIntervals[4].traitRange[2]) / 2.0;
+    float averagePreyMetabolicRate = (geneticDatabase[0].geneticTraitIntervals[2].traitRange[1] + geneticDatabase[0].geneticTraitIntervals[2].traitRange[2]) / 2.0;
+    float averagePreyLustLevel = (geneticDatabase[0].geneticTraitIntervals[3].traitRange[1] + geneticDatabase[0].geneticTraitIntervals[3].traitRange[2]) / 2.0;
+    float averagePreyHungerSensitivity = (geneticDatabase[0].geneticTraitIntervals[1].traitRange[1] + geneticDatabase[0].geneticTraitIntervals[1].traitRange[2]) / 2.0;
+    float averagePreyPredatorAversion = (geneticDatabase[0].geneticTraitIntervals[5].traitRange[1] + geneticDatabase[0].geneticTraitIntervals[5].traitRange[2]) / 2.0;
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     //////////////////////////////////////////////////////// USER INPUT //////////////////////////////////////////////////////////////
     int inputNrPred = 0;
     int inputNrPrey = 0;
