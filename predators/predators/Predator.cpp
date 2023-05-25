@@ -15,6 +15,7 @@ Predator::Predator(float myPosX, float myPosY, float myRadius, float myEnergy,bo
 	totalEnergyPredator += myEnergy;
 	numberOfPredators += 1;
 
+
 	if (mySex) {
 		numberOfFemalePredator += 1;
 	}

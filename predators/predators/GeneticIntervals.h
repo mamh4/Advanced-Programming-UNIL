@@ -1,5 +1,4 @@
 #pragma once
-#include "GeneticIntervals.h"
 #include <string>
 #include <vector>
 
@@ -18,9 +17,9 @@ struct SpeciesGeneticTraitsIntervals {
 
 //PREY GENETIC TRAIT INTERVAL 
 
-extern GeneticTraitInterval preySpeedRange ;
+extern GeneticTraitInterval preySpeedRange;
 
-extern GeneticTraitInterval preyHungerSensitivityRange ;
+extern GeneticTraitInterval preyHungerSensitivityRange;
 
 extern GeneticTraitInterval preyMetabolicRateRange;
 
@@ -38,16 +37,16 @@ extern GeneticTraitInterval predatorHungerSensitivityRange;
 
 extern GeneticTraitInterval predatorMetabolicRateRange;
 
-extern GeneticTraitInterval predatorLustLevelRange ;
+extern GeneticTraitInterval predatorLustLevelRange;
 
-extern GeneticTraitInterval predatorVisionRangeRange ;
+extern GeneticTraitInterval predatorVisionRangeRange;
 
 // SPECIED GENETIC TRAITS INTERVALS 
 
-extern SpeciesGeneticTraitsIntervals preyGeneticTraitIntervals ;
+extern SpeciesGeneticTraitsIntervals preyGeneticTraitIntervals;
 
-extern SpeciesGeneticTraitsIntervals predatorGeneticTraitIntervals ;
+extern SpeciesGeneticTraitsIntervals predatorGeneticTraitIntervals;
 
 // GENETICS DATABASE 
 
-extern std::vector<SpeciesGeneticTraitsIntervals> geneticDatabase ; 
+extern std::vector<SpeciesGeneticTraitsIntervals> geneticDatabase;

@@ -13,7 +13,7 @@
 #include "OrganicStats.h"
 #include <iomanip>
 #include <sstream>
-
+#include "GeneticIntervals.h"
 #include <random>
 #include <thread>
 
@@ -46,8 +46,24 @@ float avgAgePredator = 0.0;
 float avgAgePrey = 0.0;
 
 
-//TODO: Decide on intialisation in main class of two vectors Fauna and Flora and then we loop through all Faunas, then all Floras? I think so
-//TODO: Implement update for Prey and Flora
+/////////////////////////////////////////////////////// Genetic Engine Data //////////////////////////////////////////////////////////
+
+float averagePredatorSpeed = (geneticDatabase[1].geneticTraitIntervals[0].traitRange[1] + geneticDatabase[1].geneticTraitIntervals[0].traitRange[2]) / 2.0;
+float averagePredatorVisionRange = (geneticDatabase[1].geneticTraitIntervals[4].traitRange[1] + geneticDatabase[1].geneticTraitIntervals[4].traitRange[2]) / 2.0;
+float averagePredatorMetabolicRate = (geneticDatabase[1].geneticTraitIntervals[2].traitRange[1] + geneticDatabase[1].geneticTraitIntervals[2].traitRange[2]) / 2.0;
+float averagePredatorLustLevel = (geneticDatabase[1].geneticTraitIntervals[3].traitRange[1] + geneticDatabase[1].geneticTraitIntervals[3].traitRange[2]) / 2.0;
+float averagePredatorHungerSensitivity = (geneticDatabase[1].geneticTraitIntervals[1].traitRange[1] + geneticDatabase[1].geneticTraitIntervals[1].traitRange[2]) / 2.0;
+
+float averagePreySpeed = (geneticDatabase[0].geneticTraitIntervals[0].traitRange[1] + geneticDatabase[0].geneticTraitIntervals[0].traitRange[2]) / 2.0;
+float averagePreyVisionRange = (geneticDatabase[0].geneticTraitIntervals[4].traitRange[1] + geneticDatabase[0].geneticTraitIntervals[4].traitRange[2]) / 2.0;
+float averagePreyMetabolicRate = (geneticDatabase[0].geneticTraitIntervals[2].traitRange[1] + geneticDatabase[0].geneticTraitIntervals[2].traitRange[2]) / 2.0;
+float averagePreyLustLevel = (geneticDatabase[0].geneticTraitIntervals[3].traitRange[1] + geneticDatabase[0].geneticTraitIntervals[3].traitRange[2]) / 2.0;
+float averagePreyHungerSensitivity = (geneticDatabase[0].geneticTraitIntervals[1].traitRange[1] + geneticDatabase[0].geneticTraitIntervals[1].traitRange[2]) / 2.0;
+float averagePreyPredatorAversion = (geneticDatabase[0].geneticTraitIntervals[5].traitRange[1] + geneticDatabase[0].geneticTraitIntervals[5].traitRange[2]) / 2.0;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
 int main()
 {   
@@ -59,6 +75,20 @@ int main()
 
 
     sf::RenderWindow windowParam(sf::VideoMode(350, 300), "Input Box Example");
+
+
+
+
+    sf::Texture backgroundTexture;
+    if (!backgroundTexture.loadFromFile("background.png")) {
+        // Handle loading error
+        return -1;
+    }
+
+    // Create a sprite for the background
+    sf::Sprite backgroundSprite(backgroundTexture);
+
+
 
     sf::Font font;
     if (!font.loadFromFile("arial.ttf"))
@@ -166,8 +196,11 @@ int main()
     bool isPredatorInputFocused = false;
     bool isPreyInputFocused = false;
     bool isFloraInputFocused = false;
-    bool isStandardModeFocused = false;
+    //default is standard mode
+    bool isStandardModeFocused = true;
+    standardMode.setFillColor(sf::Color(120, 120, 120));
     bool isPreyVsPredFocused = false;
+
 
 
     while (windowParam.isOpen()) {
@@ -324,6 +357,7 @@ int main()
         }
 
         windowParam.clear(sf::Color::White);
+        windowParam.draw(backgroundSprite);
         //Predator
         windowParam.draw(numberOfPredatorsTxtPrompt);
         windowParam.draw(predatorInputBox);
@@ -357,8 +391,8 @@ int main()
     srand(seed);
 
     std::vector<Organism*> organismVector;
-
     
+    /*
     //TO BE DELETED Below
     Predator* myPredator = new Predator(500, 600, 5, 2000, true, 1, 10, 1, 50, 800);
     organismVector.push_back(myPredator);
@@ -392,87 +426,106 @@ int main()
     Flora* myFlora3 = new Flora(500, 500, 10, 1000, 0.5);
     organismVector.push_back(myFlora3);
     //To be deleted Above
-    
-    /*UNCOMMENT
+    */
+    //UNCOMMENT
     //std::cout << organismVector.at(0)->getType() << std::endl;
-    for (int i = 0; i < numberOfPredators; i++) {
+    
+
+
+    
+    
+    for (int i = 0; i < inputNrPred; i++) {
         bool validRespawnPlace = false;
-        float posX = 500;
-        float posY = 500;
+        float posX = isStandardModeFocused ? rand() % windowWidth : rand() % windowWidth /2 ;
+        float posY = rand() % windowHeight;
         float radius = 3;
         while (not validRespawnPlace){
-            posX = rand() % windowWidth;
-            posY = rand() % windowHeight;
-            radius = static_cast<float>(rand() % 10 + 5);
-            for (int j = 0; j <= i; j++) {
-                float distanceSquare = pow(posX - organismVector.at(i)->getPosX(), 2) + pow(posY - organismVector.at(i)->getPosY(), 2);
-                if (distanceSquare > pow(organismVector.at(i)->getRadius() + radius, 2)) {
+            for (int j = 0; j < i; j++) {
+                float distanceSquare = pow(posX - organismVector.at(j)->getPosX(), 2) + pow(posY - organismVector.at(j)->getPosY(), 2);
+                if (distanceSquare > pow(organismVector.at(j)->getRadius() + radius, 2)) {
                     validRespawnPlace = true;
                 }
+                else {
+                    posX = isStandardModeFocused ? rand() % windowWidth : rand() % windowWidth / 2;
+                    posY = rand() % windowHeight;
+                    validRespawnPlace = false;
+                    break;
+                }
             }
+            validRespawnPlace = true;
         }
-        float energy = rand() % 100 + 1;
+        float energy = 250.0;
+        float visionRange = geneticEngine ("Predator", "Vision Range", averagePredatorVisionRange, averagePredatorVisionRange);
         bool sex = rand() % 2 == 0 ? true : false;
-        int speed = rand() % 3 +1;
-        int hungerLevel = rand() % 100 + 1;
-        float metabolicRate = static_cast<float>(rand() % 10 + 1) / 10.0f;
-        int lustLevel = rand() % 100 + 1;
-        int visionRange = rand() % 100 + 1;
+        float speed = geneticEngine("Predator", "Speed", averagePredatorSpeed, averagePredatorSpeed);
+        float hungerLevel = geneticEngine("Predator", "Hunger Level", averagePredatorHungerSensitivity, averagePredatorHungerSensitivity);
+        float metabolicRate = geneticEngine("Predator", "Metabolic Rate", averagePredatorMetabolicRate, averagePredatorMetabolicRate);
+        int lustLevel = geneticEngine("Predator", "Lust Level", averagePredatorLustLevel, averagePredatorLustLevel);
+        
         Predator* myPredator = new Predator(posX, posY, radius, energy, sex, speed, hungerLevel, metabolicRate, lustLevel, visionRange);
         organismVector.push_back(myPredator);
     }
 
-    for (int i = 0; i < numberOfPrey; i++) {
+    for (int i = 0; i < inputNrPrey; i++) {
         bool validRespawnPlace = false;
-        float posX = 500;
-        float posY = 500;
+        float posX = isStandardModeFocused ? rand() % windowWidth : (rand() % (windowWidth - windowWidth / 2 + 1)) + windowWidth / 2;
+        float posY = rand() % windowHeight;
         float radius = 3;
         while (not validRespawnPlace) {
-            posX = rand() % windowWidth;
-            posY = rand() % windowHeight;
-            radius = static_cast<float>(rand() % 10 + 5);
-            for (int j = 0; j <= i; j++) {
-                float distanceSquare = pow(posX - organismVector.at(i)->getPosX(), 2) + pow(posY - organismVector.at(i)->getPosY(), 2);
-                if (distanceSquare > pow(organismVector.at(i)->getRadius() + radius, 2)) {
+            for (int j = 0; j < i; j++) {
+                float distanceSquare = pow(posX - organismVector.at(j)->getPosX(), 2) + pow(posY - organismVector.at(j)->getPosY(), 2);
+                if (distanceSquare > pow(organismVector.at(j)->getRadius() + radius, 2)) {
                     validRespawnPlace = true;
                 }
+                else {
+                    posX = isStandardModeFocused ? rand() % windowWidth : (rand() % (windowWidth - windowWidth/2 + 1)) + windowWidth/2;
+                    posY = rand() % windowHeight;
+                    validRespawnPlace = false;
+                    break;
+                }
             }
+            validRespawnPlace = true;
         }
-        float energy = rand() % 100 + 1;
+        float energy = 250.0;
+        float visionRange = geneticEngine("Predator", "Vision Range", averagePredatorVisionRange, averagePredatorVisionRange);
         bool sex = rand() % 2 == 0 ? true : false;
-        int speed = rand() % 10 + 1;
-        int hungerLevel = rand() % 100 + 1;
-        float metabolicRate = static_cast<float>(rand() % 10 + 1) / 10.0f;
-        int lustLevel = rand() % 100 + 1;
-        int visionRange = rand() % 100 + 1;
-        float predatorAversion = static_cast<float>(rand() * 100);
+        float speed = geneticEngine("Predator", "Speed", averagePredatorSpeed, averagePredatorSpeed);
+        float hungerLevel = geneticEngine("Predator", "Hunger Level", averagePredatorHungerSensitivity, averagePredatorHungerSensitivity);
+        float metabolicRate = geneticEngine("Predator", "Metabolic Rate", averagePredatorMetabolicRate, averagePredatorMetabolicRate);
+        int lustLevel = geneticEngine("Predator", "Lust Level", averagePredatorLustLevel, averagePredatorLustLevel);
+        float predatorAversion = geneticEngine("Prey", "Predator Aversion", averagePreyPredatorAversion, averagePreyPredatorAversion);
+
         Prey* myPrey = new Prey(posX, posY, radius, energy, sex, speed, hungerLevel, metabolicRate, lustLevel, visionRange, predatorAversion);
         organismVector.push_back(myPrey);
     }
 
-    for (int i = 0; i < numberOfFlora; i++) {
+    for (int i = 0; i < inputNrFlora; i++) {
         bool validRespawnPlace = false;
-        float posX = 500;
-        float posY = 500;
+        float posX = rand() % windowWidth;
+        float posY = rand() % windowHeight;
         float radius = 3;
         while (not validRespawnPlace) {
-            posX = rand() % windowWidth;
-            posY = rand() % windowHeight;
-            radius = static_cast<float>(rand() % 10 + 5);
-            for (int j = 0; j <= i; j++) {
-                float distanceSquare = pow(posX - organismVector.at(i)->getPosX(), 2) + pow(posY - organismVector.at(i)->getPosY(), 2);
-                if (distanceSquare > pow(organismVector.at(i)->getRadius() + radius, 2)) {
+            for (int j = 0; j < i; j++) {
+                float distanceSquare = pow(posX - organismVector.at(j)->getPosX(), 2) + pow(posY - organismVector.at(j)->getPosY(), 2);
+                if (distanceSquare > pow(organismVector.at(j)->getRadius() + radius, 2)) {
                     validRespawnPlace = true;
                 }
+                else {
+                    posX = rand() % windowWidth;
+                    posY = rand() % windowHeight;
+                    validRespawnPlace = false;
+                    break;
+                }
             }
+            validRespawnPlace = true;
         }
         float energy = rand() % 100 + 1;
-        float growthRate = static_cast<float>(rand() * 100);
+        float growthRate = static_cast<float>(rand() % 10 + 1) / 10.0f;
         Flora* myFlora = new Flora(posX, posY, radius, energy, growthRate);
         organismVector.push_back(myFlora);
     }
-    UNCOMMENT*/
-
+    
+    
 
     std::vector<float> numberOfFaunaAtTimeT;
     float totalNumberOfFauna = numberOfPrey + numberOfPredators;
@@ -768,8 +821,8 @@ int main()
         femaleBox.setPosition(1100, 705);
 
         sf::RectangleShape fertileBox(sf::Vector2f(8.f, 8.f));
-        femaleBox.setFillColor(sf::Color::Color(255,155,0));
-        femaleBox.setPosition(1180, 705);
+        fertileBox.setFillColor(sf::Color::Color(255,155,0));
+        fertileBox.setPosition(1180, 705);
 
         sf::Text maleTextString;
         maleTextString.setFont(font);
@@ -846,6 +899,8 @@ int main()
         testBox.setOutlineColor(sf::Color::Black);
         testBox.setPosition(0.f, 0.f);
         windowSummary.draw(testBox);
+
+
         
         
         sf::Text currentText;
@@ -858,7 +913,16 @@ int main()
 
         currentText.setCharacterSize(10);
 
+        sf::RectangleShape speciesSeparator(sf::Vector2f( 20.0* columnWidth , 2.0));
+        speciesSeparator.setFillColor(sf::Color::Black);
+        speciesSeparator.setOutlineThickness(0.f);
+        speciesSeparator.setOutlineColor(sf::Color::Black);
+
         for (int i = 0; i < summaryStatistics.size(); i++) {
+            
+
+            speciesSeparator.setPosition(newOriginX + (-0.2 * columnWidth ), newOriginY + (1.8 + i * 6.0) * lineHeight);
+            windowSummary.draw(speciesSeparator);
             currentText.setString(summaryStatistics[i].speciesName);
             currentText.setPosition(newOriginX + 2.0 * columnWidth, newOriginY + (2.0 + i * 6.0) * lineHeight);
             windowSummary.draw(currentText);
@@ -881,14 +945,30 @@ int main()
             currentText.setPosition(newOriginX, newOriginY + (7.0 + i * 6.0) * lineHeight);
             windowSummary.draw(currentText);
 
+            sf::RectangleShape traitSeparator(sf::Vector2f( 2.0 , 4.8*lineHeight));
+            traitSeparator.setFillColor(sf::Color::Black);
+            traitSeparator.setOutlineThickness(0.f);
+            traitSeparator.setOutlineColor(sf::Color::Black);
+            
+            sf::RectangleShape classSeparator(sf::Vector2f( 1.0 , 3.8*lineHeight));
+            classSeparator.setFillColor(sf::Color::Black);
+            classSeparator.setOutlineThickness(0.f);
+            classSeparator.setOutlineColor(sf::Color::Black);
+
+            
+
             for (int j = 0; j < summaryStatistics[i].traitSummaryStatisticVector.size(); j++) {
                 currentText.setString(summaryStatistics[i].traitSummaryStatisticVector[j].traitName);
                 currentText.setPosition(newOriginX + (2.0 + 3.0 * j) * columnWidth, newOriginY + (3.0 + i * 6.0) * lineHeight);
-                    windowSummary.draw(currentText);
+                windowSummary.draw(currentText);
+                traitSeparator.setPosition(newOriginX + (1.8 + 3.0 * (j+1 )) * columnWidth, newOriginY + (3.0 + i * 6.0) * lineHeight);
+                windowSummary.draw(traitSeparator);
                 for (int k = 0; k < 3; k++) {
                     currentText.setString(std::to_string(k + 1));
                     currentText.setPosition(newOriginX + (2.0 + 3.0 * j + 1.0 * k) * columnWidth, newOriginY + (4.0 + i * 6.0) * lineHeight);
                     windowSummary.draw(currentText);
+                    classSeparator.setPosition(newOriginX + (1.8 + 3.0 * j + 1.0 * k) * columnWidth, newOriginY + (4.0 + i * 6.0) * lineHeight);
+                    windowSummary.draw(classSeparator);
                     std::stringstream stream1;
                     stream1 << std::fixed << std::setprecision(0) << (summaryStatistics[i].traitSummaryStatisticVector[j].population[k]); 
                     currentText.setString(stream1.str());
@@ -918,6 +998,9 @@ int main()
             }
         
         }
+
+        speciesSeparator.setPosition(newOriginX, newOriginY + (1.8 + 2 * 6.0) * lineHeight);
+        windowSummary.draw(speciesSeparator);
 
 
         windowSummary.display();
