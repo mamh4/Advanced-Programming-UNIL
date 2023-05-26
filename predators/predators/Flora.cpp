@@ -17,7 +17,7 @@
     float maxEnergy = 500.0 ; 
     
 
-	 //this->setEnergy( std::min( maxEnergy * this->getRadius(), (this->getEnergy() +  this->getGrowthRate() )) );
+	this->setEnergy( std::min( maxEnergy * this->getRadius(), (this->getEnergy() +  this->getGrowthRate() )) );
   
     //totalEnergyFlora += std::min(maxEnergy * this->getRadius(), (this->getEnergy() + this->getGrowthRate()));
 
