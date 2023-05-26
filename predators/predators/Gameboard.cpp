@@ -46,20 +46,20 @@ float avgAgePredator = 0.0;
 float avgAgePrey = 0.0;
 
 
-
+const int maxInput = 50;
 
 
 int main()
 {   
     /////////////////////////////////////////////////////// Genetic Engine Data //////////////////////////////////////////////////////////
-
-    float averagePredatorSpeed = (geneticDatabase[1].geneticTraitIntervals[0].traitRange[1] + geneticDatabase[1].geneticTraitIntervals[0].traitRange[2]) / 2.0;
+    
+    int averagePredatorSpeed = (geneticDatabase[1].geneticTraitIntervals[0].traitRange[1] + geneticDatabase[1].geneticTraitIntervals[0].traitRange[2]) / 2.0;
     float averagePredatorVisionRange = (geneticDatabase[1].geneticTraitIntervals[4].traitRange[1] + geneticDatabase[1].geneticTraitIntervals[4].traitRange[2]) / 2.0;
     float averagePredatorMetabolicRate = (geneticDatabase[1].geneticTraitIntervals[2].traitRange[1] + geneticDatabase[1].geneticTraitIntervals[2].traitRange[2]) / 2.0;
     float averagePredatorLustLevel = (geneticDatabase[1].geneticTraitIntervals[3].traitRange[1] + geneticDatabase[1].geneticTraitIntervals[3].traitRange[2]) / 2.0;
     float averagePredatorHungerSensitivity = (geneticDatabase[1].geneticTraitIntervals[1].traitRange[1] + geneticDatabase[1].geneticTraitIntervals[1].traitRange[2]) / 2.0;
 
-    float averagePreySpeed = (geneticDatabase[0].geneticTraitIntervals[0].traitRange[1] + geneticDatabase[0].geneticTraitIntervals[0].traitRange[2]) / 2.0;
+    int averagePreySpeed = (geneticDatabase[0].geneticTraitIntervals[0].traitRange[1] + geneticDatabase[0].geneticTraitIntervals[0].traitRange[2]) / 2.0;
     float averagePreyVisionRange = (geneticDatabase[0].geneticTraitIntervals[4].traitRange[1] + geneticDatabase[0].geneticTraitIntervals[4].traitRange[2]) / 2.0;
     float averagePreyMetabolicRate = (geneticDatabase[0].geneticTraitIntervals[2].traitRange[1] + geneticDatabase[0].geneticTraitIntervals[2].traitRange[2]) / 2.0;
     float averagePreyLustLevel = (geneticDatabase[0].geneticTraitIntervals[3].traitRange[1] + geneticDatabase[0].geneticTraitIntervals[3].traitRange[2]) / 2.0;
@@ -73,30 +73,30 @@ int main()
     int inputNrPrey = 0;
     int inputNrFlora = 0;
 
-
+  
     sf::RenderWindow windowParam(sf::VideoMode(350, 300), "Input Box Example");
 
-
-
+    
+    
 
     sf::Texture backgroundTexture;
     if (!backgroundTexture.loadFromFile("background.png")) {
         // Handle loading error
         return -1;
     }
-
+    
     // Create a sprite for the background
     sf::Sprite backgroundSprite(backgroundTexture);
 
 
-
+    
     sf::Font font;
     if (!font.loadFromFile("arial.ttf"))
     {
         std::cout << "Failed to load font!" << std::endl;
         return -1;
     }
-
+    
     //Number of predators
     sf::Text numberOfPredatorsTxtPrompt;
     numberOfPredatorsTxtPrompt.setFont(font);
@@ -202,7 +202,6 @@ int main()
     bool isPreyVsPredFocused = false;
 
 
-
     while (windowParam.isOpen()) {
         sf::Event event;
         while (windowParam.pollEvent(event)) {
@@ -274,12 +273,13 @@ int main()
                             inputNrPred = std::stoi(predatorInputString);
                         }
                         try {
-                            if (inputNrPred > 50) {
-                                throw std::runtime_error("Input value too large! Maximum is 50");
+                            if (inputNrPred > maxInput) {
+                                throw std::runtime_error("Input value too large! Maximum is 50. Only Max. will be considered!");
                             }
                         }
                         catch (std::runtime_error& e) {
                             std::cout << "Exception caught: " << e.what() << std::endl;
+                            inputNrPred = maxInput;
                         }
                         
                     }
@@ -309,12 +309,14 @@ int main()
                             inputNrPrey = std::stoi(preyInputString);
                         }
                         try {
-                            if (inputNrPrey > 50) {
-                                throw std::runtime_error("Input value too large! Maximum is 50");
+                            if (inputNrPrey > maxInput) {
+                                throw std::runtime_error("Input value too large! Maximum is 50. Only Max. will be considered!");
+
                             }
                         }
                         catch (std::runtime_error& e) {
                             std::cout << "Exception caught: " << e.what() << std::endl;
+                            inputNrPrey = maxInput;
                         }
                     }
                 }//Flora
@@ -343,18 +345,35 @@ int main()
                             inputNrFlora = std::stoi(floraInputString);
                         }
                         try {
-                            if (inputNrFlora > 50) {
-                                throw std::runtime_error("Input value too large! Maximum is 50");
+                            if (inputNrFlora > maxInput) {
+                                throw std::runtime_error("Input value too large! Maximum is 50. Only Max. will be considered!");
                             }
                         }
                         catch (std::runtime_error& e) {
                             std::cout << "Exception caught: " << e.what() << std::endl;
+                            inputNrFlora = maxInput;
                         }
 
                     }
                 }
             }
         }
+
+        sf::Text maxInputString;
+        maxInputString.setFont(font);
+        maxInputString.setCharacterSize(10);
+        maxInputString.setFillColor(sf::Color::Black);
+        maxInputString.setString("Maximum input per species: 50.");
+        maxInputString.setStyle(sf::Text::Italic);
+        maxInputString.setPosition(0, 280);
+
+        sf::Text versionText;
+        versionText.setFont(font);
+        versionText.setCharacterSize(10);
+        versionText.setFillColor(sf::Color::Black);
+        versionText.setString("version 1.0.0");
+        versionText.setStyle(sf::Text::Italic);
+        versionText.setPosition(280, 280);
 
         windowParam.clear(sf::Color::White);
         windowParam.draw(backgroundSprite);
@@ -370,6 +389,11 @@ int main()
         windowParam.draw(numberOfFloraTxtPrompt);
         windowParam.draw(floraInputBox);
         windowParam.draw(floraInputText);
+
+        //version + notificiation
+        windowParam.draw(maxInputString);
+        windowParam.draw(versionText);
+
 
         //modes
         windowParam.draw(preyVsPredMode);
@@ -457,7 +481,7 @@ int main()
         float energy = 250.0;
         float visionRange = geneticEngine ("Predator", "Vision Range", averagePredatorVisionRange, averagePredatorVisionRange);
         bool sex = rand() % 2 == 0 ? true : false;
-        float speed = geneticEngine("Predator", "Speed", averagePredatorSpeed, averagePredatorSpeed);
+        int speed = static_cast<int>(geneticEngine("Predator", "Speed", averagePredatorSpeed, averagePredatorSpeed));
         float hungerLevel = geneticEngine("Predator", "Hunger Level", averagePredatorHungerSensitivity, averagePredatorHungerSensitivity);
         float metabolicRate = geneticEngine("Predator", "Metabolic Rate", averagePredatorMetabolicRate, averagePredatorMetabolicRate);
         int lustLevel = geneticEngine("Predator", "Lust Level", averagePredatorLustLevel, averagePredatorLustLevel);
@@ -487,12 +511,12 @@ int main()
             validRespawnPlace = true;
         }
         float energy = 250.0;
-        float visionRange = geneticEngine("Predator", "Vision Range", averagePredatorVisionRange, averagePredatorVisionRange);
+        float visionRange = geneticEngine("Prey", "Vision Range", averagePredatorVisionRange, averagePredatorVisionRange);
         bool sex = rand() % 2 == 0 ? true : false;
-        float speed = geneticEngine("Predator", "Speed", averagePredatorSpeed, averagePredatorSpeed);
-        float hungerLevel = geneticEngine("Predator", "Hunger Level", averagePredatorHungerSensitivity, averagePredatorHungerSensitivity);
-        float metabolicRate = geneticEngine("Predator", "Metabolic Rate", averagePredatorMetabolicRate, averagePredatorMetabolicRate);
-        int lustLevel = geneticEngine("Predator", "Lust Level", averagePredatorLustLevel, averagePredatorLustLevel);
+        int speed = static_cast<int>(geneticEngine("Prey", "Speed", averagePredatorSpeed, averagePredatorSpeed));
+        float hungerLevel = geneticEngine("Prey", "Hunger Level", averagePredatorHungerSensitivity, averagePredatorHungerSensitivity);
+        float metabolicRate = geneticEngine("Prey", "Metabolic Rate", averagePredatorMetabolicRate, averagePredatorMetabolicRate);
+        int lustLevel = geneticEngine("Prey", "Lust Level", averagePredatorLustLevel, averagePredatorLustLevel);
         float predatorAversion = geneticEngine("Prey", "Predator Aversion", averagePreyPredatorAversion, averagePreyPredatorAversion);
 
         Prey* myPrey = new Prey(posX, posY, radius, energy, sex, speed, hungerLevel, metabolicRate, lustLevel, visionRange, predatorAversion);
@@ -519,11 +543,14 @@ int main()
             }
             validRespawnPlace = true;
         }
-        float energy = rand() % 100 + 1;
-        float growthRate = static_cast<float>(rand() % 10 + 1) / 10.0f;
+        float energy = 500; //TODO NEED TO PICK A VALID RANDOM ENERGY
+        float growthRate = 0;// static_cast<float>(rand() % 10 + 1) * 10.0f;
         Flora* myFlora = new Flora(posX, posY, radius, energy, growthRate);
         organismVector.push_back(myFlora);
     }
+
+
+
     
     
 
@@ -599,6 +626,25 @@ int main()
 
         }
 
+
+
+        // Simplified Survey Loop of Living Population 
+        totalEnergyFlora = 0.0 ;
+        totalEnergyPrey = 0.0 ;
+        totalEnergyPredator = 0.0 ;
+        for (int i = 0; i < organismVector.size(); i++) {
+            if(Flora* myFlora = dynamic_cast<Flora*>(organismVector.at(i))){
+                totalEnergyFlora += myFlora->getEnergy();
+            }
+            if(Prey* myPrey = dynamic_cast<Prey*>(organismVector.at(i))){
+                totalEnergyPrey += myPrey->getEnergy();
+            }
+            if(Predator* myPredator = dynamic_cast<Predator*>(organismVector.at(i))){
+                totalEnergyPredator += myPredator->getEnergy();
+            }
+		}
+
+
         numberOfPredatorsAtTimeT.push_back(numberOfPredators);
         numberOfPreyAtTimeT.push_back(numberOfPrey);
         totalNumberOfFauna = numberOfPrey + numberOfPredators;
@@ -643,21 +689,14 @@ int main()
             "Population: " + std::to_string(organismVector.size()) + "\n" +
             "Predators: " + std::to_string(numberOfPredators) + "\n" +
             "Prey: " + std::to_string(numberOfPrey) + "\n" +
-            "Flora: " + std::to_string(numberOfFlora) + "\n" +
-            "Fertile Pred Female: " + std::to_string(numberOfFertileFemalePredator) + "\n" +
-            "Fertile Pred Male: " + std::to_string(numberOfFertileMalePredator) + "\n" +
-            "Fertile Prey Female: " + std::to_string(numberOfFertileFemalePrey) + "\n" +
-            "Fertile Prey Male: " + std::to_string(numberOfFertileMalePrey) + "\n" +
-            "Number of Male Pred: " + std::to_string(numberOfMalePredator) + "\n" +
-            "Number of Female Pred: " + std::to_string(numberOfFemalePredator)
-        );
+            "Flora: " + std::to_string(numberOfFlora));
         // +std::to_string(organismVector.size()));
         text.setCharacterSize(14);
-        text.setFillColor(sf::Color::Black);
+        text.setFillColor(sf::Color::White);
 
 
         // clear the window
-        window.clear(sf::Color::White);
+        window.clear(sf::Color::Black);
         
         //Plot linePlot1 = linePlot(1010.0, 170.0,numberOfPredatorsAtTimeT, font,"Hello",120.0,250.0,2000);
         Plot2 mixedPlot = twoLinesPlot(1030.0, 170.0,numberOfPredatorsAtTimeT, numberOfPreyAtTimeT

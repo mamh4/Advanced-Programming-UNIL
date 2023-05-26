@@ -15,7 +15,6 @@ Prey::Prey(float myPosX, float myPosY, float myRadius, float myEnergy,bool mySex
     predatorAversion = myPredatorAversion;
 	shape.setFillColor(sf::Color::Blue);
 	numberOfPrey += 1;
-	totalEnergyPrey += myEnergy;
 
 	if (mySex) {
 		numberOfFemalePrey += 1;
@@ -57,6 +56,8 @@ void Prey::interact(Organism* targetOrganism, std::vector<Organism*>& organismVe
 		float absorbedEnergy;
 		absorbedEnergy = std::min(energyAbsorbtionSpeed, targetOrganism->getEnergy());
 		targetOrganism->setEnergy(targetOrganism->getEnergy() - absorbedEnergy);
+		//totalEnergyFlora-= absorbedEnergy;
+		this->setEnergy(this->getEnergy() + absorbedEnergy);
 	}
 	else if (Prey* myPrey = dynamic_cast<Prey*>(targetOrganism)) {
 		//NEW!! Age must be greater than 30 to reproduce
@@ -223,7 +224,6 @@ void Prey::interact(Organism* targetOrganism, std::vector<Organism*>& organismVe
 
 			this->setEnergy(this->getEnergy() - baseReproductionEnergyCost);
 			targetOrganism->setEnergy(targetOrganism->getEnergy() - baseReproductionEnergyCost);
-			totalEnergyPrey -= 2 * baseReproductionEnergyCost;
 			this->setNumberOfOffspring(this->getNumberOfOffspring() + 1);
 			if (Prey* myPrey = dynamic_cast<Prey*>(this)) {
 				myPrey->setNumberOfOffspring(myPrey->getNumberOfOffspring() + 1);
@@ -240,6 +240,8 @@ void Prey::interact(Organism* targetOrganism, std::vector<Organism*>& organismVe
 
 void Prey::computeUtility(float distanceSquared, Organism* targetOrganism, std::vector<float>& directionalUtility , std::vector<Organism*>& possibleCollisions, 
 	float& maxInteractionUtility , Organism*& maxInteractionUtilityTarget ) {
+
+	//std::cout << "I am a prey and my speed is " << this->getSpeed() << std::endl; 
     
 	float currentUtility = 0 ;
 	float angleBetween = 0 ;

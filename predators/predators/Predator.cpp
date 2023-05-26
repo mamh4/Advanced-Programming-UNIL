@@ -12,7 +12,6 @@ Predator::Predator(float myPosX, float myPosY, float myRadius, float myEnergy,bo
 		mySex, mySpeed, myHungerSensitivity,
 		myMetabolicRate, myLustLevel, myVisionRange) {
 	shape.setFillColor(sf::Color::Red);
-	totalEnergyPredator += myEnergy;
 	numberOfPredators += 1;
 
 
@@ -28,6 +27,8 @@ Predator::Predator(float myPosX, float myPosY, float myRadius, float myEnergy,bo
 void Predator::computeUtility(float distanceSquared, Organism* targetOrganism, std::vector<float>& directionalUtility , std::vector<Organism*>& possibleCollisions, 
 	float& maxInteractionUtility , Organism*& maxInteractionUtilityTarget ) {
     
+	//std::cout << "I am a predator and my speed is " << this->getSpeed() << std::endl; 
+
 	float currentUtility = 0 ; 
     float angleBetween = 0 ;
     int currentIntegerDirection =0 ; 
@@ -129,14 +130,12 @@ void Predator::computeUtility(float distanceSquared, Organism* targetOrganism, s
 void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organismVector) {
 	if(Prey* myPrey = dynamic_cast<Prey*>(targetOrganism)){
 		float energyAbsorbtionSpeed;
-		energyAbsorbtionSpeed = 10.0;
+		energyAbsorbtionSpeed = 5.0; //initial falue 10
 		// CLASS CONST OR ATTRIBUTE ? Maximum amount of energy the predator can take from a prey in one interaction 
 		float absorbedEnergy;
 		absorbedEnergy = std::min(energyAbsorbtionSpeed, targetOrganism->getEnergy());
 		targetOrganism->setEnergy(targetOrganism->getEnergy() - absorbedEnergy);
 		this->setEnergy(this->getEnergy() + absorbedEnergy);
-		totalEnergyPredator += absorbedEnergy;
-		totalEnergyPrey -= absorbedEnergy;
 	}
 	else if (Predator* myPred = dynamic_cast<Predator*>(targetOrganism)) {
 
@@ -274,7 +273,6 @@ void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organi
 
 			this->setEnergy(this->getEnergy() - baseReproductionEnergyCost);
 			targetOrganism->setEnergy(targetOrganism->getEnergy() - baseReproductionEnergyCost);  // MOVE TO AFTER CHEcK IF REPRO POSSIBLE ELSE ENERGY TAKEN WITH NO OFFSPRING 
-			totalEnergyPredator -= 2 * baseReproductionEnergyCost;
 			this->setNumberOfOffspring(this->getNumberOfOffspring() + 1);
 			if (Predator* myPredator = dynamic_cast<Predator*>(this)){
 				myPredator->setNumberOfOffspring(myPredator->getNumberOfOffspring() + 1);

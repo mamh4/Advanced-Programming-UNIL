@@ -101,11 +101,8 @@
             numberOfPredators -=1;
             //std::cout << "I am a predator, my energy level before dying is  " << this->energy << " total energy before dying is : " << totalEnergyPredator
              //   << std::endl;
-            if (this->energy > 0) {
-                totalEnergyPredator -= this->energy;
-            }
 
-            std::cout << "total energy after pred death is " << totalEnergyPredator << std::endl;
+            //std::cout << "total energy after pred death is " << totalEnergyPredator << std::endl;
             if (this->sex) {
                 numberOfFemalePredator -= 1;
                 if (this->fertile) {
@@ -121,13 +118,10 @@
         }
         else if (Prey* myPrey = dynamic_cast<Prey*>(this)) {
             numberOfPrey -= 1;
-            std::cout << "I am a prey, my energy level before dying is  " << this->energy << " total energy before dying is : " << totalEnergyPrey
-                << std::endl;
-            if (this->energy > 0) {
-                totalEnergyPrey -= this->energy;
-            }
+            //std::cout << "I am a prey, my energy level before dying is  " << this->energy << " total energy before dying is : " << totalEnergyPrey
+               // << std::endl;
 
-            std::cout << "total energy after pred death is " << totalEnergyPredator << std::endl;
+            //std::cout << "total energy after pred death is " << totalEnergyPredator << std::endl;
             if (this->sex) {
                 numberOfFemalePrey -= 1;
                 if (this->fertile) {
@@ -198,13 +192,6 @@ void Fauna::move(int directionIndicator) {
     this->setPosX(this->getPosX() + stepSize * cos((directionIndicator + 0.5) * M_PI * 2 / angleSectionNumber));
     this->setPosY(this->getPosY() + stepSize * sin((directionIndicator + 0.5) * M_PI * 2 / angleSectionNumber));
     this->setEnergy(this->getEnergy() - energyCostOfMovement);
-
-    if (Predator* myPredator = dynamic_cast<Predator*>(this)) {
-        totalEnergyPredator -= energyCostOfMovement;
-    }
-    else if (Prey* myPrey = dynamic_cast<Prey*>(this)) {
-        totalEnergyPrey -= energyCostOfMovement;
-    }
 }
 
 void Fauna::ageing() {
@@ -224,19 +211,14 @@ void Fauna::ageing() {
 
 void Fauna::update(std::vector<Organism*>& organismVector) {
     this->ageing(); // CHANGE TO DATE OF BIRTH 
-    this->setEnergy(this->getEnergy() - std::min(this->getMetabolicRate(), this->energy));
+    this->setEnergy(this->getEnergy() - std::min(this->getMetabolicRate(), this->getEnergy()));
+
 
     float childRadius = 3.0;
     float adultRadius = 6.0; // Prey or Predator Specific ? 
     int maxAge = 12000; // 100 seconds at 60 fps / Prey or Predator Specific ? 
     this->setRadius(childRadius + log(20 * (1.0 * this->getAge() / maxAge) + 1) * (adultRadius - childRadius)); // CHECK PARAMETERS 
 
-    if (Predator* myPredator = dynamic_cast<Predator*>(this)) {
-        totalEnergyPredator -= std::min(this->getMetabolicRate(), this->energy);
-    }
-    else if (Prey* myPrey = dynamic_cast<Prey*>(this)) {
-        totalEnergyPrey -= std::min(this->getMetabolicRate(), this->energy);
-    }
 
     // with arbitrary 100 seconds (6000 frames ) max lifespan, arbitrary function with certain death at 6000 
     //Maybe separate function
@@ -253,7 +235,7 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
         int maxFertilityAge = 100;
         if ((1.0 * (rand() % 100) < std::max(0.0, (100 * std::pow(((this->getAge() - minFertilityAge) / (maxFertilityAge - minFertilityAge)), 10)))) and not this->getFertile()) {
             this->setFertile(true);
-            std::cout << "Fertility Unlocked, I am: "<< this->getSex() <<this->getType()<< "numberOfFertileFemalePred" << numberOfFertileFemalePredator << std::endl;
+          //  std::cout << "Fertility Unlocked, I am: "<< this->getSex() <<this->getType()<< "numberOfFertileFemalePred" << numberOfFertileFemalePredator << std::endl;
 
             if (Prey* myPrey = dynamic_cast<Prey*>(this)) {
                 if (this->getSex()) {
@@ -455,10 +437,10 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
                 this->interact(maxInteractionUtilityTarget, organismVector);
                 //} 
             }
-    if (boostingMomentTracker > 1 ){
-        std::cout << "WARNING !!! BOOSTING DETECTED - NUMBER OF STEPS IN SINGLE SPEED ITEM IS:  " << boostingMomentTracker << std::endl;
-        std::cout << boostingReport << std::endl; 
-    } 
+    //if (boostingMomentTracker > 1 ){
+   //     std::cout << "WARNING !!! BOOSTING DETECTED - NUMBER OF STEPS IN SINGLE SPEED ITEM IS:  " << boostingMomentTracker << std::endl;
+   //     std::cout << boostingReport << std::endl; 
+   // } 
     
     // vvv COLOR AS A FUNCTION OF ENERGY vvv
 
@@ -473,11 +455,11 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
         approximateColorCode = 100.0 ; 
     }
     else if (this->getEnergy()  <=  maxEnergy * this->getRadius() ) {
-        approximateColorCode = 100.0 + (this->getEnergy()*155.0/(maxEnergy * this->getRadius())) ; 
+        approximateColorCode = 150.0 - (this->getEnergy()*150.0/(maxEnergy * this->getRadius())) ; 
        // std::cout << "My energy is " << this->getEnergy() << " which is the following percentage of the max " << (this->getEnergy()*100.0/(maxEnergy * this->getRadius())) << std::endl; 
     }
     else {
-        approximateColorCode = 255.0 ; 
+        approximateColorCode = 0.0 ; 
     }
     newColorCode = static_cast<int> (approximateColorCode ); 
     newColorCode = newColorCode % 256 ; 
@@ -486,11 +468,11 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
     // std::cout << "actual Color Code is now " << actualColorCode << std::endl ; 
 
     if (Prey* myPrey = dynamic_cast<Prey*>(this)) {
-        newShape.setFillColor(sf::Color::Color( 0 , 0, actualColorCode , 255 )); 
+        newShape.setFillColor(sf::Color::Color( actualColorCode , actualColorCode, 255 , 255 )); 
 
     }
     else if (Predator* myPredator = dynamic_cast<Predator*>(this)) {
-        newShape.setFillColor(sf::Color::Color( actualColorCode ,0 , 0 , 255 )); 
+        newShape.setFillColor(sf::Color::Color( 255 ,actualColorCode , actualColorCode , 255 )); 
 
     }
     this->setShape(newShape);
@@ -676,7 +658,13 @@ float geneticEngine (std::string speciesName, std::string traitName, float paren
         geneticRand = (rand() % 100); 
         //std::cout << "alleleCounter is equal to " << alleleCounter << "corresponding to an interval between " << geneticTraitInterval[alleleCounter] << " and " << geneticTraitInterval[alleleCounter + 1] << "and random increment is " << geneticRand << " percent " <<  std::endl; 
         //offspringTraitValue = geneticTraitInterval[alleleCounter] + (geneticTraitInterval[alleleCounter + 1] - geneticTraitInterval[alleleCounter]) * geneticRand / 100.0;
-        offspringTraitValue = geneticTraitInterval[alleleCounter] + (geneticTraitInterval[alleleCounter + 1] - geneticTraitInterval[alleleCounter]) * (0.5 + 0.5*std::pow(-1 + 2* geneticRand / 100.0,5 ));
+        offspringTraitValue = geneticTraitInterval[alleleCounter] + (geneticTraitInterval[alleleCounter + 1] - geneticTraitInterval[alleleCounter]) * (0.5 + 0.5*std::pow((-1 + 2* geneticRand / 100.0) ,5 ));
+    
+    
+    //    offspringTraitValue = geneticTraitInterval[alleleCounter] + (geneticTraitInterval[alleleCounter + 1] - geneticTraitInterval[alleleCounter]) * (1.0 - 4.0*std::pow( geneticRand - 0.5 , 2 ));
+       // if (traitName == "Speed") {
+        //    std::cout << offspringTraitValue << std::endl ; 
+       // } 
 
         //FOR NOW UNIFORMLY, but can change distribution if fun, concentrated arround middle of the interval ? Making each of the 3 categories more distinct 
     }
