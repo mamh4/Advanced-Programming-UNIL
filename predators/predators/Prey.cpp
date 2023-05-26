@@ -56,7 +56,6 @@ void Prey::interact(Organism* targetOrganism, std::vector<Organism*>& organismVe
 		float absorbedEnergy;
 		absorbedEnergy = std::min(energyAbsorbtionSpeed, targetOrganism->getEnergy());
 		targetOrganism->setEnergy(targetOrganism->getEnergy() - absorbedEnergy);
-		//totalEnergyFlora-= absorbedEnergy;
 		this->setEnergy(this->getEnergy() + absorbedEnergy);
 	}
 	else if (Prey* myPrey = dynamic_cast<Prey*>(targetOrganism)) {
@@ -88,37 +87,8 @@ void Prey::interact(Organism* targetOrganism, std::vector<Organism*>& organismVe
 		/*/
 
 		float baseReproductionEnergyCost;
-		baseReproductionEnergyCost = 250.0; 
-		float energy = 500;//rand() % 100 + 1; 2* BASEREPRODZCTION COST 
-		bool sex; //= false;//rand() % 2 == 0 ? true : false;
-
-		int randomSexDetermination ; 
-		randomSexDetermination = rand() % 2 ; 
-		sex = (randomSexDetermination== 0 ); 
-
-		int speed = 1;//rand() % 10 + 1;
-		speed = static_cast<int> (geneticEngine ("Prey", "Speed", this->getSpeed(), myPrey->getSpeed() ))  ; 
-		std::cout << "Speed test genetics Engine " << speed << std::endl; 
-
-		float hungerSensitivity = 1;//rand() % 100 + 1
-		hungerSensitivity = geneticEngine ("Prey", "Hunger Sensitivity", this->getHungerSensitivity(), myPrey->getHungerSensitivity() ); 
-		std::cout << "Hunger Sensitivity test genetics Engine " << hungerSensitivity << std::endl; 
-
-		float metabolicRate = 0.1;//static_cast<float>(rand() % 10 + 1) / 10.0f;
-		metabolicRate = geneticEngine ("Prey", "Metabolic Rate", this->getMetabolicRate(), myPrey->getMetabolicRate() ); 
-		std::cout << "Metabolic Rate test genetics Engine " << metabolicRate << std::endl; 
-
-		int lustLevel = 1;//rand() % 100 + 1;
-		lustLevel = geneticEngine ("Prey", "Lust Level", this->getLustLevel(), myPrey->getLustLevel() ); 
-		std::cout << "Lust Level test genetics Engine " << lustLevel << std::endl; 
-
-		int visionRange = 250; //rand() % 100 + 1;
-		visionRange = geneticEngine ("Prey", "Vision Range", this->getVisionRange(), myPrey->getVisionRange() ); 
-		std::cout << "Vision Range test genetics Engine " << visionRange << std::endl; 
-
-		int predatorAversion = 1;//rand() % 100 + 1;
-		predatorAversion = geneticEngine ("Prey", "Predator Aversion", this->getPredatorAversion(), myPrey->getPredatorAversion() ); 
-		std::cout << "Predator Aversion test genetics Engine " << predatorAversion << std::endl; 
+		baseReproductionEnergyCost = 250.0;
+		//Mohamed: Moved initialisation attributes when candidate birth place is found //TODO: DECIDE ON ENERGY WHEN BORN.
 
 		// MOVE TO AFTER CHEcK IF REPRO POSSIBLE ELSE ENERGY TAKEN WITH NO OFFSPRING 
 		// CHECK EMPTY SPACE
@@ -218,6 +188,39 @@ void Prey::interact(Organism* targetOrganism, std::vector<Organism*>& organismVe
 		}
 		/*/
 		if (validCandidateBirthPlace) {
+
+			float energy = 500;//rand() % 100 + 1; 2* BASEREPRODZCTION COST 
+			bool sex; //= false;//rand() % 2 == 0 ? true : false;
+
+			int randomSexDetermination;
+			randomSexDetermination = rand() % 2;
+			sex = (randomSexDetermination == 0);
+
+			int speed = 1;//rand() % 10 + 1;
+			speed = static_cast<int> (geneticEngine("Prey", "Speed", this->getSpeed(), myPrey->getSpeed()));
+			std::cout << "Speed test genetics Engine " << speed << std::endl;
+
+			float hungerSensitivity = 1;//rand() % 100 + 1
+			hungerSensitivity = geneticEngine("Prey", "Hunger Sensitivity", this->getHungerSensitivity(), myPrey->getHungerSensitivity());
+			std::cout << "Hunger Sensitivity test genetics Engine " << hungerSensitivity << std::endl;
+
+			float metabolicRate = 0.1;//static_cast<float>(rand() % 10 + 1) / 10.0f;
+			metabolicRate = geneticEngine("Prey", "Metabolic Rate", this->getMetabolicRate(), myPrey->getMetabolicRate());
+			std::cout << "Metabolic Rate test genetics Engine " << metabolicRate << std::endl;
+
+			int lustLevel = 1;//rand() % 100 + 1;
+			lustLevel = geneticEngine("Prey", "Lust Level", this->getLustLevel(), myPrey->getLustLevel());
+			std::cout << "Lust Level test genetics Engine " << lustLevel << std::endl;
+
+			int visionRange = 250; //rand() % 100 + 1;
+			visionRange = geneticEngine("Prey", "Vision Range", this->getVisionRange(), myPrey->getVisionRange());
+			std::cout << "Vision Range test genetics Engine " << visionRange << std::endl;
+
+			int predatorAversion = 1;//rand() % 100 + 1;
+			predatorAversion = geneticEngine("Prey", "Predator Aversion", this->getPredatorAversion(), myPrey->getPredatorAversion());
+			std::cout << "Predator Aversion test genetics Engine " << predatorAversion << std::endl;
+
+
 			Prey* offspring = new Prey(candidateBirthPlaceX, candidateBirthPlaceY,
 				childRadius, energy, sex, speed, hungerSensitivity, metabolicRate, lustLevel, visionRange, predatorAversion);//Above parameters cause program failure!
 			organismVector.push_back(offspring);

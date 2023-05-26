@@ -185,7 +185,7 @@ void Fauna::move(int directionIndicator) {
 
     //std::cout << "my speed is " << Fauna::getSpeed() << "my coordinates are: " << Fauna::getPosX() << " "<< Fauna::getPosY << std::endl;
     float energyCostOfMovement;
-    energyCostOfMovement = std::min(0.1f, this->energy);
+    energyCostOfMovement = std::min(1.f, this->energy);
     // as Class constant later on ? 
     //Fauna::getShape().setPosition(Fauna::getShape().getPosition().x + stepSize * cos((directionIndicator + 0.5) * M_PI * 2 / 12),
     //    Fauna::getShape().getPosition().y + stepSize * sin((directionIndicator + 0.5) * M_PI * 2 / 12)); 

@@ -544,7 +544,7 @@ int main()
             validRespawnPlace = true;
         }
         float energy = 500; //TODO NEED TO PICK A VALID RANDOM ENERGY
-        float growthRate = 0;// static_cast<float>(rand() % 10 + 1) * 10.0f;
+        float growthRate = 10;// static_cast<float>(rand() % 10 + 1) * 10.0f;
         Flora* myFlora = new Flora(posX, posY, radius, energy, growthRate);
         organismVector.push_back(myFlora);
     }

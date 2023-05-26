@@ -35,6 +35,8 @@ void Predator::computeUtility(float distanceSquared, Organism* targetOrganism, s
 
     float baseReproductionEnergyCost;
 	baseReproductionEnergyCost = 250.0;
+	//Mohamed: Moved initialisation attributes when candidate birth place is found //TODO: DECIDE ON ENERGY WHEN BORN.
+
 
     float energyAbsorbtionSpeed;
 	energyAbsorbtionSpeed = 10.0;
@@ -142,31 +144,6 @@ void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organi
 
 		float baseReproductionEnergyCost;
 		baseReproductionEnergyCost = 250.0; 
-		float energy = 500;//rand() % 100 + 1; 2* BASEREPRODZCTION COST 
-		bool sex; //= false;//rand() % 2 == 0 ? true : false;
-
-		int randomSexDetermination ; 
-		randomSexDetermination = rand() % 2 ; 
-		sex = (randomSexDetermination== 0 ); 
-
-		int speed = 1;//rand() % 10 + 1;
-		speed = static_cast<int> (geneticEngine ("Predator", "Speed", this->getSpeed(), myPred->getSpeed() ))  ; 
-		//std::cout << "Speed test genetics Engine " << speed << std::endl; 
-
-		float hungerSensitivity = 1;//rand() % 100 + 1
-		hungerSensitivity = geneticEngine ("Predator", "Hunger Sensitivity", this->getHungerSensitivity(), myPred->getHungerSensitivity() ); 
-		//std::cout << "Hunger Sensitivity test genetics Engine " << hungerSensitivity << std::endl; 
-
-		float metabolicRate = 0.1;//static_cast<float>(rand() % 10 + 1) / 10.0f;
-		metabolicRate = geneticEngine ("Predator", "Metabolic Rate", this->getMetabolicRate(), myPred->getMetabolicRate() ); 
-		//std::cout << "Metabolic Rate test genetics Engine " << metabolicRate << std::endl; 
-
-		int lustLevel = 1;//rand() % 100 + 1;
-		lustLevel = geneticEngine ("Predator", "Lust Level", this->getLustLevel(), myPred->getLustLevel() ); 
-		//std::cout << "Lust Level test genetics Engine " << lustLevel << std::endl; 
-
-		int visionRange = 250; //rand() % 100 + 1;
-		visionRange = geneticEngine ("Predator", "Vision Range", this->getVisionRange(), myPred->getVisionRange() ); 
 		//std::cout << "Vision Range test genetics Engine " << visionRange << std::endl; 
 
 		// CHECK EMPTY SPACE
@@ -267,6 +244,33 @@ void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organi
 		/*/
 		//(float myPosX, float myPosY, float myRadius, float myEnergy,bool mySex, int mySpeed, float myHungerSensitivity, float myMetabolicRate, float myLustLevel, float myVisionRange)
 		if (validCandidateBirthPlace) {
+
+			float energy = 500;//rand() % 100 + 1; 2* BASEREPRODZCTION COST 
+			bool sex; //= false;//rand() % 2 == 0 ? true : false;
+
+			int randomSexDetermination;
+			randomSexDetermination = rand() % 2;
+			sex = (randomSexDetermination == 0);
+
+			int speed = 1;//rand() % 10 + 1;
+			speed = static_cast<int> (geneticEngine("Predator", "Speed", this->getSpeed(), myPred->getSpeed()));
+			//std::cout << "Speed test genetics Engine " << speed << std::endl; 
+
+			float hungerSensitivity = 1;//rand() % 100 + 1
+			hungerSensitivity = geneticEngine("Predator", "Hunger Sensitivity", this->getHungerSensitivity(), myPred->getHungerSensitivity());
+			//std::cout << "Hunger Sensitivity test genetics Engine " << hungerSensitivity << std::endl; 
+
+			float metabolicRate = 0.1;//static_cast<float>(rand() % 10 + 1) / 10.0f;
+			metabolicRate = geneticEngine("Predator", "Metabolic Rate", this->getMetabolicRate(), myPred->getMetabolicRate());
+			//std::cout << "Metabolic Rate test genetics Engine " << metabolicRate << std::endl; 
+
+			int lustLevel = 1;//rand() % 100 + 1;
+			lustLevel = geneticEngine("Predator", "Lust Level", this->getLustLevel(), myPred->getLustLevel());
+			//std::cout << "Lust Level test genetics Engine " << lustLevel << std::endl; 
+
+			int visionRange = 250; //rand() % 100 + 1;
+			visionRange = geneticEngine("Predator", "Vision Range", this->getVisionRange(), myPred->getVisionRange());
+
 			Predator* offspring = new Predator(candidateBirthPlaceX, candidateBirthPlaceY,
 			childRadius, energy, sex, speed, hungerSensitivity, metabolicRate, lustLevel, visionRange);//Above parameters cause program failure!
 			organismVector.push_back(offspring);
