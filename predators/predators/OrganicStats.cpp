@@ -114,16 +114,16 @@ Plot2 twoLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, std:
     xcoord.setPrimitiveType(sf::LinesStrip);
     xcoord[0].position = sf::Vector2f(posX, posY);
     xcoord[1].position = sf::Vector2f(posX + width, posY);
-    xcoord[0].color = sf::Color::Black;
-    xcoord[1].color = sf::Color::Black;
+    xcoord[0].color = sf::Color::White;
+    xcoord[1].color = sf::Color::White;
 
 
     sf::VertexArray ycoord(sf::LineStrip, 2);
     ycoord.setPrimitiveType(sf::LinesStrip);
     ycoord[0].position = sf::Vector2f(posX, posY);
     ycoord[1].position = sf::Vector2f(posX, posY - height - 30);
-    ycoord[0].color = sf::Color::Black;
-    ycoord[1].color = sf::Color::Black;
+    ycoord[0].color = sf::Color::White;
+    ycoord[1].color = sf::Color::White;
 
     sf::VertexArray chartLines(sf::LineStrip, timeSpan);
     chartLines.setPrimitiveType(sf::LinesStrip);
@@ -137,7 +137,7 @@ Plot2 twoLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, std:
     theTitle.setFont(font);
     theTitle.setCharacterSize(12);
     theTitle.setPosition(posX +(width)/2,posY-height-15);//posX+width/2 , posY - height-20);
-    theTitle.setFillColor(sf::Color::Black);
+    theTitle.setFillColor(sf::Color::White);
     theTitle.setString(title);
     theTitle.setOrigin(theTitle.getGlobalBounds().width/2, 0);
     theTitle.setStyle(sf::Text::Italic);
@@ -149,7 +149,7 @@ Plot2 twoLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, std:
     ylabel.setFont(font);
     ylabel.setCharacterSize(12);
     ylabel.setPosition(posX+width-ylabel.getGlobalBounds().width, posY + 8);
-    ylabel.setFillColor(sf::Color::Black);
+    ylabel.setFillColor(sf::Color::White);
     ylabel.setString("Simulation Time");
     ylabel.setOrigin(ylabel.getGlobalBounds().width, 0);
 
@@ -159,26 +159,26 @@ Plot2 twoLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, std:
     xAxisMax.setFont(font);
     xAxisMax.setCharacterSize(12);
     xAxisMax.setPosition(posX + width, posY +5);
-    xAxisMax.setFillColor(sf::Color::Black);
+    xAxisMax.setFillColor(sf::Color::White);
     float maxXDataPoint = timeSpan / 60.0;
 
     sf::Text xAxisMid;
     xAxisMid.setFont(font);
     xAxisMid.setCharacterSize(12);
     xAxisMid.setPosition(posX + width/2, posY + 5);
-    xAxisMid.setFillColor(sf::Color::Black);
+    xAxisMid.setFillColor(sf::Color::White);
 
     sf::Text xAxis25;
     xAxis25.setFont(font);
     xAxis25.setCharacterSize(12);
     xAxis25.setPosition(posX + width / 4, posY + 5);
-    xAxis25.setFillColor(sf::Color::Black);
+    xAxis25.setFillColor(sf::Color::White);
 
     sf::Text xAxis75;
     xAxis75.setFont(font);
     xAxis75.setCharacterSize(12);
     xAxis75.setPosition(posX + 3*width / 4, posY + 5);
-    xAxis75.setFillColor(sf::Color::Black);
+    xAxis75.setFillColor(sf::Color::White);
 
 
 
@@ -223,7 +223,7 @@ Plot2 twoLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, std:
     yAxisMax.setFont(font);
     yAxisMax.setCharacterSize(12);
     yAxisMax.setPosition(posX - 7, posY - height);
-    yAxisMax.setFillColor(sf::Color::Black);
+    yAxisMax.setFillColor(sf::Color::White);
 
 
     //mid Y-axis
@@ -232,20 +232,20 @@ Plot2 twoLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, std:
     yAxisMid.setFont(font);
     yAxisMid.setCharacterSize(12);
     yAxisMid.setPosition(posX - 7, posY - height / 2);
-    yAxisMid.setFillColor(sf::Color::Black);
+    yAxisMid.setFillColor(sf::Color::White);
 
     sf::Text yAxis75;
     yAxis75.setFont(font);
     yAxis75.setCharacterSize(12);
     yAxis75.setPosition(posX - 7, posY - (height * 3.0 / 4.0));
-    yAxis75.setFillColor(sf::Color::Black);
+    yAxis75.setFillColor(sf::Color::White);
 
 
     sf::Text yAxis25;
     yAxis25.setFont(font);
     yAxis25.setCharacterSize(12);
     yAxis25.setPosition(posX - 7, posY - (height * 1 / 4.0));
-    yAxis25.setFillColor(sf::Color::Black);
+    yAxis25.setFillColor(sf::Color::White);
 
 
 
@@ -391,16 +391,16 @@ Plot3 threeLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, st
     xcoord.setPrimitiveType(sf::LinesStrip);
     xcoord[0].position = sf::Vector2f(posX, posY);
     xcoord[1].position = sf::Vector2f(posX + width, posY);
-    xcoord[0].color = sf::Color::Black;
-    xcoord[1].color = sf::Color::Black;
+    xcoord[0].color = sf::Color::White;
+    xcoord[1].color = sf::Color::White;
 
 
     sf::VertexArray ycoord(sf::LineStrip, 2);
     ycoord.setPrimitiveType(sf::LinesStrip);
     ycoord[0].position = sf::Vector2f(posX, posY);
     ycoord[1].position = sf::Vector2f(posX, posY - height - 30);
-    ycoord[0].color = sf::Color::Black;
-    ycoord[1].color = sf::Color::Black;
+    ycoord[0].color = sf::Color::White;
+    ycoord[1].color = sf::Color::White;
 
     sf::VertexArray chartLines(sf::LineStrip, timeSpan);
     chartLines.setPrimitiveType(sf::LinesStrip);
@@ -416,7 +416,7 @@ Plot3 threeLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, st
     theTitle.setFont(font);
     theTitle.setCharacterSize(12);
     theTitle.setPosition(posX + width / 2, posY - height - 15);//posX+width/2 , posY - height-20);
-    theTitle.setFillColor(sf::Color::Black);
+    theTitle.setFillColor(sf::Color::White);
     theTitle.setString(title);
     theTitle.setOrigin(theTitle.getGlobalBounds().width / 2, 0);
     theTitle.setStyle(sf::Text::Italic);
@@ -428,26 +428,26 @@ Plot3 threeLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, st
     xAxisMax.setFont(font);
     xAxisMax.setCharacterSize(12);
     xAxisMax.setPosition(posX + width, posY + 5);
-    xAxisMax.setFillColor(sf::Color::Black);
+    xAxisMax.setFillColor(sf::Color::White);
     float maxXDataPoint = timeSpan / 60.0;
 
     sf::Text xAxisMid;
     xAxisMid.setFont(font);
     xAxisMid.setCharacterSize(12);
     xAxisMid.setPosition(posX + width / 2, posY + 5);
-    xAxisMid.setFillColor(sf::Color::Black);
+    xAxisMid.setFillColor(sf::Color::White);
 
     sf::Text xAxis25;
     xAxis25.setFont(font);
     xAxis25.setCharacterSize(12);
     xAxis25.setPosition(posX + width / 4, posY + 5);
-    xAxis25.setFillColor(sf::Color::Black);
+    xAxis25.setFillColor(sf::Color::White);
 
     sf::Text xAxis75;
     xAxis75.setFont(font);
     xAxis75.setCharacterSize(12);
     xAxis75.setPosition(posX + 3 * width / 4, posY + 5);
-    xAxis75.setFillColor(sf::Color::Black);
+    xAxis75.setFillColor(sf::Color::White);
 
 
 
@@ -488,28 +488,28 @@ Plot3 threeLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, st
     yAxisMax.setFont(font);
     yAxisMax.setCharacterSize(12);
     yAxisMax.setPosition(posX - 7, posY - height);
-    yAxisMax.setFillColor(sf::Color::Black);
+    yAxisMax.setFillColor(sf::Color::White);
 
 
     sf::Text yAxisMid;
     yAxisMid.setFont(font);
     yAxisMid.setCharacterSize(12);
     yAxisMid.setPosition(posX - 7, posY - height / 2);
-    yAxisMid.setFillColor(sf::Color::Black);
+    yAxisMid.setFillColor(sf::Color::White);
 
 
     sf::Text yAxis75;
     yAxis75.setFont(font);
     yAxis75.setCharacterSize(12);
     yAxis75.setPosition(posX - 7, posY - (height * 3.0 / 4.0));
-    yAxis75.setFillColor(sf::Color::Black);
+    yAxis75.setFillColor(sf::Color::White);
 
 
     sf::Text yAxis25;
     yAxis25.setFont(font);
     yAxis25.setCharacterSize(12);
     yAxis25.setPosition(posX - 7, posY - (height * 1 / 4.0));
-    yAxis25.setFillColor(sf::Color::Black);
+    yAxis25.setFillColor(sf::Color::White);
 
     if (dataPoints2.size() > timeSpan) {
         for (int i = 0; i < (dataPoints2.size() - 1); i++) {
@@ -671,14 +671,14 @@ Plot4 pieChart(float posX, float posY,std::vector<float> dataPoints, std::vector
     theTitle.setFont(font);
     theTitle.setCharacterSize(12);
     theTitle.setPosition(posX-radius, posY - radius - 16);
-    theTitle.setFillColor(sf::Color::Black);
+    theTitle.setFillColor(sf::Color::White);
     theTitle.setString(title);
 
     //Data Label //TODO: add small rectangles with colors Male Female and with percentages next to them.
     sf::Text theLabel;
     theLabel.setFont(font);
     theLabel.setCharacterSize(12);
-    theLabel.setFillColor(sf::Color::Black);
+    theLabel.setFillColor(sf::Color::White);
     
     std::stringstream stream;
     stream << std::fixed << std::setprecision(2) << (percentageOfFemale*100.0);
@@ -763,14 +763,14 @@ Plot5 pieChart2(float posX, float posY, std::vector<float> dataPoints, std::vect
     theTitle.setFont(font);
     theTitle.setCharacterSize(12);
     theTitle.setPosition(posX - radius, posY - radius - 16);
-    theTitle.setFillColor(sf::Color::Black);
+    theTitle.setFillColor(sf::Color::White);
     theTitle.setString(title);
 
     //Data Label //TODO: add small rectangles with colors Male Female and with percentages next to them.
     sf::Text theLabel;
     theLabel.setFont(font);
     theLabel.setCharacterSize(12);
-    theLabel.setFillColor(sf::Color::Black);
+    theLabel.setFillColor(sf::Color::White);
 
     std::stringstream stream;
     stream << std::fixed << std::setprecision(2) << (percentageOfFemale * 100.0);
@@ -780,10 +780,10 @@ Plot5 pieChart2(float posX, float posY, std::vector<float> dataPoints, std::vect
     std::string percentageComplement = stream2.str();
     theLabel.setString("     " + title +std::string("\n") + "Female: " + percentage + " % " + "\n" +
         "Male: " + percentageComplement + " %");
-    theLabel.setPosition(posX, posY + radius + 50);
+    theLabel.setPosition(posX-10, posY + radius + 50);
     theLabel.setOrigin(radius, radius);
 
-    float additionalRadius = 15;
+    float additionalRadius = 10;
     //pie charting
     if (dataPoints[dataPoints.size() - 1] != 0) {
         for (int i = degrees-1; i >= 0; i--) {

@@ -397,7 +397,7 @@ void Prey::computeUtility(float distanceSquared, Organism* targetOrganism, std::
         else if (Predator* myPredator = dynamic_cast<Predator*>(targetOrganism)) {
 			float distanceToInterraction;
             distanceToInterraction = sqrt(distanceSquared) - this->getRadius() - targetOrganism->getRadius();
-            currentUtility = 1000.0 * (1 +  this->getPredatorAversion()) ; // 1000 AS DEATH SCORE ----> DISCUSS 
+            currentUtility = 50.0 * (1 +  this->getPredatorAversion()) ; // 1000 AS DEATH SCORE ----> DISCUSS 
             int oppositeCurrentIntegerDirection = (((angleSectionNumber / 2) + currentIntegerDirection) % angleSectionNumber);
             directionalUtility[oppositeCurrentIntegerDirection] += currentUtility;
             for (int l = 1; l <= (angleSectionNumber / 4); l++) {
@@ -444,7 +444,7 @@ void Prey::computeUtility(float distanceSquared, Organism* targetOrganism, std::
 			}
 		}
 		else if (Predator* myPredator = dynamic_cast<Predator*>(targetOrganism)) {
-            currentUtility = -1000.0 * distancefactor * (1 + this->getPredatorAversion()) ; // 1000 arbitraty as death score  
+            currentUtility = -50.0 * distancefactor * (1 + this->getPredatorAversion()) ; // 1000 arbitraty as death score  
 		}
         else if (Flora* myFlora = dynamic_cast<Flora*>(targetOrganism)) {
             //float hungerFactor;

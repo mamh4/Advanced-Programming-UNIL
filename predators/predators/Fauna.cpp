@@ -469,12 +469,23 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
 
     if (Prey* myPrey = dynamic_cast<Prey*>(this)) {
         newShape.setFillColor(sf::Color::Color( actualColorCode , actualColorCode, 255 , 255 )); 
+        //sf::Color(173, 216, 230); sf::Color::Magenta;
 
     }
     else if (Predator* myPredator = dynamic_cast<Predator*>(this)) {
         newShape.setFillColor(sf::Color::Color( 255 ,actualColorCode , actualColorCode , 255 )); 
 
     }
+    newShape.setOutlineThickness (1.0) ; 
+    if (this->getSex()) {
+        //newShape.setOutlineColor(sf::Color::Color(255, 0, 255, 100)) ; 
+         newShape.setOutlineColor(sf::Color::Color(255, 255, 255, 150)) ; 
+    }
+    else {
+        //newShape.setOutlineColor(sf::Color::Color(173, 216, 230, 100)) ; 
+         newShape.setOutlineColor(sf::Color::Color(0, 0, 0, 0)) ; 
+    }
+
     this->setShape(newShape);
     // ^^^ COLOR AS A FUNCTION OF ENERGY ^^^
 

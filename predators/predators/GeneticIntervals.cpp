@@ -24,7 +24,7 @@ GeneticTraitInterval preyLustLevelRange = {
 
 GeneticTraitInterval preyVisionRangeRange = {
     "Vision Range",
-    {200.0 , 250.0 , 300.0 , 400.0 }
+    {200.0 , 250.0 , 300.0 , 350.0 }
 };
 
 GeneticTraitInterval preyPredatorAversionRange = {
@@ -36,6 +36,7 @@ GeneticTraitInterval preyPredatorAversionRange = {
 
 GeneticTraitInterval predatorSpeedRange = {
     "Speed",
+// THE HAWK TM      {1.5 , 2.5 , 3.5 , 4.5 }//
     {0.5 , 1.5 , 2.5 , 3.5 }
 };
 
@@ -56,7 +57,9 @@ GeneticTraitInterval predatorLustLevelRange = {
 
 GeneticTraitInterval predatorVisionRangeRange = {
     "Vision Range",
-    {200.0 , 250.0 , 300.0 , 400.0 }
+// THE HAWK TM    
+    {250.0 , 300.0 , 350.0 , 400.0 }
+    //{200.0 , 250.0 , 300.0 , 400.0 }
 };
 
 // SPECIED GENETIC TRAITS INTERVALS 

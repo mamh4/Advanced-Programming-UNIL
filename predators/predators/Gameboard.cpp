@@ -478,7 +478,7 @@ int main()
             }
             validRespawnPlace = true;
         }
-        float energy = 250.0;
+        float energy = 500.0;
         float visionRange = geneticEngine ("Predator", "Vision Range", averagePredatorVisionRange, averagePredatorVisionRange);
         bool sex = rand() % 2 == 0 ? true : false;
         int speed = static_cast<int>(geneticEngine("Predator", "Speed", averagePredatorSpeed, averagePredatorSpeed));
@@ -604,11 +604,11 @@ int main()
     //Overlay on top of each other population counts!!!! with different colour plots based on flora, prey and pred
     sf::RectangleShape pane(sf::Vector2f(paneWidth, 720.f));
     pane.setPosition(sf::Vector2f(980.f, 0.f));
-    pane.setFillColor(sf::Color(128,128,128));
+    pane.setFillColor(sf::Color(50,60,50));
 
     
     // Set the frame rate
-    window.setFramerateLimit(30);
+    window.setFramerateLimit(frameRate);
 
     // start the game loop
     while (window.isOpen()) {
@@ -625,7 +625,6 @@ int main()
             organismVector.at(i)->update(organismVector);
 
         }
-
 
 
         // Simplified Survey Loop of Living Population 
@@ -672,10 +671,10 @@ int main()
 
         avgAgePredator = numberOfPredators == 0 ? 0 : totalAgePredator / numberOfPredators;
         avgAgePrey = numberOfPrey == 0 ? 0 : totalAgePrey / numberOfPrey;
-        avgAgePredatorAtTimeT.push_back(avgAgePredator);
-        avgAgePreyAtTimeT.push_back(avgAgePrey);
+        avgAgePredatorAtTimeT.push_back(avgAgePredator /frameRate);
+        avgAgePreyAtTimeT.push_back(avgAgePrey / frameRate);
         
-
+        
 
         // Print statistics at the top left corner
         sf::Text text;
@@ -824,14 +823,14 @@ int main()
         sf::Text predatorTextString;
         predatorTextString.setFont(font);
         predatorTextString.setCharacterSize(12);
-        predatorTextString.setFillColor(sf::Color::Black);
+        predatorTextString.setFillColor(sf::Color::White);
         predatorTextString.setString("Predator");
         predatorTextString.setPosition(1050, 521);
 
         sf::Text preyTextString;
         preyTextString.setFont(font);
         preyTextString.setCharacterSize(12);
-        preyTextString.setFillColor(sf::Color::Black);
+        preyTextString.setFillColor(sf::Color::White);
         preyTextString.setString("Prey");
         preyTextString.setPosition(1120, 521);
 
@@ -839,7 +838,7 @@ int main()
         sf::Text floraTextString;
         floraTextString.setFont(font);
         floraTextString.setCharacterSize(12);
-        floraTextString.setFillColor(sf::Color::Black);
+        floraTextString.setFillColor(sf::Color::White);
         floraTextString.setString("Flora");
         floraTextString.setPosition(1175, 521);
 
@@ -866,21 +865,21 @@ int main()
         sf::Text maleTextString;
         maleTextString.setFont(font);
         maleTextString.setCharacterSize(12);
-        maleTextString.setFillColor(sf::Color::Black);
+        maleTextString.setFillColor(sf::Color::White);
         maleTextString.setString("Male");
         maleTextString.setPosition(1045, 701);
 
         sf::Text femaleTextString;
         femaleTextString.setFont(font);
         femaleTextString.setCharacterSize(12);
-        femaleTextString.setFillColor(sf::Color::Black);
+        femaleTextString.setFillColor(sf::Color::White);
         femaleTextString.setString("Female");
         femaleTextString.setPosition(1110, 701);
 
         sf::Text fertileTextString;
         fertileTextString.setFont(font);
         fertileTextString.setCharacterSize(12);
-        fertileTextString.setFillColor(sf::Color::Black);
+        fertileTextString.setFillColor(sf::Color::White);
         fertileTextString.setString("Fertile");
         fertileTextString.setPosition(1190, 701);
 
