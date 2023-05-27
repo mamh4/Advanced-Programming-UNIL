@@ -604,7 +604,7 @@ int main()
     //Overlay on top of each other population counts!!!! with different colour plots based on flora, prey and pred
     sf::RectangleShape pane(sf::Vector2f(paneWidth, 720.f));
     pane.setPosition(sf::Vector2f(980.f, 0.f));
-    pane.setFillColor(sf::Color(50,60,50));
+    pane.setFillColor(sf::Color(50,60,70));
 
     
     // Set the frame rate
@@ -813,7 +813,7 @@ int main()
         predatorBox.setPosition(1040, 525);
         
         sf::RectangleShape preyBox(sf::Vector2f(8.f, 8.f));
-        preyBox.setFillColor(sf::Color::Blue);
+        preyBox.setFillColor(sf::Color::Color(0,120,255));
         preyBox.setPosition(1110, 525);
 
         sf::RectangleShape floraBox(sf::Vector2f(8.f, 8.f));
@@ -851,15 +851,15 @@ int main()
 
         //Pie Chart Legend
         sf::RectangleShape maleBox(sf::Vector2f(8.f, 8.f));
-        maleBox.setFillColor(sf::Color(173, 216, 230));
+        maleBox.setFillColor(sf::Color(130, 190, 230));
         maleBox.setPosition(1035, 705);
 
         sf::RectangleShape femaleBox(sf::Vector2f(8.f, 8.f));
-        femaleBox.setFillColor(sf::Color::Magenta);
+        femaleBox.setFillColor(sf::Color::Color(230,130,220));
         femaleBox.setPosition(1100, 705);
 
         sf::RectangleShape fertileBox(sf::Vector2f(8.f, 8.f));
-        fertileBox.setFillColor(sf::Color::Color(255,155,0));
+        fertileBox.setFillColor(sf::Color::Color(230,100,0));
         fertileBox.setPosition(1180, 705);
 
         sf::Text maleTextString;
@@ -949,7 +949,7 @@ int main()
         currentText.setPosition(newOriginX + canvasWidth * 0.5 - (currentText.getLocalBounds().width / 2.0), newOriginY + lineHeight * (1.0) - (currentText.getLocalBounds().height / 2.0));
         windowSummary.draw(currentText);
 
-        currentText.setCharacterSize(10);
+        currentText.setCharacterSize(12);
 
         sf::RectangleShape speciesSeparator(sf::Vector2f( 20.0* columnWidth , 2.0));
         speciesSeparator.setFillColor(sf::Color::Black);

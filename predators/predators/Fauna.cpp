@@ -396,7 +396,8 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
                 }
             }
 
-            if (maxDirectionalUtility >= maxInteractionUtility) { // O by default, eliminates negative utility interactions 
+            //if ((maxDirectionalUtility >= maxInteractionUtility) or (maxInteractionUtilityTarget == nullptr)  ) { // O by default, eliminates negative utility interactions
+            if ((maxDirectionalUtility >= maxInteractionUtility)) { // O by default, eliminates negative utility interactions 
                 if (not noDirectionalUtility and validDirectionFound) {
                     //RANDOM PICK AMONG ¨
                     int numberOfValidMaxUtilityDirections  = 0 ;

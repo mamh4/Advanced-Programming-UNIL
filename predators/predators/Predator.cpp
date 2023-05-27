@@ -385,9 +385,9 @@ void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organi
 				myPredator->setNumberOfOffspring(myPredator->getNumberOfOffspring() + 1);
 			}
 		} 
-		else{
-			std::cout << "no valid birthplace arround mother" << std::endl; 
-		}
+		//else{
+		//	std::cout << "no valid birthplace arround mother" << std::endl; 
+		//}
 		/*
 			//NEW!! Age must be greater than 30 to reproduce
 		

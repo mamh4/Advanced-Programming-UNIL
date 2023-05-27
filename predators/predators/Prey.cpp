@@ -13,7 +13,7 @@ Prey::Prey(float myPosX, float myPosY, float myRadius, float myEnergy,bool mySex
 		myMetabolicRate, myLustLevel, myVisionRange) {
     
     predatorAversion = myPredatorAversion;
-	shape.setFillColor(sf::Color::Blue);
+	shape.setFillColor(sf::Color::Color(0,120,255));
 	numberOfPrey += 1;
 
 	if (mySex) {
@@ -193,27 +193,27 @@ void Prey::interact(Organism* targetOrganism, std::vector<Organism*>& organismVe
 
 			int speed = 1;//rand() % 10 + 1;
 			speed = static_cast<int> (geneticEngine("Prey", "Speed", this->getSpeed(), myPrey->getSpeed()));
-			std::cout << "Speed test genetics Engine " << speed << std::endl;
+			//std::cout << "Speed test genetics Engine " << speed << std::endl;
 
 			float hungerSensitivity = 1;//rand() % 100 + 1
 			hungerSensitivity = geneticEngine("Prey", "Hunger Sensitivity", this->getHungerSensitivity(), myPrey->getHungerSensitivity());
-			std::cout << "Hunger Sensitivity test genetics Engine " << hungerSensitivity << std::endl;
+			//std::cout << "Hunger Sensitivity test genetics Engine " << hungerSensitivity << std::endl;
 
 			float metabolicRate = 0.1;//static_cast<float>(rand() % 10 + 1) / 10.0f;
 			metabolicRate = geneticEngine("Prey", "Metabolic Rate", this->getMetabolicRate(), myPrey->getMetabolicRate());
-			std::cout << "Metabolic Rate test genetics Engine " << metabolicRate << std::endl;
+			//std::cout << "Metabolic Rate test genetics Engine " << metabolicRate << std::endl;
 
 			int lustLevel = 1;//rand() % 100 + 1;
 			lustLevel = geneticEngine("Prey", "Lust Level", this->getLustLevel(), myPrey->getLustLevel());
-			std::cout << "Lust Level test genetics Engine " << lustLevel << std::endl;
+			//std::cout << "Lust Level test genetics Engine " << lustLevel << std::endl;
 
 			int visionRange = 250; //rand() % 100 + 1;
 			visionRange = geneticEngine("Prey", "Vision Range", this->getVisionRange(), myPrey->getVisionRange());
-			std::cout << "Vision Range test genetics Engine " << visionRange << std::endl;
+			//std::cout << "Vision Range test genetics Engine " << visionRange << std::endl;
 
 			int predatorAversion = 1;//rand() % 100 + 1;
 			predatorAversion = geneticEngine("Prey", "Predator Aversion", this->getPredatorAversion(), myPrey->getPredatorAversion());
-			std::cout << "Predator Aversion test genetics Engine " << predatorAversion << std::endl;
+			//std::cout << "Predator Aversion test genetics Engine " << predatorAversion << std::endl;
 
 
 			Prey* offspring = new Prey(candidateBirthPlaceX, candidateBirthPlaceY,
@@ -444,7 +444,7 @@ void Prey::computeUtility(float distanceSquared, Organism* targetOrganism, std::
 			}
 		}
 		else if (Predator* myPredator = dynamic_cast<Predator*>(targetOrganism)) {
-            currentUtility = -50.0 * distancefactor * (1 + this->getPredatorAversion()) ; // 1000 arbitraty as death score  
+            currentUtility = -25.0 * distancefactor * (1 + this->getPredatorAversion()) ; // 1000 arbitraty as death score  Then 50 then 25 
 		}
         else if (Flora* myFlora = dynamic_cast<Flora*>(targetOrganism)) {
             //float hungerFactor;

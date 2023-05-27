@@ -9,7 +9,8 @@ GeneticTraitInterval preySpeedRange = {
 
 GeneticTraitInterval preyHungerSensitivityRange = {
     "Hunger Sensitivity",
-    {0.2 , 0.5 , 2 , 5 }
+   // {0.2 , 0.5 , 2 , 5 }
+   {0.2 , 0.5 , 2 , 5 }
 };
 
 GeneticTraitInterval preyMetabolicRateRange = {
@@ -24,7 +25,8 @@ GeneticTraitInterval preyLustLevelRange = {
 
 GeneticTraitInterval preyVisionRangeRange = {
     "Vision Range",
-    {200.0 , 250.0 , 300.0 , 350.0 }
+    //{200.0 , 250.0 , 300.0 , 350.0 }
+    {150.0 , 200.0 , 250.0 , 300.0 }
 };
 
 GeneticTraitInterval preyPredatorAversionRange = {

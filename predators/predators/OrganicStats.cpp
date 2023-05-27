@@ -338,13 +338,13 @@ Plot2 twoLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, std:
         for (int i = 0; i < std::min(static_cast<int>(dataPoints3.size()), timeSpan); i++) {
             chartLines2[i].position = sf::Vector2f(posX + 1.0 * i * width / (timeSpan * 1.0),
                 posY - height * (dataPoints3[i]- minDataPoint) / (maxDataPoint - minDataPoint));
-            chartLines2[i].color = sf::Color::Blue;
+            chartLines2[i].color = sf::Color::Color(0,120,255);
         }
         if (static_cast<int>(dataPoints3.size()) < timeSpan) {
             for (int i = (static_cast<int>(dataPoints3.size())); i < std::max(static_cast<int>(dataPoints3.size()), timeSpan); i++) {
                 chartLines2[i].position = sf::Vector2f(posX + 1.0 * (static_cast<int>(dataPoints3.size()) - 1) * width / (timeSpan * 1.0),
                     posY - height * (dataPoints3[dataPoints3.size() - 1] - minDataPoint)/ (maxDataPoint - minDataPoint));
-                chartLines2[i].color = sf::Color::Blue;
+                chartLines2[i].color = sf::Color::Color(0,120,255);
             }// CHECK SOLIDITY AS THIS WAS BUILT LAZILY 
         }
     }
@@ -588,13 +588,13 @@ Plot3 threeLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, st
         for (int i = 0; i < std::min(static_cast<int>(dataPoints3.size()), timeSpan); i++) {
             chartLines2[i].position = sf::Vector2f(posX + 1.0 * i * width / (timeSpan * 1.0),
                 posY - height * dataPoints3[i] / (maxDataPoint - minDataPoint));
-            chartLines2[i].color = sf::Color::Blue;
+            chartLines2[i].color = sf::Color::Color(0,120,255);
         }
         if (static_cast<int>(dataPoints3.size()) < timeSpan) {
             for (int i = (static_cast<int>(dataPoints3.size())); i < std::max(static_cast<int>(dataPoints3.size()), timeSpan); i++) {
                 chartLines2[i].position = sf::Vector2f(posX + 1.0 * (static_cast<int>(dataPoints3.size()) - 1) * width / (timeSpan * 1.0),
                     posY - height * dataPoints3[dataPoints3.size() - 1] / (maxDataPoint - minDataPoint));
-                chartLines2[i].color = sf::Color::Blue;
+                chartLines2[i].color = sf::Color::Color(0,120,255);
             }// CHECK SOLIDITY AS THIS WAS BUILT LAZILY 
         }
     }
@@ -696,13 +696,17 @@ if (dataPoints[dataPoints.size() - 1] != 0) {
     for (int i = 0; i < degrees; i++) {
         if (i < percentageOfFemale * degrees) {
             chartlineVector[i][1].position = sf::Vector2f(posX + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
-            chartlineVector[i][0].color = sf::Color::Magenta;
-            chartlineVector[i][1].color = sf::Color::Magenta;
+            chartlineVector[i][0].color = sf::Color(230, 130, 220);
+            chartlineVector[i][1].color = sf::Color(230, 130, 220);
+            //chartlineVector[i][0].color = sf::Color::Magenta;
+            //chartlineVector[i][1].color = sf::Color::Magenta;
         }
         else {
             chartlineVector[i][1].position = sf::Vector2f(posX + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
-            chartlineVector[i][0].color = sf::Color(173, 216, 230);
-            chartlineVector[i][1].color = sf::Color(173, 216, 230);
+            //chartlineVector[i][0].color = sf::Color(173, 216, 230);
+            //chartlineVector[i][1].color = sf::Color(173, 216, 230);
+            chartlineVector[i][0].color = sf::Color(130, 190, 230);
+            chartlineVector[i][1].color = sf::Color(130, 190, 230);
         }
     }
 }
@@ -791,12 +795,14 @@ Plot5 pieChart2(float posX, float posY, std::vector<float> dataPoints, std::vect
             chartlineVector2[i][1].position = sf::Vector2f(posX + (radius + additionalRadius) * cos(2 * M_PI * i / degrees), posY + (radius + additionalRadius) * sin(2 * M_PI * i / degrees));
             if (i >= degrees-( percentageOfFemale * degrees)) {
                 //chartlineVector[i][1].position = sf::Vector2f(posX + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
-                chartlineVector[i][0].color = sf::Color::Magenta;//female colour
-                chartlineVector[i][1].color = sf::Color::Magenta;
+                //chartlineVector[i][0].color = sf::Color::Magenta;//female colour sf::Color(230, 130, 220);
+                //chartlineVector[i][1].color = sf::Color::Magenta;
+                chartlineVector[i][0].color = sf::Color(230, 130, 220);
+                chartlineVector[i][1].color = sf::Color(230, 130, 220);
                 //bigger plots
                 if (i >= degrees - ( percentageOfFertileFemale * degrees)) {
-					chartlineVector2[i][0].color = sf::Color::Color(255, 165, 0);//fertile colour
-					chartlineVector2[i][1].color = sf::Color::Color(255, 165, 0);
+					chartlineVector2[i][0].color = sf::Color::Color(230, 100, 0);//fertile colour
+					chartlineVector2[i][1].color = sf::Color::Color(230, 100, 0);
                 }
                 else {
                     //chartlineVector2[i][1].position = sf::Vector2f(posX + (radius + additionalRadius) * cos(2 * M_PI * i / degrees), posY + (radius + additionalRadius) * sin(2 * M_PI * i / degrees));
@@ -806,13 +812,15 @@ Plot5 pieChart2(float posX, float posY, std::vector<float> dataPoints, std::vect
             }
             else {
                 //chartlineVector[i][1].position = sf::Vector2f(posX + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
-                chartlineVector[i][0].color = sf::Color(173, 216, 230);//male colour
-                chartlineVector[i][1].color = sf::Color(173, 216, 230);
+                //chartlineVector[i][0].color = sf::Color(173, 216, 230);//male colour
+                //chartlineVector[i][1].color = sf::Color(173, 216, 230);
+                chartlineVector[i][0].color = sf::Color(130, 190, 230);
+                chartlineVector[i][1].color = sf::Color(130, 190, 230);
                 //bigger plots 
                 if (i >= degrees -( percentageOfFertileMale * degrees)) {
                     //chartlineVector2[i][1].position = sf::Vector2f(posX + (radius + additionalRadius) * cos(2 * M_PI * i / degrees), posY + (radius + additionalRadius) * sin(2 * M_PI * i / degrees));
-                    chartlineVector2[i][0].color = sf::Color::Color(255, 165, 0);
-                    chartlineVector2[i][1].color = sf::Color::Color(255, 165, 0);
+                    chartlineVector2[i][0].color = sf::Color::Color(230, 100, 0);
+                    chartlineVector2[i][1].color = sf::Color::Color(230, 100, 0);
                 }
                 else {
                     //chartlineVector2[i][1].position = sf::Vector2f(posX + (radius + additionalRadius) * cos(2 * M_PI * i / degrees), posY + (radius + additionalRadius) * sin(2 * M_PI * i / degrees));
