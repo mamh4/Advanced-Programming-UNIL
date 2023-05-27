@@ -183,7 +183,7 @@ void Prey::interact(Organism* targetOrganism, std::vector<Organism*>& organismVe
 			numberOfSteps++;
 		}
 		/*/
-		if (validCandidateBirthPlace and organismVector.size()<=150) {
+		if (validCandidateBirthPlace and organismVector.size()<=300) {
 
 			bool sex; //= false;//rand() % 2 == 0 ? true : false;
 
@@ -383,8 +383,8 @@ void Prey::computeUtility(float distanceSquared, Organism* targetOrganism, std::
     if (distanceSquared < std::pow(this->getRadius() + targetOrganism->getRadius() + rangeOfInteraction, 2)) {
         possibleCollisions.push_back(targetOrganism);
         if (Prey* myPrey = dynamic_cast<Prey*>(targetOrganism)) {
-			if ((this->getSex() != myPrey->getSex()) and this->getFertile() and myPrey->getFertile() and (myPrey->getEnergy() > 2*baseReproductionCost)) {
-                if (this->getEnergy() <= 2*baseReproductionCost){
+			if ((this->getSex() != myPrey->getSex()) and this->getFertile() and myPrey->getFertile() and (myPrey->getEnergy() > 1.5*baseReproductionCost)) {
+                if (this->getEnergy() <= 1.5*baseReproductionCost){
                     currentUtility = maxInteractionUtility - 1000.0 ;
                 } 
                 else{
@@ -395,8 +395,8 @@ void Prey::computeUtility(float distanceSquared, Organism* targetOrganism, std::
 			}
 		}
         else if (Predator* myPredator = dynamic_cast<Predator*>(targetOrganism)) {
-			float distanceToInterraction;
-            distanceToInterraction = sqrt(distanceSquared) - this->getRadius() - targetOrganism->getRadius();
+			//float distanceToInterraction;
+            //distanceToInterraction = sqrt(distanceSquared) - this->getRadius() - targetOrganism->getRadius();
             currentUtility = 50.0 * (1 +  this->getPredatorAversion()) ; // 1000 AS DEATH SCORE ----> DISCUSS 
             int oppositeCurrentIntegerDirection = (((angleSectionNumber / 2) + currentIntegerDirection) % angleSectionNumber);
             directionalUtility[oppositeCurrentIntegerDirection] += currentUtility;
@@ -430,8 +430,8 @@ void Prey::computeUtility(float distanceSquared, Organism* targetOrganism, std::
 		distancefactor = proximityEffectFactor(0, this->getVisionRange(), distanceToInterraction);// USE VISION RANGE OR % OF IT ? 
 
 		if (Prey* myPrey = dynamic_cast<Prey*>(targetOrganism)) {
-            if ((this->getSex() != myPrey->getSex()) and this->getFertile() and myPrey->getFertile() and (myPrey->getEnergy() > 2*baseReproductionCost)) {
-                if (not this->getEnergy() <= 2*baseReproductionCost){
+            if ((this->getSex() != myPrey->getSex()) and this->getFertile() and myPrey->getFertile() and (myPrey->getEnergy() > 1.5*baseReproductionCost)) {
+                if (not this->getEnergy() <= 1.5*baseReproductionCost){
                     //float lustFactor;
 				    //1000 acts as placeholder for amount of energy at which the weight of sex drive is total 
 				    //lustFactor =  1 - proximityEffectFactor(0, 1000, Predator::getLustLevel(), Predator::getEnergy());
@@ -444,7 +444,20 @@ void Prey::computeUtility(float distanceSquared, Organism* targetOrganism, std::
 			}
 		}
 		else if (Predator* myPredator = dynamic_cast<Predator*>(targetOrganism)) {
-            currentUtility = -25.0 * distancefactor * (1 + this->getPredatorAversion()) ; // 1000 arbitraty as death score  Then 50 then 25 
+            currentUtility = 15.0 * distancefactor * (1 + this->getPredatorAversion()) ; // 1000 arbitraty as death score  Then 50 then 25 
+			//currentUtility = 50.0 * (1 +  this->getPredatorAversion()) ; // 1000 AS DEATH SCORE ----> DISCUSS 
+            int oppositeCurrentIntegerDirection = (((angleSectionNumber / 2) + currentIntegerDirection) % angleSectionNumber);
+            directionalUtility[oppositeCurrentIntegerDirection] += currentUtility;
+            for (int l = 1; l <= (angleSectionNumber / 4); l++) {
+                int testInteger = 0;
+                testInteger = directionalUtility.size();
+                testInteger = (((oppositeCurrentIntegerDirection + l) % angleSectionNumber));
+                directionalUtility[((oppositeCurrentIntegerDirection + l) % angleSectionNumber)] += (currentUtility / (l + 1));
+                testInteger = (((oppositeCurrentIntegerDirection - l + angleSectionNumber) % angleSectionNumber));
+                directionalUtility[((oppositeCurrentIntegerDirection - l + angleSectionNumber) % angleSectionNumber)] += (currentUtility / (l + 1));
+
+            }
+            currentUtility = 0.0 ; 
 		}
         else if (Flora* myFlora = dynamic_cast<Flora*>(targetOrganism)) {
             //float hungerFactor;

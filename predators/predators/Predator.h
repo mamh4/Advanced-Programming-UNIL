@@ -4,10 +4,10 @@
 class Predator : public Fauna
 {
 
-	float const satietyThreshold = 1000.f;
+	float const satietyThreshold = 2000.f;
 	// float const satietyThreshold = 750.f; test
-	float const baseReproductionCost = 250.f;
-	float const energyAbsorbtionRate = 20.f; // was 10 was 15 
+	float const baseReproductionCost = 500.f; // 500 before 
+	float const energyAbsorbtionRate = 30.f; // was 10 was 15 // BEST SCENARIO 50 // 40 = machine stability 25 or 30
 
 	public:
 		Predator(float myPosX, float myPosY, float myRadius, float myEnergy, bool mySex,

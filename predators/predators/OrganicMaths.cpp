@@ -112,7 +112,9 @@ float proximityEffectFactor (float lowerRange, float upperRange, float evaluatio
     float x ; 
     // float compensationFactor = atan(2.0 ) ; 
     x= (evaluationPoint - lowerRange)/(upperRange - lowerRange ) ; 
-    return (1 - std::pow( x , 2))  ;
+    //return (1 - std::pow( x , 2))  ; //-> scared too early 
+    //return (1 - x)  ; -> meh 
+    return (std::pow(1.0 - x , 2)) ;
     //return std::pow( x - 1.0, 2) ;
     //return(1.0 - x ) ; 
     //return (1.0  - atan( (x - 0.5)*0.25 )/compensationFactor)/2.0 ; // close to 1 when evaluation point is close to lower range, close to 0 for upper range 

@@ -739,10 +739,11 @@ Plot5 pieChart2(float posX, float posY, std::vector<float> dataPoints, std::vect
 
     sf::CircleShape circle;
     circle.setRadius(radius);
-    circle.setFillColor(sf::Color(120, 120, 120));
+    circle.setFillColor(sf::Color(0, 0, 0,0));
     circle.setOrigin(radius, radius);
     circle.setPosition(posX, posY);
-    circle.setOutlineColor(sf::Color(120, 120, 120));
+    circle.setOutlineColor(sf::Color(55, 60, 70));
+    circle.setOutlineThickness(2.5f);
 
     //Create lines
     std::vector<sf::VertexArray> chartlineVector;

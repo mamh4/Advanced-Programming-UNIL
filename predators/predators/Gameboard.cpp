@@ -17,6 +17,8 @@
 #include <random>
 #include <thread>
 
+
+
 int simulationTime = 0;
 
 int numberOfPredators = 0;
@@ -458,7 +460,7 @@ int main()
 
     
     
-    for (int i = 0; i < inputNrPred; i++) {
+    for (int i = 0; i < 20; i++) {
         bool validRespawnPlace = false;
         float posX = isStandardModeFocused ? rand() % windowWidth : rand() % windowWidth /2 ;
         float posY = rand() % windowHeight;
@@ -478,7 +480,7 @@ int main()
             }
             validRespawnPlace = true;
         }
-        float energy = 500.0;
+        float energy = 1000.0;
         float visionRange = geneticEngine ("Predator", "Vision Range", averagePredatorVisionRange, averagePredatorVisionRange);
         bool sex = rand() % 2 == 0 ? true : false;
         int speed = static_cast<int>(geneticEngine("Predator", "Speed", averagePredatorSpeed, averagePredatorSpeed));
@@ -490,7 +492,7 @@ int main()
         organismVector.push_back(myPredator);
     }
 
-    for (int i = 0; i < inputNrPrey; i++) {
+    for (int i = 0; i < 50; i++) {
         bool validRespawnPlace = false;
         float posX = isStandardModeFocused ? rand() % windowWidth : (rand() % (windowWidth - windowWidth / 2 + 1)) + windowWidth / 2;
         float posY = rand() % windowHeight;
@@ -523,7 +525,7 @@ int main()
         organismVector.push_back(myPrey);
     }
 
-    for (int i = 0; i < inputNrFlora; i++) {
+    for (int i = 0; i < 50; i++) {
         bool validRespawnPlace = false;
         float posX = rand() % windowWidth;
         float posY = rand() % windowHeight;
@@ -544,7 +546,7 @@ int main()
             validRespawnPlace = true;
         }
         float energy = 1000; //TODO NEED TO PICK A VALID RANDOM ENERGY
-        float growthRate = 10;// static_cast<float>(rand() % 10 + 1) * 10.0f;
+        float growthRate =10.0;// static_cast<float>(rand() % 10 + 1) * 10.0f;
         Flora* myFlora = new Flora(posX, posY, radius, energy, growthRate);
         organismVector.push_back(myFlora);
     }
@@ -778,6 +780,7 @@ int main()
         for (int i = 0; i < myPieChart3.chartlinesVector.size(); i++) {
             window.draw(myPieChart3.chartlinesVector2[i]);
             window.draw(myPieChart3.chartlinesVector[i]);
+            window.draw(myPieChart3.circle);
         }
 
         //tiral new Pie chart
@@ -787,6 +790,7 @@ int main()
         for (int i = 0; i < myPieChart4.chartlinesVector.size(); i++) {
             window.draw(myPieChart4.chartlinesVector2[i]);
             window.draw(myPieChart4.chartlinesVector[i]);
+            window.draw(myPieChart4.circle);
         }
 
 
