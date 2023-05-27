@@ -26,7 +26,7 @@ Predator::Predator(float myPosX, float myPosY, float myRadius, float myEnergy,bo
 
 void Predator::computeUtility(float distanceSquared, Organism* targetOrganism, std::vector<float>& directionalUtility , std::vector<Organism*>& possibleCollisions, 
 	float& maxInteractionUtility , Organism*& maxInteractionUtilityTarget ) {
-    
+    /*
 	//std::cout << "I am a predator and my speed is " << this->getSpeed() << std::endl; 
 
 	float currentUtility = 0 ; 
@@ -127,6 +127,7 @@ void Predator::computeUtility(float distanceSquared, Organism* targetOrganism, s
 	 						//} 
                         }
 	}
+	*/
 }
 
 void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organismVector) {
@@ -243,7 +244,7 @@ void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organi
 		}
 		/*/
 		//(float myPosX, float myPosY, float myRadius, float myEnergy,bool mySex, int mySpeed, float myHungerSensitivity, float myMetabolicRate, float myLustLevel, float myVisionRange)
-		if (validCandidateBirthPlace) {
+		if (validCandidateBirthPlace and organismVector.size() <= 150) {
 
 			float energy = 500;//rand() % 100 + 1; 2* BASEREPRODZCTION COST 
 			bool sex; //= false;//rand() % 2 == 0 ? true : false;

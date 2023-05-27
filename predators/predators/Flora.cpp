@@ -12,17 +12,19 @@
 		return this->growthRate;
 	}
 
+    float maxEnergyDensity = 500.0 ; 
+
 	void Flora::update(std::vector<Organism*>& organismVector) {
     //std::cout << "I am a plant and I am Updating " << std::endl ; 
-    float maxEnergy = 500.0 ; 
+    float maxEnergy = maxEnergyDensity*this->getRadius(); 
     
 
-	this->setEnergy( std::min( maxEnergy * this->getRadius(), (this->getEnergy() +  this->getGrowthRate() )) );
+	this->setEnergy( std::min( maxEnergy, (this->getEnergy() +  this->getGrowthRate() )) );
   
     //totalEnergyFlora += std::min(maxEnergy * this->getRadius(), (this->getEnergy() + this->getGrowthRate()));
 
     // vvv COLOR AS A FUNCTION OF ENERGY vvv
-    sf::CircleShape newShape;
+    sf::CircleShape newShape; 
     newShape = this->getShape(); 
     int newColorCode ;
     float approximateColorCode ; 

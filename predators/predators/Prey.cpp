@@ -50,11 +50,9 @@ float Prey::getPredatorAversion() {
 
 void Prey::interact(Organism* targetOrganism, std::vector<Organism*>& organismVector) {
 	if(Flora* myFlora = dynamic_cast<Flora*>(targetOrganism)){
-		float energyAbsorbtionSpeed;
-		energyAbsorbtionSpeed = 10.0;
 		// CLASS CONST OR ATTRIBUTE ? Maximum amount of energy the predator can take from a prey in one interaction 
 		float absorbedEnergy;
-		absorbedEnergy = std::min(energyAbsorbtionSpeed, targetOrganism->getEnergy());
+		absorbedEnergy = std::min(energyAbsorbtionRate, targetOrganism->getEnergy());
 		targetOrganism->setEnergy(targetOrganism->getEnergy() - absorbedEnergy);
 		this->setEnergy(this->getEnergy() + absorbedEnergy);
 	}
@@ -86,8 +84,6 @@ void Prey::interact(Organism* targetOrganism, std::vector<Organism*>& organismVe
 		//bool wallCollision;
 		/*/
 
-		float baseReproductionEnergyCost;
-		baseReproductionEnergyCost = 250.0;
 		//Mohamed: Moved initialisation attributes when candidate birth place is found //TODO: DECIDE ON ENERGY WHEN BORN.
 
 		// MOVE TO AFTER CHEcK IF REPRO POSSIBLE ELSE ENERGY TAKEN WITH NO OFFSPRING 
@@ -187,9 +183,8 @@ void Prey::interact(Organism* targetOrganism, std::vector<Organism*>& organismVe
 			numberOfSteps++;
 		}
 		/*/
-		if (validCandidateBirthPlace) {
+		if (validCandidateBirthPlace and organismVector.size()<=150) {
 
-			float energy = 500;//rand() % 100 + 1; 2* BASEREPRODZCTION COST 
 			bool sex; //= false;//rand() % 2 == 0 ? true : false;
 
 			int randomSexDetermination;
@@ -222,25 +217,24 @@ void Prey::interact(Organism* targetOrganism, std::vector<Organism*>& organismVe
 
 
 			Prey* offspring = new Prey(candidateBirthPlaceX, candidateBirthPlaceY,
-				childRadius, energy, sex, speed, hungerSensitivity, metabolicRate, lustLevel, visionRange, predatorAversion);//Above parameters cause program failure!
+				childRadius, baseReproductionCost*2.0 , sex, speed, hungerSensitivity, metabolicRate, lustLevel, visionRange, predatorAversion);//Above parameters cause program failure!
 			organismVector.push_back(offspring);
 
-			this->setEnergy(this->getEnergy() - baseReproductionEnergyCost);
-			targetOrganism->setEnergy(targetOrganism->getEnergy() - baseReproductionEnergyCost);
+			this->setEnergy(this->getEnergy() - baseReproductionCost);
+			targetOrganism->setEnergy(targetOrganism->getEnergy() - baseReproductionCost);
 			this->setNumberOfOffspring(this->getNumberOfOffspring() + 1);
 			if (Prey* myPrey = dynamic_cast<Prey*>(this)) {
 				myPrey->setNumberOfOffspring(myPrey->getNumberOfOffspring() + 1);
 			}
 		}
-		else{
-			std::cout << "no valid birthplace arround mother" << std::endl; 
-		}
-		
+		//else{
+		//	std::cout << "no valid birthplace arround mother" << std::endl; 
+		//}
 	}
 }
 
 
-
+/*/
 void Prey::computeUtility(float distanceSquared, Organism* targetOrganism, std::vector<float>& directionalUtility , std::vector<Organism*>& possibleCollisions, 
 	float& maxInteractionUtility , Organism*& maxInteractionUtilityTarget ) {
 
@@ -254,7 +248,7 @@ void Prey::computeUtility(float distanceSquared, Organism* targetOrganism, std::
 	baseReproductionEnergyCost = 250.0;
 
     float energyAbsorbtionSpeed;
-	energyAbsorbtionSpeed = 50.0;
+	energyAbsorbtionSpeed = 10.0;
 
     angleBetween = angle( this, targetOrganism);
     currentIntegerDirection = angleSorting(angleBetween); 
@@ -268,12 +262,14 @@ void Prey::computeUtility(float distanceSquared, Organism* targetOrganism, std::
                 if (this->getEnergy() <= baseReproductionEnergyCost){
 					//std::cout << " I do not have enough energy :( my energy level is " << this->getEnergy() << std::endl; 
                     // ARBITRARY 250
-                    currentUtility = - baseReproductionEnergyCost; 
+                    currentUtility = - baseReproductionEnergyCost ; // Death score 
+					//currentUtility = 0 ; 
                 } 
                 else{
 					//std::cout << " I have enough energy" << std::endl; 
                     // ARBITRARY 250
-					currentUtility = baseReproductionEnergyCost;
+					//currentUtility = baseReproductionEnergyCost; // lustlevel influence here 
+					currentUtility = baseReproductionEnergyCost * (1 + this->getLustLevel()); // lustlevel influence here 
                 }
 			}
 		}
@@ -283,7 +279,7 @@ void Prey::computeUtility(float distanceSquared, Organism* targetOrganism, std::
             distanceToInterraction = sqrt(distanceSquared) - this->getRadius() - targetOrganism->getRadius();
 			float fearFactor;
             fearFactor = proximityEffectFactor(0, 1000, this->getPredatorAversion(), distanceToInterraction);
-            currentUtility = 1000.0 * fearFactor;
+            currentUtility = 1000.0 * (1 +  fearFactor) ;
             int oppositeCurrentIntegerDirection = (((angleSectionNumber / 2) + currentIntegerDirection) % angleSectionNumber);
             directionalUtility[oppositeCurrentIntegerDirection] += currentUtility;
             //	if ( directionalUtility[currentIntegerDirection] > maxDirectionalUtility ) { 
@@ -299,7 +295,7 @@ void Prey::computeUtility(float distanceSquared, Organism* targetOrganism, std::
                 directionalUtility[((oppositeCurrentIntegerDirection - l + angleSectionNumber) % angleSectionNumber)] += (currentUtility / (l + 1));
 
             }
-            currentUtility = maxInteractionUtility - 10; // disqualifying interaction as an option  
+            currentUtility = maxInteractionUtility - 1000; // disqualifying interaction as an option  
         }
 		else if (Flora* myFlora = dynamic_cast<Flora*>(targetOrganism)) {
 			//std::cout << " I can interract with a Flora" << std::endl; 
@@ -331,7 +327,6 @@ void Prey::computeUtility(float distanceSquared, Organism* targetOrganism, std::
 				    // effect of size or energy of target mate ? 
 				    currentUtility =  baseReproductionEnergyCost * lustFactor * distancefactor;
                 } 
-
 			}
 		}
 		else if (Predator* myPredator = dynamic_cast<Predator*>(targetOrganism)) {
@@ -345,6 +340,121 @@ void Prey::computeUtility(float distanceSquared, Organism* targetOrganism, std::
 			hungerFactor = proximityEffectFactor(0, 1000, this->getHungerSensitivity(), this->getEnergy());
 			currentUtility =  std::min( myFlora->getEnergy(), energyAbsorbtionSpeed) * hungerFactor * distancefactor;
 			// effect of size or energy of target prey ? 
+		}
+    directionalUtility[currentIntegerDirection] += currentUtility;
+//	if ( directionalUtility[currentIntegerDirection] > maxDirectionalUtility ) { 
+//		maxDirectionalUtility = directionalUtility[currentIntegerDirection] ; 
+//		maxDirectionalUtilityTarget = currentIntegerDirection ; 
+//	 } 
+    for (int l = 1; l <= (angleSectionNumber / 4); l++) {
+                            int testInteger =0 ;
+                            testInteger = directionalUtility.size() ; 
+                            testInteger = (((currentIntegerDirection + l) % angleSectionNumber)) ; 
+                            directionalUtility[((currentIntegerDirection + l) % angleSectionNumber)] +=  (currentUtility / (l + 1));
+							//if ( directionalUtility[((currentIntegerDirection + l) % angleSectionNumber)] > maxDirectionalUtility ) { 
+							//	maxDirectionalUtility = directionalUtility[((currentIntegerDirection + l) % angleSectionNumber)] ; 
+							//	maxDirectionalUtilityTarget = ((currentIntegerDirection + l) % angleSectionNumber) ; 
+	 						//} 
+                            testInteger = (((currentIntegerDirection - l + angleSectionNumber) % angleSectionNumber)) ; 
+                            directionalUtility[((currentIntegerDirection - l + angleSectionNumber ) % angleSectionNumber)] +=   (currentUtility / (l + 1));
+							//if ( directionalUtility[((currentIntegerDirection - l + angleSectionNumber) % angleSectionNumber)] > maxDirectionalUtility ) { 
+							//	maxDirectionalUtility = directionalUtility[((currentIntegerDirection - l + angleSectionNumber) % angleSectionNumber)] ; 
+							//	maxDirectionalUtilityTarget = ((currentIntegerDirection - l + angleSectionNumber) % angleSectionNumber) ; 
+	 						//} 
+                        }
+	}
+}
+/*/
+
+// NEW AND HOPEFULLY IMPROVED VERSION 
+void Prey::computeUtility(float distanceSquared, Organism* targetOrganism, std::vector<float>& directionalUtility , std::vector<Organism*>& possibleCollisions, 
+	float& maxInteractionUtility , Organism*& maxInteractionUtilityTarget ) { 
+
+	float currentUtility = 0 ;
+	float angleBetween = 0 ;
+    int currentIntegerDirection =0 ; 
+
+    angleBetween = angle( this, targetOrganism);
+    currentIntegerDirection = angleSorting(angleBetween); 
+
+	float satietyEffectFactor; 
+	satietyEffectFactor = proximityEffectFactor(0.0, satietyThreshold, this->getEnergy()); 
+
+    if (distanceSquared < std::pow(this->getRadius() + targetOrganism->getRadius() + rangeOfInteraction, 2)) {
+        possibleCollisions.push_back(targetOrganism);
+        if (Prey* myPrey = dynamic_cast<Prey*>(targetOrganism)) {
+			if ((this->getSex() != myPrey->getSex()) and this->getFertile() and myPrey->getFertile() and (myPrey->getEnergy() > 2*baseReproductionCost)) {
+                if (this->getEnergy() <= 2*baseReproductionCost){
+                    currentUtility = maxInteractionUtility - 1000.0 ;
+                } 
+                else{
+					//currentUtility = baseReproductionCost * (1 + this->getLustLevel()) * (1-satietyEffectFactor); // ABRITRARY USE OF baseReproductionEnergyCost
+					currentUtility = 25.0 * (1 + this->getLustLevel()) * (1-satietyEffectFactor); // ABRITRARY USE OF baseReproductionEnergyCost
+
+                }
+			}
+		}
+        else if (Predator* myPredator = dynamic_cast<Predator*>(targetOrganism)) {
+			float distanceToInterraction;
+            distanceToInterraction = sqrt(distanceSquared) - this->getRadius() - targetOrganism->getRadius();
+            currentUtility = 1000.0 * (1 +  this->getPredatorAversion()) ; // 1000 AS DEATH SCORE ----> DISCUSS 
+            int oppositeCurrentIntegerDirection = (((angleSectionNumber / 2) + currentIntegerDirection) % angleSectionNumber);
+            directionalUtility[oppositeCurrentIntegerDirection] += currentUtility;
+            for (int l = 1; l <= (angleSectionNumber / 4); l++) {
+                int testInteger = 0;
+                testInteger = directionalUtility.size();
+                testInteger = (((oppositeCurrentIntegerDirection + l) % angleSectionNumber));
+                directionalUtility[((oppositeCurrentIntegerDirection + l) % angleSectionNumber)] += (currentUtility / (l + 1));
+                testInteger = (((oppositeCurrentIntegerDirection - l + angleSectionNumber) % angleSectionNumber));
+                directionalUtility[((oppositeCurrentIntegerDirection - l + angleSectionNumber) % angleSectionNumber)] += (currentUtility / (l + 1));
+
+            }
+            currentUtility = maxInteractionUtility - 1000.0 ; 
+        }
+		else if (Flora* myFlora = dynamic_cast<Flora*>(targetOrganism)) {
+            currentUtility = 10.0*std::min( myFlora->getEnergy(), energyAbsorbtionRate)*(1.0 + this->getHungerSensitivity())*satietyEffectFactor;
+			//std::cout << "Utility of eating interraction" << currentUtility << std::endl ; 
+		}
+        if (currentUtility > maxInteractionUtility) { 
+            maxInteractionUtility = currentUtility;
+            maxInteractionUtilityTarget = targetOrganism;
+        }
+    }
+	else {
+		float distanceToInterraction;
+		float distancefactor;
+
+
+		distanceToInterraction = sqrt(distanceSquared) - this->getRadius() - targetOrganism->getRadius();
+
+		distancefactor = proximityEffectFactor(0, this->getVisionRange(), distanceToInterraction);// USE VISION RANGE OR % OF IT ? 
+
+		if (Prey* myPrey = dynamic_cast<Prey*>(targetOrganism)) {
+            if ((this->getSex() != myPrey->getSex()) and this->getFertile() and myPrey->getFertile() and (myPrey->getEnergy() > 2*baseReproductionCost)) {
+                if (not this->getEnergy() <= 2*baseReproductionCost){
+                    //float lustFactor;
+				    //1000 acts as placeholder for amount of energy at which the weight of sex drive is total 
+				    //lustFactor =  1 - proximityEffectFactor(0, 1000, Predator::getLustLevel(), Predator::getEnergy());
+				    //lustFactor = 1 - proximityEffectFactor(0, 1000, this->getLustLevel(), this->getEnergy());
+				    // effect of size or energy of target mate ? 
+
+					//currentUtility = baseReproductionCost * (1 + this->getLustLevel() ) * distancefactor * (1- satietyEffectFactor);
+				    currentUtility = 5.0 * (1 + this->getLustLevel() ) * distancefactor * (1- satietyEffectFactor);
+                } 
+			}
+		}
+		else if (Predator* myPredator = dynamic_cast<Predator*>(targetOrganism)) {
+            currentUtility = -1000.0 * distancefactor * (1 + this->getPredatorAversion()) ; // 1000 arbitraty as death score  
+		}
+        else if (Flora* myFlora = dynamic_cast<Flora*>(targetOrganism)) {
+            //float hungerFactor;
+			//1000 acts as placeholder for amount of energy at which indifference to food is total 
+			//hungerFactor = proximityEffectFactor(0, 1000, this->getHungerSensitivity(), this->getEnergy());
+			//currentUtility = 10.0*std::min( myFlora->getEnergy(), energyAbsorbtionRate)*(1.0 + this->getHungerSensitivity())*satietyEffectFactor; // SHOULD BE #VISIBLE FLORA INSTEAD OF 10.0
+
+			currentUtility =  std::min( myFlora->getEnergy(), energyAbsorbtionRate) * satietyEffectFactor * distancefactor * (1 + this->getHungerSensitivity());
+			// effect of size or energy of target prey ? 
+			//std::cout << "Utility of eating movement" << currentUtility << std::endl ; 
 		}
     directionalUtility[currentIntegerDirection] += currentUtility;
 //	if ( directionalUtility[currentIntegerDirection] > maxDirectionalUtility ) { 

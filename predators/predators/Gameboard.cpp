@@ -431,26 +431,26 @@ int main()
 
     Predator* myPredator5 = new Predator(330, 290, 2, 500, true, 1, 10, 1, 50, 800);
     organismVector.push_back(myPredator5);
-
+    
     Prey* myPrey = new Prey(400, 460, 7, 600, true, 2, 10, 0.1, 50, 900, 1);
     organismVector.push_back(myPrey);
-
-    Prey* myPrey2 = new Prey(700, 700, 7, 600, true, 3, 10, 0.1, 50, 300, 1);
+       
+    Prey* myPrey2 = new Prey(400, 300, 3, 500, true, 3, 10, 1, 1, 300, 1);
     organismVector.push_back(myPrey2);
-
-    Prey* myPrey3 = new Prey(50, 660, 7, 200, false, 2, 10, 0.1, 50, 900, 1);
+     
+    Prey* myPrey3 = new Prey(400, 450, 3, 700, false, 2, 10, 1, 1, 300, 1);
     organismVector.push_back(myPrey3);
 
-    Flora* myFlora = new Flora(300, 800, 10, 50, 0.5);
+    Flora* myFlora = new Flora(300, 300, 3, 50, 10);
     organismVector.push_back(myFlora);
 
-    Flora* myFlora2 = new Flora(300, 800, 10, 50, 0.5);
+    Flora* myFlora2 = new Flora(400, 400, 10, 50, 0.5);
     organismVector.push_back(myFlora2);
-
-    Flora* myFlora3 = new Flora(500, 500, 10, 1000, 0.5);
-    organismVector.push_back(myFlora3);
-    //To be deleted Above
     */
+    //Flora* myFlora3 = new Flora(500, 500, 10, 1000, 0.5);
+    //organismVector.push_back(myFlora3);
+    //To be deleted Above
+
     //UNCOMMENT
     //std::cout << organismVector.at(0)->getType() << std::endl;
     
@@ -510,7 +510,7 @@ int main()
             }
             validRespawnPlace = true;
         }
-        float energy = 250.0;
+        float energy = 500.0;
         float visionRange = geneticEngine("Prey", "Vision Range", averagePredatorVisionRange, averagePredatorVisionRange);
         bool sex = rand() % 2 == 0 ? true : false;
         int speed = static_cast<int>(geneticEngine("Prey", "Speed", averagePredatorSpeed, averagePredatorSpeed));
@@ -543,7 +543,7 @@ int main()
             }
             validRespawnPlace = true;
         }
-        float energy = 500; //TODO NEED TO PICK A VALID RANDOM ENERGY
+        float energy = 1000; //TODO NEED TO PICK A VALID RANDOM ENERGY
         float growthRate = 10;// static_cast<float>(rand() % 10 + 1) * 10.0f;
         Flora* myFlora = new Flora(posX, posY, radius, energy, growthRate);
         organismVector.push_back(myFlora);

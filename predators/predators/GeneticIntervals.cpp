@@ -4,7 +4,7 @@
 
 GeneticTraitInterval preySpeedRange = {
     "Speed",
-    {0.5 , 2.5 , 4.5 , 6.5 }
+    {0.5 , 1.5 , 2.5 , 3.5 }
 };
 
 GeneticTraitInterval preyHungerSensitivityRange = {
@@ -14,7 +14,7 @@ GeneticTraitInterval preyHungerSensitivityRange = {
 
 GeneticTraitInterval preyMetabolicRateRange = {
     "Metabolic Rate",
-    {0.0,  0.25 , 0.75 , 1}
+    {1.0,  1.5 , 2.0 , 2.5}
 };
 
 GeneticTraitInterval preyLustLevelRange = {
@@ -24,7 +24,7 @@ GeneticTraitInterval preyLustLevelRange = {
 
 GeneticTraitInterval preyVisionRangeRange = {
     "Vision Range",
-    {175.0 , 225.0 , 275.0 , 325.0 }
+    {200.0 , 250.0 , 300.0 , 400.0 }
 };
 
 GeneticTraitInterval preyPredatorAversionRange = {
@@ -36,7 +36,7 @@ GeneticTraitInterval preyPredatorAversionRange = {
 
 GeneticTraitInterval predatorSpeedRange = {
     "Speed",
-    {0.5 , 2.5 , 4.5 , 6.5 }
+    {0.5 , 1.5 , 2.5 , 3.5 }
 };
 
 GeneticTraitInterval predatorHungerSensitivityRange = {
@@ -46,7 +46,7 @@ GeneticTraitInterval predatorHungerSensitivityRange = {
 
 GeneticTraitInterval predatorMetabolicRateRange = {
     "Metabolic Rate",
-    {0.0,  0.25 , 0.75 , 1}
+    {1.0,  1.5 , 2.0 , 2.5}
 };
 
 GeneticTraitInterval predatorLustLevelRange = {
@@ -56,7 +56,7 @@ GeneticTraitInterval predatorLustLevelRange = {
 
 GeneticTraitInterval predatorVisionRangeRange = {
     "Vision Range",
-    {175.0 , 225.0 , 275.0 , 325.0 }
+    {200.0 , 250.0 , 300.0 , 400.0 }
 };
 
 // SPECIED GENETIC TRAITS INTERVALS 

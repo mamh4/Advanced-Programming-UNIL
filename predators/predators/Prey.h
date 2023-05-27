@@ -3,6 +3,11 @@
 #include "Flora.h"
 class Prey : public Fauna
 {
+	float const satietyThreshold = 1000.f;
+	float const baseReproductionCost = 250.f;
+	float const energyAbsorbtionRate = 10.f;
+
+
 private: 
 	float predatorAversion;
 

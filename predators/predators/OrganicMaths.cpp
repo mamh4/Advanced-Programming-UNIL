@@ -77,7 +77,7 @@ int angleSorting (float angle) {
 }
 
 // shift factor from 1/n 
-float proximityEffectFactor (float lowerRange, float upperRange, float shiftFactor, float evaluationPoint) {
+/*/float proximityEffectFactor (float lowerRange, float upperRange, float shiftFactor, float evaluationPoint) {
     
     if (evaluationPoint < lowerRange ) {
         return 1.0; 
@@ -91,6 +91,29 @@ float proximityEffectFactor (float lowerRange, float upperRange, float shiftFact
     // float compensationFactor = atan(2.0 ) ; 
     x= (evaluationPoint - lowerRange)/(upperRange - lowerRange ) ; 
     return std::pow( x - 1.0, 2) ;
+    //return(1.0 - x ) ; 
+    //return (1.0  - atan( (x - 0.5)*0.25 )/compensationFactor)/2.0 ; // close to 1 when evaluation point is close to lower range, close to 0 for upper range 
+    // how to take shift factor into consideration ? 
+    } 
+} 
+/*/
+
+// SIMPLER VERSION 
+float proximityEffectFactor (float lowerRange, float upperRange, float evaluationPoint) {
+    
+    if (evaluationPoint < lowerRange ) {
+        return 1.0; 
+    }
+    else if (evaluationPoint > upperRange ) {
+        return 0.0; 
+    }
+    else {
+   // return 0.5 - 0.5*(atan(10 *(-0.5 + pow((( evaluationPoint - lowerRange )/ (upperRange - lowerRange) ), shiftFactor)  ) ) /(M_PI*0.43717)) ;  
+    float x ; 
+    // float compensationFactor = atan(2.0 ) ; 
+    x= (evaluationPoint - lowerRange)/(upperRange - lowerRange ) ; 
+    return (1 - std::pow( x , 2))  ;
+    //return std::pow( x - 1.0, 2) ;
     //return(1.0 - x ) ; 
     //return (1.0  - atan( (x - 0.5)*0.25 )/compensationFactor)/2.0 ; // close to 1 when evaluation point is close to lower range, close to 0 for upper range 
     // how to take shift factor into consideration ? 

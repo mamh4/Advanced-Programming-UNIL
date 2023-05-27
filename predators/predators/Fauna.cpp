@@ -185,7 +185,7 @@ void Fauna::move(int directionIndicator) {
 
     //std::cout << "my speed is " << Fauna::getSpeed() << "my coordinates are: " << Fauna::getPosX() << " "<< Fauna::getPosY << std::endl;
     float energyCostOfMovement;
-    energyCostOfMovement = std::min(1.f, this->energy);
+    energyCostOfMovement = std::min(0.1f, this->energy);
     // as Class constant later on ? 
     //Fauna::getShape().setPosition(Fauna::getShape().getPosition().x + stepSize * cos((directionIndicator + 0.5) * M_PI * 2 / 12),
     //    Fauna::getShape().getPosition().y + stepSize * sin((directionIndicator + 0.5) * M_PI * 2 / 12)); 
@@ -204,7 +204,7 @@ void Fauna::ageing() {
         totalAgePrey += 1;
     }
     //TODO: Update total age parameters
-    this->setRadius(this->getRadius() + 0.001);
+    //this->setRadius(this->getRadius() + 0.001);
 }
 
 
@@ -217,7 +217,7 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
     float childRadius = 3.0;
     float adultRadius = 6.0; // Prey or Predator Specific ? 
     int maxAge = 12000; // 100 seconds at 60 fps / Prey or Predator Specific ? 
-    this->setRadius(childRadius + log(20 * (1.0 * this->getAge() / maxAge) + 1) * (adultRadius - childRadius)); // CHECK PARAMETERS 
+    // this->setRadius(childRadius + log(20 * (1.0 * this->getAge() / maxAge) + 1) * (adultRadius - childRadius)); // CHECK PARAMETERS 
 
 
     // with arbitrary 100 seconds (6000 frames ) max lifespan, arbitrary function with certain death at 6000 
