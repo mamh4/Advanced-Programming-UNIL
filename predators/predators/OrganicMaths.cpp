@@ -5,16 +5,12 @@
 
 float distanceSquared (Organism* target1 , Organism* target2 ) {
     return std::pow(target1->getPosX() - target2->getPosX(), 2) + std::pow(target1->getPosY() - target2->getPosY(), 2);
-//    return std::pow(target1->getShape().getPosition().x - target2->getShape().getPosition().x,2) + std::pow(target1->getShape().getPosition().y - target2->getShape().getPosition().y,2);
 }
 
 float l2NormSquared (Organism* target) {
     return std::pow(target->getPosX(),2) + std::pow(target->getPosY(),2);
 }
 
-//float alternativeAngle (Organism* target1 , Organism* target2) {
-//   return target1->getShape().getPosition().angle(target2->getShape().getPosition()); 
-//}
 
 float angle (Organism* target1 , Organism* target2) {
     float target1Norm ;
@@ -41,23 +37,6 @@ float angle (Organism* target1 , Organism* target2) {
                 return 2*M_PI - phi ; 
         }
     }
- /*/
-    if ()
-    if ( target1Norm != 0 and  target2Norm != 0 ){
-        return acos( ( target2->getPosX() - target1->getPosX() + target1->getPosY()*target2->getPosY()) / (1.0 * target1Norm * target2Norm));
-
-        return acos( (target1->getPosX() *target2->getPosX() + target1->getPosY()*target2->getPosY()) / (1.0 * target1Norm * target2Norm));
-    }
-    else if  ( target1Norm != 0 ){
-        return acos( target1->getPosX() / target1Norm  ) ;
-    }
-    else if  ( target2Norm != 0 ){
-        return acos( target2->getPosX() / target2Norm  ) ;
-    }
-    else {
-        return 0; 
-    }
-    /*/
 }
 
 // acos gives in 0 pi range 
@@ -76,27 +55,6 @@ int angleSorting (float angle) {
     return angleSectionCounter; 
 }
 
-// shift factor from 1/n 
-/*/float proximityEffectFactor (float lowerRange, float upperRange, float shiftFactor, float evaluationPoint) {
-    
-    if (evaluationPoint < lowerRange ) {
-        return 1.0; 
-    }
-    else if (evaluationPoint > upperRange ) {
-        return 0.0; 
-    }
-    else {
-   // return 0.5 - 0.5*(atan(10 *(-0.5 + pow((( evaluationPoint - lowerRange )/ (upperRange - lowerRange) ), shiftFactor)  ) ) /(M_PI*0.43717)) ;  
-    float x ; 
-    // float compensationFactor = atan(2.0 ) ; 
-    x= (evaluationPoint - lowerRange)/(upperRange - lowerRange ) ; 
-    return std::pow( x - 1.0, 2) ;
-    //return(1.0 - x ) ; 
-    //return (1.0  - atan( (x - 0.5)*0.25 )/compensationFactor)/2.0 ; // close to 1 when evaluation point is close to lower range, close to 0 for upper range 
-    // how to take shift factor into consideration ? 
-    } 
-} 
-/*/
 
 // SIMPLER VERSION 
 float proximityEffectFactor (float lowerRange, float upperRange, float evaluationPoint) {
@@ -108,16 +66,8 @@ float proximityEffectFactor (float lowerRange, float upperRange, float evaluatio
         return 0.0; 
     }
     else {
-   // return 0.5 - 0.5*(atan(10 *(-0.5 + pow((( evaluationPoint - lowerRange )/ (upperRange - lowerRange) ), shiftFactor)  ) ) /(M_PI*0.43717)) ;  
     float x ; 
-    // float compensationFactor = atan(2.0 ) ; 
     x= (evaluationPoint - lowerRange)/(upperRange - lowerRange ) ; 
-    //return (1 - std::pow( x , 2))  ; //-> scared too early 
-    //return (1 - x)  ; -> meh 
     return (std::pow(1.0 - x , 2)) ;
-    //return std::pow( x - 1.0, 2) ;
-    //return(1.0 - x ) ; 
-    //return (1.0  - atan( (x - 0.5)*0.25 )/compensationFactor)/2.0 ; // close to 1 when evaluation point is close to lower range, close to 0 for upper range 
-    // how to take shift factor into consideration ? 
     } 
 } 

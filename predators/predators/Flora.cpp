@@ -21,9 +21,6 @@
 
 	this->setEnergy( std::min( maxEnergy, (this->getEnergy() +  this->getGrowthRate() )) );
   
-    //totalEnergyFlora += std::min(maxEnergy * this->getRadius(), (this->getEnergy() + this->getGrowthRate()));
-
-    // vvv COLOR AS A FUNCTION OF ENERGY vvv
     sf::CircleShape newShape; 
     newShape = this->getShape(); 
     int newColorCode ;
@@ -33,8 +30,7 @@
     }
     else if (this->getEnergy()  <=  maxEnergy * this->getRadius() ) {
         approximateColorCode = 150.0 - (this->getEnergy()*150.0/(maxEnergy * this->getRadius())) ; 
-       // std::cout << "My energy is " << this->getEnergy() << " which is the following percentage of the max " << (this->getEnergy()*100.0/(maxEnergy * this->getRadius())) << std::endl; 
-    }
+       }
     else {
         approximateColorCode = 0.0 ; 
     }
@@ -42,12 +38,8 @@
     newColorCode = newColorCode % 256 ; 
     uint8_t actualColorCode ; 
     actualColorCode = newColorCode ; 
-    // std::cout << "actual Color Code is now " << actualColorCode << std::endl ; 
     newShape.setFillColor(sf::Color::Color( actualColorCode , 255, actualColorCode , 255 )); 
-    // newShape.setOutlineThickness (0.5); 
-    // newShape.setOutlineColor(sf::Color::Color( 50+ actualColorCode , 255, 50+ actualColorCode , 255 )); 
     this->setShape(newShape);
-    // ^^^ COLOR AS A FUNCTION OF ENERGY ^^^
 
 	}
 

@@ -911,7 +911,8 @@ int main()
         currentText.setCharacterSize(20);
         currentText.setFillColor(sf::Color::Black);
         currentText.setString("Population Summary");
-        currentText.setPosition(newOriginX + canvasWidth * 0.5 - (currentText.getLocalBounds().width / 2.0), newOriginY + lineHeight * (1.0) - (currentText.getLocalBounds().height / 2.0));
+        currentText.setPosition(newOriginX + canvasWidth * 0.5 - (currentText.getLocalBounds().width / 2.0), newOriginY + lineHeight * (1.0) - 
+            (currentText.getLocalBounds().height / 2.0));
         windowSummary.draw(currentText);
 
         currentText.setCharacterSize(12);

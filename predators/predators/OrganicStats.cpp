@@ -8,6 +8,87 @@
 #include <sstream>
 
 
+TraitSummaryStatistics preySpeedSummaryStatistics = {
+    "Speed",
+    {0.0 , 0.0, 0.0 },
+    {0.0 , 0.0, 0.0 },
+    {0.0 , 0.0, 0.0 }
+};
+TraitSummaryStatistics preyHungerSensitivitySummaryStatistics = {
+    "Hunger Sensitivity",
+    {0.0 , 0.0, 0.0 },
+    {0.0 , 0.0, 0.0 },
+    {0.0 , 0.0, 0.0 }
+};
+TraitSummaryStatistics preyMetabolicRateSummaryStatistics = {
+    "Metabolic Rate",
+    {0.0 , 0.0, 0.0 },
+    {0.0 , 0.0, 0.0 },
+    {0.0 , 0.0, 0.0 }
+};
+TraitSummaryStatistics preyLustLevelSummaryStatistics = {
+    "Lust Level",
+    {0.0 , 0.0, 0.0 },
+    {0.0 , 0.0, 0.0 },
+    {0.0 , 0.0, 0.0 }
+};
+TraitSummaryStatistics preyVisionRangeSummaryStatistics = {
+    "Vision Range",
+    {0.0 , 0.0, 0.0 },
+    {0.0 , 0.0, 0.0 },
+    {0.0 , 0.0, 0.0 }
+};
+TraitSummaryStatistics preyPredatorAversionSummaryStatistics = {
+    "Predator Aversion",
+    {0.0 , 0.0, 0.0 },
+    {0.0 , 0.0, 0.0 },
+    {0.0 , 0.0, 0.0 }
+};
+TraitSummaryStatistics predatorSpeedSummaryStatistics = {
+    "Speed",
+    {0.0 , 0.0, 0.0 },
+    {0.0 , 0.0, 0.0 },
+    {0.0 , 0.0, 0.0 }
+};
+TraitSummaryStatistics predatorHungerSensitivitySummaryStatistics = {
+    "Hunger Sensitivity",
+    {0.0 , 0.0, 0.0 },
+    {0.0 , 0.0, 0.0 },
+    {0.0 , 0.0, 0.0 }
+};
+TraitSummaryStatistics predatorMetabolicRateSummaryStatistics = {
+    "Metabolic Rate",
+    {0.0 , 0.0, 0.0 },
+    {0.0 , 0.0, 0.0 },
+    {0.0 , 0.0, 0.0 }
+};
+TraitSummaryStatistics predatorLustLevelSummaryStatistics = {
+    "Lust Level",
+    {0.0 , 0.0, 0.0 },
+    {0.0 , 0.0, 0.0 },
+    {0.0 , 0.0, 0.0 }
+};
+TraitSummaryStatistics predatorVisionRangeSummaryStatistics = {
+    "Vision Range",
+    {0.0 , 0.0, 0.0 },
+    {0.0 , 0.0, 0.0 },
+    {0.0 , 0.0, 0.0 }
+};
+
+SpeciesSummaryStatistics preySummaryStatistics = {
+    "Prey" ,
+    {preySpeedSummaryStatistics, preyHungerSensitivitySummaryStatistics, preyMetabolicRateSummaryStatistics, preyLustLevelSummaryStatistics, preyVisionRangeSummaryStatistics, preyPredatorAversionSummaryStatistics }
+};
+
+SpeciesSummaryStatistics predatorSummaryStatistics = {
+     "Predator",
+    {predatorSpeedSummaryStatistics, predatorHungerSensitivitySummaryStatistics, predatorMetabolicRateSummaryStatistics, predatorLustLevelSummaryStatistics, predatorVisionRangeSummaryStatistics }
+};
+
+std::vector<SpeciesSummaryStatistics> summaryStatistics = { preySummaryStatistics, predatorSummaryStatistics };
+
+
+
 Plot linePlot(float posX, float posY, std::vector<float> dataPoints, 
     sf::Font& font,std::string title, float height, float width, int timeSpan) {
     Plot myPlot;
@@ -52,19 +133,6 @@ Plot linePlot(float posX, float posY, std::vector<float> dataPoints,
     yAxisMid.setPosition(posX - 7, posY - height/2);
     yAxisMid.setFillColor(sf::Color::Black);
 
-
-    //float newDataPoint = 1.0 * dataPoints.size();
-
-//    if (dataPoints.size() > timeSpan) {
- //       for (int i = 0; i < (dataPoints.size() - 1); i++) {
-  //          dataPoints[i] = dataPoints[i + 1];
-   //     }
-    //    dataPoints[dataPoints.size() - 1] = newDataPoint;
-    //}
-    //else {
-      //  dataPoints.push_back(newDataPoint);
-    //}
-
     for (int i = 0; i < dataPoints.size(); i++) {
         if (maxDataPoint < dataPoints[i]) {
             maxDataPoint = dataPoints[i];
@@ -75,7 +143,7 @@ Plot linePlot(float posX, float posY, std::vector<float> dataPoints,
             minDataPoint = dataPoints[i];
         }
     }
-    if ((maxDataPoint - minDataPoint) != 0.0) {//Removed if timeframe==0
+    if ((maxDataPoint - minDataPoint) != 0.0) {
         for (int i = 0; i < std::min(static_cast<int>(dataPoints.size()), timeSpan); i++) {
             chartLines[i].position = sf::Vector2f(posX + 1.0 * i * width / (timeSpan * 1.0),
                 posY - height * dataPoints[i] / (maxDataPoint - minDataPoint));
@@ -86,7 +154,7 @@ Plot linePlot(float posX, float posY, std::vector<float> dataPoints,
                 chartLines[i].position = sf::Vector2f(posX + 1.0 * (static_cast<int>(dataPoints.size()) - 1) * width / (timeSpan * 1.0),
                     posY - height * dataPoints[dataPoints.size() - 1] / (maxDataPoint - minDataPoint));
                 chartLines[i].color = sf::Color::Black;
-            }// CHECK SOLIDITY AS THIS WAS BUILT LAZILY 
+            }
         }
     }
     yAxisMax.setOrigin(yAxisMax.getLocalBounds().width, yAxisMax.getLocalBounds().height);
@@ -132,7 +200,6 @@ Plot2 twoLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, std:
     chartLines2.setPrimitiveType(sf::LinesStrip);
 
     //title
-    //TODO include label Predator with red rectangle, and prey with blue rectangle, for next plot do the same and include green for Fauna
     sf::Text theTitle;
     theTitle.setFont(font);
     theTitle.setCharacterSize(12);
@@ -141,7 +208,6 @@ Plot2 twoLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, std:
     theTitle.setString(title);
     theTitle.setOrigin(theTitle.getGlobalBounds().width/2, 0);
     theTitle.setStyle(sf::Text::Italic);
-
 
 
     //ylabes
@@ -181,15 +247,9 @@ Plot2 twoLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, std:
     xAxis75.setFillColor(sf::Color::White);
 
 
-
-
-
-
     if (dataPoints2.size() >= timeSpan) {
         maxXDataPoint = simulationTime / 60.0;
         }
-
-
 
     std::stringstream streamx;
     streamx << std::fixed << std::setprecision(1) << maxXDataPoint;
@@ -263,28 +323,6 @@ Plot2 twoLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, std:
         }
         dataPoints3.pop_back();
     }
-
-
-
-
-    //Was commented
-    //if (dataPoints.size() > 0 ){
-      //  maxDataPoint = dataPoints[0] ; 
-     //   minDataPoint = dataPoints[0] ; 
-    //}
-    //std::vector<float> maximumVector;
-    //for (int i = 0; i < dataPoints2.size();i++) {
-     //   maximumVector.push_back(std::max(dataPoints2[i], dataPoints3[i]));
-    //}
-
-    //for (int i = 0; i < dataPoints.size(); i++) {
-     //   if (maxDataPoint < dataPoints[i] ) {
-      //      maxDataPoint = dataPoints[i] ;
-       // }
-        //if (minDataPoint > dataPoints[i]) {
-         //   minDataPoint = dataPoints[i];
-        //}
-    //}
     
     for (int i = 0; i < dataPoints2.size(); i++) {
         if (maxDataPoint < std::max(dataPoints2[i], dataPoints3[i])) {
@@ -330,11 +368,11 @@ Plot2 twoLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, std:
                 chartLines[i].position = sf::Vector2f(posX + 1.0 * (static_cast<int>(dataPoints2.size()) - 1) * width / (timeSpan * 1.0),
                     posY - height * (dataPoints2[dataPoints2.size() - 1] - minDataPoint)/ (maxDataPoint - minDataPoint));
                 chartLines[i].color = sf::Color::Red;
-            }// CHECK SOLIDITY AS THIS WAS BUILT LAZILY 
+            }
         }
     }
 
-    if ((maxDataPoint - minDataPoint) != 0.0) {//Removed if timeframe==0
+    if ((maxDataPoint - minDataPoint) != 0.0) {
         for (int i = 0; i < std::min(static_cast<int>(dataPoints3.size()), timeSpan); i++) {
             chartLines2[i].position = sf::Vector2f(posX + 1.0 * i * width / (timeSpan * 1.0),
                 posY - height * (dataPoints3[i]- minDataPoint) / (maxDataPoint - minDataPoint));
@@ -345,7 +383,7 @@ Plot2 twoLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, std:
                 chartLines2[i].position = sf::Vector2f(posX + 1.0 * (static_cast<int>(dataPoints3.size()) - 1) * width / (timeSpan * 1.0),
                     posY - height * (dataPoints3[dataPoints3.size() - 1] - minDataPoint)/ (maxDataPoint - minDataPoint));
                 chartLines2[i].color = sf::Color::Color(0,120,255);
-            }// CHECK SOLIDITY AS THIS WAS BUILT LAZILY 
+            }
         }
     }
 
@@ -569,7 +607,7 @@ Plot3 threeLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, st
 
 
     //Thrice
-    if ((maxDataPoint - minDataPoint) != 0.0) {//Removed if timeframe==0
+    if ((maxDataPoint - minDataPoint) != 0.0) {
         for (int i = 0; i < std::min(static_cast<int>(dataPoints2.size()), timeSpan); i++) {
             chartLines[i].position = sf::Vector2f(posX + 1.0 * i * width / (timeSpan * 1.0),
                 posY - height * dataPoints2[i] / (maxDataPoint - minDataPoint));
@@ -580,11 +618,11 @@ Plot3 threeLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, st
                 chartLines[i].position = sf::Vector2f(posX + 1.0 * (static_cast<int>(dataPoints2.size()) - 1) * width / (timeSpan * 1.0),
                     posY - height * dataPoints2[dataPoints2.size() - 1] / (maxDataPoint - minDataPoint));
                 chartLines[i].color = sf::Color::Red;
-            }// CHECK SOLIDITY AS THIS WAS BUILT LAZILY 
+            }
         }
     }
 
-    if ((maxDataPoint - minDataPoint) != 0.0) {//Removed if timeframe==0
+    if ((maxDataPoint - minDataPoint) != 0.0) {
         for (int i = 0; i < std::min(static_cast<int>(dataPoints3.size()), timeSpan); i++) {
             chartLines2[i].position = sf::Vector2f(posX + 1.0 * i * width / (timeSpan * 1.0),
                 posY - height * dataPoints3[i] / (maxDataPoint - minDataPoint));
@@ -595,11 +633,11 @@ Plot3 threeLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, st
                 chartLines2[i].position = sf::Vector2f(posX + 1.0 * (static_cast<int>(dataPoints3.size()) - 1) * width / (timeSpan * 1.0),
                     posY - height * dataPoints3[dataPoints3.size() - 1] / (maxDataPoint - minDataPoint));
                 chartLines2[i].color = sf::Color::Color(0,120,255);
-            }// CHECK SOLIDITY AS THIS WAS BUILT LAZILY 
+            }
         }
     }
 
-    if ((maxDataPoint - minDataPoint) != 0.0) {//Removed if timeframe==0
+    if ((maxDataPoint - minDataPoint) != 0.0) {
         for (int i = 0; i < std::min(static_cast<int>(dataPoints4.size()), timeSpan); i++) {
             chartLines3[i].position = sf::Vector2f(posX + 1.0 * i * width / (timeSpan * 1.0),
                 posY - height * dataPoints4[i] / (maxDataPoint - minDataPoint));
@@ -610,7 +648,7 @@ Plot3 threeLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, st
                 chartLines3[i].position = sf::Vector2f(posX + 1.0 * (static_cast<int>(dataPoints4.size()) - 1) * width / (timeSpan * 1.0),
                     posY - height * dataPoints4[dataPoints4.size() - 1] / (maxDataPoint - minDataPoint));
                 chartLines3[i].color = sf::Color::Green;
-            }// CHECK SOLIDITY AS THIS WAS BUILT LAZILY 
+            }
         }
     }
 
@@ -662,7 +700,7 @@ Plot4 pieChart(float posX, float posY,std::vector<float> dataPoints, std::vector
         sf::VertexArray chartLine(sf::LineStrip,2);
         chartLine.setPrimitiveType(sf::LineStrip);
         chartLine[0].position = sf::Vector2f(posX, posY);
-        chartLine[1].position = sf::Vector2f(posX, posY); //will override in the next loop
+        chartLine[1].position = sf::Vector2f(posX, posY);
         chartlineVector.push_back(chartLine);
     }
 
@@ -674,7 +712,7 @@ Plot4 pieChart(float posX, float posY,std::vector<float> dataPoints, std::vector
     theTitle.setFillColor(sf::Color::White);
     theTitle.setString(title);
 
-    //Data Label //TODO: add small rectangles with colors Male Female and with percentages next to them.
+    //Data Label 
     sf::Text theLabel;
     theLabel.setFont(font);
     theLabel.setCharacterSize(12);
@@ -698,13 +736,9 @@ if (dataPoints[dataPoints.size() - 1] != 0) {
             chartlineVector[i][1].position = sf::Vector2f(posX + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
             chartlineVector[i][0].color = sf::Color(230, 130, 220);
             chartlineVector[i][1].color = sf::Color(230, 130, 220);
-            //chartlineVector[i][0].color = sf::Color::Magenta;
-            //chartlineVector[i][1].color = sf::Color::Magenta;
         }
         else {
             chartlineVector[i][1].position = sf::Vector2f(posX + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
-            //chartlineVector[i][0].color = sf::Color(173, 216, 230);
-            //chartlineVector[i][1].color = sf::Color(173, 216, 230);
             chartlineVector[i][0].color = sf::Color(130, 190, 230);
             chartlineVector[i][1].color = sf::Color(130, 190, 230);
         }
@@ -719,7 +753,6 @@ else {
 
    myPlot.chartlinesVector = chartlineVector;
    myPlot.circle = circle ; 
-   //myPlot.title = theTitle;
    myPlot.xlabel = theLabel;
    return myPlot;
 }
@@ -753,7 +786,7 @@ Plot5 pieChart2(float posX, float posY, std::vector<float> dataPoints, std::vect
         sf::VertexArray chartLine(sf::LineStrip, 2);
         chartLine.setPrimitiveType(sf::LineStrip);
         chartLine[0].position = sf::Vector2f(posX, posY);
-        chartLine[1].position = sf::Vector2f(posX, posY); //will override in the next loop
+        chartLine[1].position = sf::Vector2f(posX, posY);
         chartlineVector.push_back(chartLine);
         //bigger piechart
         sf::VertexArray chartLine2(sf::LineStrip, 2);
@@ -771,7 +804,7 @@ Plot5 pieChart2(float posX, float posY, std::vector<float> dataPoints, std::vect
     theTitle.setFillColor(sf::Color::White);
     theTitle.setString(title);
 
-    //Data Label //TODO: add small rectangles with colors Male Female and with percentages next to them.
+    //Data Label
     sf::Text theLabel;
     theLabel.setFont(font);
     theLabel.setCharacterSize(12);
@@ -795,9 +828,6 @@ Plot5 pieChart2(float posX, float posY, std::vector<float> dataPoints, std::vect
             chartlineVector[i][1].position = sf::Vector2f(posX + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
             chartlineVector2[i][1].position = sf::Vector2f(posX + (radius + additionalRadius) * cos(2 * M_PI * i / degrees), posY + (radius + additionalRadius) * sin(2 * M_PI * i / degrees));
             if (i >= degrees-( percentageOfFemale * degrees)) {
-                //chartlineVector[i][1].position = sf::Vector2f(posX + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
-                //chartlineVector[i][0].color = sf::Color::Magenta;//female colour sf::Color(230, 130, 220);
-                //chartlineVector[i][1].color = sf::Color::Magenta;
                 chartlineVector[i][0].color = sf::Color(230, 130, 220);
                 chartlineVector[i][1].color = sf::Color(230, 130, 220);
                 //bigger plots
@@ -806,25 +836,20 @@ Plot5 pieChart2(float posX, float posY, std::vector<float> dataPoints, std::vect
 					chartlineVector2[i][1].color = sf::Color::Color(230, 100, 0);
                 }
                 else {
-                    //chartlineVector2[i][1].position = sf::Vector2f(posX + (radius + additionalRadius) * cos(2 * M_PI * i / degrees), posY + (radius + additionalRadius) * sin(2 * M_PI * i / degrees));
                     chartlineVector2[i][0].color = sf::Color(120, 120, 120);
                     chartlineVector2[i][1].color = sf::Color(120,120,120);
                 }
             }
             else {
-                //chartlineVector[i][1].position = sf::Vector2f(posX + radius * cos(2 * M_PI * i / degrees), posY + radius * sin(2 * M_PI * i / degrees));
-                //chartlineVector[i][0].color = sf::Color(173, 216, 230);//male colour
-                //chartlineVector[i][1].color = sf::Color(173, 216, 230);
+                
                 chartlineVector[i][0].color = sf::Color(130, 190, 230);
                 chartlineVector[i][1].color = sf::Color(130, 190, 230);
                 //bigger plots 
                 if (i >= degrees -( percentageOfFertileMale * degrees)) {
-                    //chartlineVector2[i][1].position = sf::Vector2f(posX + (radius + additionalRadius) * cos(2 * M_PI * i / degrees), posY + (radius + additionalRadius) * sin(2 * M_PI * i / degrees));
                     chartlineVector2[i][0].color = sf::Color::Color(230, 100, 0);
                     chartlineVector2[i][1].color = sf::Color::Color(230, 100, 0);
                 }
                 else {
-                    //chartlineVector2[i][1].position = sf::Vector2f(posX + (radius + additionalRadius) * cos(2 * M_PI * i / degrees), posY + (radius + additionalRadius) * sin(2 * M_PI * i / degrees));
                     chartlineVector2[i][0].color = sf::Color::Color(120, 120, 120);
                     chartlineVector2[i][1].color = sf::Color::Color(120, 120, 120);
                 }
@@ -841,91 +866,7 @@ Plot5 pieChart2(float posX, float posY, std::vector<float> dataPoints, std::vect
     myPlot.chartlinesVector = chartlineVector;
     myPlot.chartlinesVector2 = chartlineVector2;
     myPlot.circle = circle;
-    //myPlot.title = theTitle;
     myPlot.xlabel = theLabel;
     return myPlot;
 }
 
-
-
-
-
-
-TraitSummaryStatistics preySpeedSummaryStatistics = {
-    "Speed",
-    {0.0 , 0.0, 0.0 }, 
-	{0.0 , 0.0, 0.0 }, 
-	{0.0 , 0.0, 0.0 }
-};
-TraitSummaryStatistics preyHungerSensitivitySummaryStatistics = {
-    "Hunger Sensitivity", 
-    {0.0 , 0.0, 0.0 }, 
-	{0.0 , 0.0, 0.0 }, 
-	{0.0 , 0.0, 0.0 }
-};
-TraitSummaryStatistics preyMetabolicRateSummaryStatistics = {
-    "Metabolic Rate", 
-    {0.0 , 0.0, 0.0 }, 
-	{0.0 , 0.0, 0.0 }, 
-	{0.0 , 0.0, 0.0 }
-};
-TraitSummaryStatistics preyLustLevelSummaryStatistics = {
-    "Lust Level",
-    {0.0 , 0.0, 0.0 }, 
-	{0.0 , 0.0, 0.0 }, 
-	{0.0 , 0.0, 0.0 }
-};
-TraitSummaryStatistics preyVisionRangeSummaryStatistics = {
-    "Vision Range",
-    {0.0 , 0.0, 0.0 }, 
-	{0.0 , 0.0, 0.0 }, 
-	{0.0 , 0.0, 0.0 }
-};
-TraitSummaryStatistics preyPredatorAversionSummaryStatistics = {
-    "Predator Aversion",
-    {0.0 , 0.0, 0.0 }, 
-	{0.0 , 0.0, 0.0 }, 
-	{0.0 , 0.0, 0.0 }
-};
-TraitSummaryStatistics predatorSpeedSummaryStatistics = {
-    "Speed",
-    {0.0 , 0.0, 0.0 }, 
-	{0.0 , 0.0, 0.0 }, 
-	{0.0 , 0.0, 0.0 }
-};
-TraitSummaryStatistics predatorHungerSensitivitySummaryStatistics = {
-    "Hunger Sensitivity", 
-    {0.0 , 0.0, 0.0 }, 
-	{0.0 , 0.0, 0.0 }, 
-	{0.0 , 0.0, 0.0 }
-};
-TraitSummaryStatistics predatorMetabolicRateSummaryStatistics = {
-    "Metabolic Rate", 
-    {0.0 , 0.0, 0.0 }, 
-	{0.0 , 0.0, 0.0 }, 
-	{0.0 , 0.0, 0.0 }
-};
-TraitSummaryStatistics predatorLustLevelSummaryStatistics = {
-    "Lust Level",
-    {0.0 , 0.0, 0.0 }, 
-	{0.0 , 0.0, 0.0 }, 
-	{0.0 , 0.0, 0.0 }
-};
-TraitSummaryStatistics predatorVisionRangeSummaryStatistics = {
-    "Vision Range",
-    {0.0 , 0.0, 0.0 }, 
-	{0.0 , 0.0, 0.0 }, 
-	{0.0 , 0.0, 0.0 }
-};
-
-SpeciesSummaryStatistics preySummaryStatistics = {
-    "Prey" ,
-    {preySpeedSummaryStatistics, preyHungerSensitivitySummaryStatistics, preyMetabolicRateSummaryStatistics, preyLustLevelSummaryStatistics, preyVisionRangeSummaryStatistics, preyPredatorAversionSummaryStatistics }
-};
-
-SpeciesSummaryStatistics predatorSummaryStatistics = {
-     "Predator",
-    {predatorSpeedSummaryStatistics, predatorHungerSensitivitySummaryStatistics, predatorMetabolicRateSummaryStatistics, predatorLustLevelSummaryStatistics, predatorVisionRangeSummaryStatistics }
-};
-
-std::vector<SpeciesSummaryStatistics> summaryStatistics = { preySummaryStatistics, predatorSummaryStatistics };
