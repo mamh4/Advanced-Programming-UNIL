@@ -55,7 +55,7 @@ public:
 
     void move(int direction);
 
-    void ageing();
+    void mature();
 
     bool getFertile() {
         return this->fertile;
@@ -68,11 +68,11 @@ public:
 
     virtual void interact(Organism* organism, std::vector<Organism*>& organismVector);
 
-    virtual void dies(std::vector<Organism*>& organismVector);
+    virtual void die(std::vector<Organism*>& organismVector);
 
-    void deathReport() ; 
+    void generateDeathReport() ; 
 
 };
 
 
-    float geneticEngine (std::string speciesName, std::string traitName, float parent1TraitValue, float parent2TraitValue); 
+    float mutateOffSpring (std::string speciesName, std::string traitName, float parent1TraitValue, float parent2TraitValue); 

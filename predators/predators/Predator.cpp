@@ -172,19 +172,19 @@ void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organi
 			sex = (randomSexDetermination == 0);
 
 			int speed = 1;
-			speed = static_cast<int> (geneticEngine("Predator", "Speed", this->getSpeed(), myPred->getSpeed()));
+			speed = static_cast<int> (mutateOffSpring("Predator", "Speed", this->getSpeed(), myPred->getSpeed()));
 
 			float hungerSensitivity = 1;
-			hungerSensitivity = geneticEngine("Predator", "Hunger Sensitivity", this->getHungerSensitivity(), myPred->getHungerSensitivity());
+			hungerSensitivity = mutateOffSpring("Predator", "Hunger Sensitivity", this->getHungerSensitivity(), myPred->getHungerSensitivity());
 
 			float metabolicRate = 0.1;
-			metabolicRate = geneticEngine("Predator", "Metabolic Rate", this->getMetabolicRate(), myPred->getMetabolicRate());
+			metabolicRate = mutateOffSpring("Predator", "Metabolic Rate", this->getMetabolicRate(), myPred->getMetabolicRate());
 
 			int lustLevel = 1;
-			lustLevel = geneticEngine("Predator", "Lust Level", this->getLustLevel(), myPred->getLustLevel());
+			lustLevel = mutateOffSpring("Predator", "Lust Level", this->getLustLevel(), myPred->getLustLevel());
 
 			int visionRange = 250;
-			visionRange = geneticEngine("Predator", "Vision Range", this->getVisionRange(), myPred->getVisionRange());
+			visionRange = mutateOffSpring("Predator", "Vision Range", this->getVisionRange(), myPred->getVisionRange());
 
 			Predator* offspring = new Predator(candidateBirthPlaceX, candidateBirthPlaceY,
 			childRadius, energy, sex, speed, hungerSensitivity, metabolicRate, lustLevel, visionRange);

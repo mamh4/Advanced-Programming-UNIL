@@ -49,16 +49,12 @@ float avgAgePrey = 0.0;
 
 /////////////////////////////////////////////////////////// Tracking variables for plots and stats End /////////////////////////////////////////////////////////////////
 
-
-
-int main()
-{
-
+void startSimulation() {
     ////////////////////////////////////////////////////////////////////// Genetic Engine Data /////////////////////////////////////////////////////////////////////////
 
-    /* The input parameters for the initial population is set to be normally distributed around the average values of the genetic intervals. We leverage our implementation
-    * of the Genetic Intervals class to generate the initial population of prey and predators.
-    */
+/* The input parameters for the initial population is set to be normally distributed around the average values of the genetic intervals. We leverage our implementation
+* of the Genetic Intervals class to generate the initial population of prey and predators.
+*/
     int averagePredatorSpeed = (geneticDatabase[1].geneticTraitIntervals[0].traitRange[1] + geneticDatabase[1].geneticTraitIntervals[0].traitRange[2]) / 2.0;
     float averagePredatorVisionRange = (geneticDatabase[1].geneticTraitIntervals[4].traitRange[1] + geneticDatabase[1].geneticTraitIntervals[4].traitRange[2]) / 2.0;
     float averagePredatorMetabolicRate = (geneticDatabase[1].geneticTraitIntervals[2].traitRange[1] + geneticDatabase[1].geneticTraitIntervals[2].traitRange[2]) / 2.0;
@@ -76,42 +72,34 @@ int main()
 
     ////////////////////////////////////////////////////////////////////////// USER INPUT /////////////////////////////////////////////////////////////////////////////
 
-    /* Here is all the UI code for the user input. We use SFML to create a window with input boxes for the user to input the number of predators, prey and flora. 
+    /* Here is all the UI code for the user input. We use SFML to create a window with input boxes for the user to input the number of predators, prey and flora.
     We then use our implementation of the Genetic Intervals class to generate the initial population of prey and predators.
     */
-    
+
     int inputNrPred = 0;
     int inputNrPrey = 0;
     int inputNrFlora = 0;
     const int maxInput = 50;
-  
+
     sf::RenderWindow windowParam(sf::VideoMode(350, 300), "Input Box Example");
 
     sf::Texture backgroundTexture;
-    if (!backgroundTexture.loadFromFile("background.png")) {
-        // Handle loading error
-        return -1;
-    }
-    
+    backgroundTexture.loadFromFile("background.png");
+
+
     // Create a sprite for the background
     sf::Sprite backgroundSprite(backgroundTexture);
 
 
-    
+
     sf::Font font;
-    if (!font.loadFromFile("arial.ttf"))
-    {
-        std::cout << "Failed to load font!" << std::endl;
-        return -1;
-    }
+    font.loadFromFile("arial.ttf");
+
 
     sf::Font font2;
-    if (!font2.loadFromFile("aerial.ttf"))
-    {
-        std::cout << "Failed to load font!" << std::endl;
-        return -1;
-    }
-    
+    font2.loadFromFile("aerial.ttf");
+
+
     //Number of predators
     sf::Text numberOfPredatorsTxtPrompt;
     numberOfPredatorsTxtPrompt.setFont(font);
@@ -133,7 +121,7 @@ int main()
     predatorInputText.setFillColor(sf::Color::Black);
     predatorInputText.setString("");
     predatorInputText.setPosition(262.f, 2.f);
-    
+
     //Number of prey
     sf::Text numberOfPreyTxtPrompt;
     numberOfPreyTxtPrompt.setFont(font);
@@ -245,16 +233,16 @@ int main()
                 }
                 else if (preyVsPredMode.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
                     isPreyVsPredFocused = true;
-                    isStandardModeFocused  = false;
-                    preyVsPredMode.setFillColor(sf::Color(120,120,120));
+                    isStandardModeFocused = false;
+                    preyVsPredMode.setFillColor(sf::Color(120, 120, 120));
                     standardMode.setFillColor(sf::Color::White);
                 }
                 else if (standardMode.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-					isPreyVsPredFocused = false;
-					isStandardModeFocused  = true;
-					standardMode.setFillColor(sf::Color(120,120,120));
-					preyVsPredMode.setFillColor(sf::Color::White);
-				}
+                    isPreyVsPredFocused = false;
+                    isStandardModeFocused = true;
+                    standardMode.setFillColor(sf::Color(120, 120, 120));
+                    preyVsPredMode.setFillColor(sf::Color::White);
+                }
                 else {
                     isPredatorInputFocused = false;
                     isPreyInputFocused = false;
@@ -296,7 +284,7 @@ int main()
                             std::cout << "Exception caught: " << e.what() << std::endl;
                             inputNrPred = maxInput;
                         }
-                        
+
                     }
                 }//Prey
                 else if (isPreyInputFocused) {
@@ -433,7 +421,7 @@ int main()
     }
 
     ///////////////////////////////////////////////////////////////////// USER INPUT END //////////////////////////////////////////////////////////////////////////////
-   
+
     ///////////////////////////////////////////////////////////////// Variable Initialisations ////////////////////////////////////////////////////////////////////////
 
     /* OrganismVector is used to storee all organisms. we start initialising predators, prey and flora according to user input.
@@ -445,13 +433,13 @@ int main()
     srand(seed);
 
     std::vector<Organism*> organismVector;
-    
+
     for (int i = 0; i < inputNrPred; i++) {
         bool validRespawnPlace = false;
-        float posX = isStandardModeFocused ? rand() % windowWidth : rand() % windowWidth /2 ;
+        float posX = isStandardModeFocused ? rand() % windowWidth : rand() % windowWidth / 2;
         float posY = rand() % windowHeight;
         float radius = 3;
-        while (not validRespawnPlace){
+        while (not validRespawnPlace) {
             for (int j = 0; j < i; j++) {
                 float distanceSquare = pow(posX - organismVector.at(j)->getPosX(), 2) + pow(posY - organismVector.at(j)->getPosY(), 2);
                 if (distanceSquare > pow(organismVector.at(j)->getRadius() + radius, 2)) {
@@ -467,13 +455,13 @@ int main()
             validRespawnPlace = true;
         }
         float energy = 1000.0;
-        float visionRange = geneticEngine ("Predator", "Vision Range", averagePredatorVisionRange, averagePredatorVisionRange);
+        float visionRange = mutateOffSpring("Predator", "Vision Range", averagePredatorVisionRange, averagePredatorVisionRange);
         bool sex = rand() % 2 == 0 ? true : false;
-        int speed = static_cast<int>(geneticEngine("Predator", "Speed", averagePredatorSpeed, averagePredatorSpeed));
-        float hungerLevel = geneticEngine("Predator", "Hunger Level", averagePredatorHungerSensitivity, averagePredatorHungerSensitivity);
-        float metabolicRate = geneticEngine("Predator", "Metabolic Rate", averagePredatorMetabolicRate, averagePredatorMetabolicRate);
-        int lustLevel = geneticEngine("Predator", "Lust Level", averagePredatorLustLevel, averagePredatorLustLevel);
-        
+        int speed = static_cast<int>(mutateOffSpring("Predator", "Speed", averagePredatorSpeed, averagePredatorSpeed));
+        float hungerLevel = mutateOffSpring("Predator", "Hunger Level", averagePredatorHungerSensitivity, averagePredatorHungerSensitivity);
+        float metabolicRate = mutateOffSpring("Predator", "Metabolic Rate", averagePredatorMetabolicRate, averagePredatorMetabolicRate);
+        int lustLevel = mutateOffSpring("Predator", "Lust Level", averagePredatorLustLevel, averagePredatorLustLevel);
+
         Predator* myPredator = new Predator(posX, posY, radius, energy, sex, speed, hungerLevel, metabolicRate, lustLevel, visionRange);
         organismVector.push_back(myPredator);
     }
@@ -490,7 +478,7 @@ int main()
                     validRespawnPlace = true;
                 }
                 else {
-                    posX = isStandardModeFocused ? rand() % windowWidth : (rand() % (windowWidth - windowWidth/2 + 1)) + windowWidth/2;
+                    posX = isStandardModeFocused ? rand() % windowWidth : (rand() % (windowWidth - windowWidth / 2 + 1)) + windowWidth / 2;
                     posY = rand() % windowHeight;
                     validRespawnPlace = false;
                     break;
@@ -499,13 +487,13 @@ int main()
             validRespawnPlace = true;
         }
         float energy = 1000.0;
-        float visionRange = geneticEngine("Prey", "Vision Range", averagePredatorVisionRange, averagePredatorVisionRange);
+        float visionRange = mutateOffSpring("Prey", "Vision Range", averagePredatorVisionRange, averagePredatorVisionRange);
         bool sex = rand() % 2 == 0 ? true : false;
-        int speed = static_cast<int>(geneticEngine("Prey", "Speed", averagePredatorSpeed, averagePredatorSpeed));
-        float hungerLevel = geneticEngine("Prey", "Hunger Level", averagePredatorHungerSensitivity, averagePredatorHungerSensitivity);
-        float metabolicRate = geneticEngine("Prey", "Metabolic Rate", averagePredatorMetabolicRate, averagePredatorMetabolicRate);
-        int lustLevel = geneticEngine("Prey", "Lust Level", averagePredatorLustLevel, averagePredatorLustLevel);
-        float predatorAversion = geneticEngine("Prey", "Predator Aversion", averagePreyPredatorAversion, averagePreyPredatorAversion);
+        int speed = static_cast<int>(mutateOffSpring("Prey", "Speed", averagePredatorSpeed, averagePredatorSpeed));
+        float hungerLevel = mutateOffSpring("Prey", "Hunger Level", averagePredatorHungerSensitivity, averagePredatorHungerSensitivity);
+        float metabolicRate = mutateOffSpring("Prey", "Metabolic Rate", averagePredatorMetabolicRate, averagePredatorMetabolicRate);
+        int lustLevel = mutateOffSpring("Prey", "Lust Level", averagePredatorLustLevel, averagePredatorLustLevel);
+        float predatorAversion = mutateOffSpring("Prey", "Predator Aversion", averagePreyPredatorAversion, averagePreyPredatorAversion);
 
         Prey* myPrey = new Prey(posX, posY, radius, energy, sex, speed, hungerLevel, metabolicRate, lustLevel, visionRange, predatorAversion);
         organismVector.push_back(myPrey);
@@ -532,10 +520,10 @@ int main()
             validRespawnPlace = true;
         }
         float energy = 1000; //TODO NEED TO PICK A VALID RANDOM ENERGY
-        float growthRate =11.425;// static_cast<float>(rand() % 10 + 1) * 10.0f;
+        float growthRate = 11.425;// static_cast<float>(rand() % 10 + 1) * 10.0f;
         Flora* myFlora = new Flora(posX, posY, radius, energy, growthRate);
         organismVector.push_back(myFlora);
-    }    
+    }
 
     std::vector<float> numberOfFaunaAtTimeT;
     float totalNumberOfFauna = numberOfPrey + numberOfPredators;
@@ -584,18 +572,18 @@ int main()
 
     ///////////////////////////////////////////////////////////////////// Simulation Window //////////////////////////////////////////////////////////////////////////
 
-    /* Here we create the window and set the frame rate, and then we enter the main loop of the program  
+    /* Here we create the window and set the frame rate, and then we enter the main loop of the program
     the one that handles events, draws the window, and processes user input until the program ends.
     */
 
-    sf::RenderWindow window(sf::VideoMode(windowWidth+paneWidth, windowHeight), "Prey vs Predator");
+    sf::RenderWindow window(sf::VideoMode(windowWidth + paneWidth, windowHeight), "Prey vs Predator");
 
     //Pane that will display the statistics
     sf::RectangleShape pane(sf::Vector2f(paneWidth, 720.f));
     pane.setPosition(sf::Vector2f(980.f, 0.f));
-    pane.setFillColor(sf::Color(50,60,70));
+    pane.setFillColor(sf::Color(50, 60, 70));
 
-    
+
     // Set the frame rate
     window.setFramerateLimit(frameRate);
 
@@ -615,20 +603,20 @@ int main()
 
 
         // Simplified Survey Loop of Living Population to keep track of the energy flow in the system. We track it per species.
-        totalEnergyFlora = 0.0 ;
-        totalEnergyPrey = 0.0 ;
-        totalEnergyPredator = 0.0 ;
+        totalEnergyFlora = 0.0;
+        totalEnergyPrey = 0.0;
+        totalEnergyPredator = 0.0;
         for (int i = 0; i < organismVector.size(); i++) {
-            if(Flora* myFlora = dynamic_cast<Flora*>(organismVector.at(i))){
+            if (Flora* myFlora = dynamic_cast<Flora*>(organismVector.at(i))) {
                 totalEnergyFlora += myFlora->getEnergy();
             }
-            if(Prey* myPrey = dynamic_cast<Prey*>(organismVector.at(i))){
+            if (Prey* myPrey = dynamic_cast<Prey*>(organismVector.at(i))) {
                 totalEnergyPrey += myPrey->getEnergy();
             }
-            if(Predator* myPredator = dynamic_cast<Predator*>(organismVector.at(i))){
+            if (Predator* myPredator = dynamic_cast<Predator*>(organismVector.at(i))) {
                 totalEnergyPredator += myPredator->getEnergy();
             }
-		}
+        }
 
         //update the summary statistics vectors
         numberOfPredatorsAtTimeT.push_back(numberOfPredators);
@@ -651,10 +639,10 @@ int main()
 
         avgAgePredator = numberOfPredators == 0 ? 0 : totalAgePredator / numberOfPredators;
         avgAgePrey = numberOfPrey == 0 ? 0 : totalAgePrey / numberOfPrey;
-        avgAgePredatorAtTimeT.push_back(avgAgePredator /frameRate);
+        avgAgePredatorAtTimeT.push_back(avgAgePredator / frameRate);
         avgAgePreyAtTimeT.push_back(avgAgePrey / frameRate);
-        
-        
+
+
 
         // Print statistics at the top left corner
         sf::Text text;
@@ -670,7 +658,7 @@ int main()
 
         // clear the window
         window.clear(sf::Color::Black);
-        
+
         /////////////////////////////////////////////////////////////// Simulation Window End //////////////////////////////////////////////////////////////////////////
 
 
@@ -681,7 +669,7 @@ int main()
 
 
         // Population plot
-        Plot2 mixedPlot = twoLinesPlot(1030.0, 170.0,numberOfPredatorsAtTimeT, numberOfPreyAtTimeT
+        Plot2 mixedPlot = twoLinesPlot(1030.0, 170.0, numberOfPredatorsAtTimeT, numberOfPreyAtTimeT
             , font, "Total Population", 110.0, 225.0, 1800);
 
         // Energy plot
@@ -689,12 +677,12 @@ int main()
             totalEnergyOfFloraAtTimeT, font, "Total Energy", 110.0, 225.0, 1800);
 
         // Average Age plot
-        Plot2 mixedPlot3 = twoLinesPlot(1030.0, 490.0 ,avgAgePredatorAtTimeT, avgAgePreyAtTimeT,
-            font, "Average Age",110.0, 225.0, 1800);
-        
+        Plot2 mixedPlot3 = twoLinesPlot(1030.0, 490.0, avgAgePredatorAtTimeT, avgAgePreyAtTimeT,
+            font, "Average Age", 110.0, 225.0, 1800);
+
         // Pie Charts Gender and fertility for Predators
         Plot5 myPieChart3 = pieChart2(1065.0, 605.0, numberOfPredatorsAtTimeT, numberOfFemalePredatorsAtTimeT,
-            numberOfFertileFemalePredatorAtTimeT, numberOfFertileMalePredatorAtTimeT,font, "Predator", 30);
+            numberOfFertileFemalePredatorAtTimeT, numberOfFertileMalePredatorAtTimeT, font, "Predator", 30);
 
         // Pie Charts Gender and fertility for Prey
         Plot5 myPieChart4 = pieChart2(1200, 605.0, numberOfPreyAtTimeT, numberOfFemalePreyAtTimeT,
@@ -708,7 +696,7 @@ int main()
         // Draw the pane and the plots
         window.draw(pane);
         window.draw(text);
-        
+
         window.draw(mixedPlot.xcoord);
         window.draw(mixedPlot.ycoord);
         window.draw(mixedPlot.chartLine);
@@ -752,7 +740,7 @@ int main()
         window.draw(mixedPlot3.percentile75XValue);
         window.draw(mixedPlot3.title);
         window.draw(mixedPlot3.ylabel);
-          
+
 
         window.draw(myPieChart3.circle);
         window.draw(myPieChart3.title);
@@ -778,9 +766,9 @@ int main()
         sf::RectangleShape predatorBox(sf::Vector2f(8.f, 8.f));
         predatorBox.setFillColor(sf::Color::Red);
         predatorBox.setPosition(1040, 525);
-        
+
         sf::RectangleShape preyBox(sf::Vector2f(8.f, 8.f));
-        preyBox.setFillColor(sf::Color::Color(0,120,255));
+        preyBox.setFillColor(sf::Color::Color(0, 120, 255));
         preyBox.setPosition(1110, 525);
 
         sf::RectangleShape floraBox(sf::Vector2f(8.f, 8.f));
@@ -822,11 +810,11 @@ int main()
         maleBox.setPosition(1035, 705);
 
         sf::RectangleShape femaleBox(sf::Vector2f(8.f, 8.f));
-        femaleBox.setFillColor(sf::Color::Color(230,130,220));
+        femaleBox.setFillColor(sf::Color::Color(230, 130, 220));
         femaleBox.setPosition(1100, 705);
 
         sf::RectangleShape fertileBox(sf::Vector2f(8.f, 8.f));
-        fertileBox.setFillColor(sf::Color::Color(230,100,0));
+        fertileBox.setFillColor(sf::Color::Color(230, 100, 0));
         fertileBox.setPosition(1180, 705);
 
         sf::Text maleTextString;
@@ -856,14 +844,14 @@ int main()
         window.draw(femaleTextString);
         window.draw(fertileBox);
         window.draw(fertileTextString);
-        
-        simulationTime ++ ; 
+
+        simulationTime++;
         window.display();
     }
 
     /////////////////////////////////////////////////////////////// Simulation pane End ////////////////////////////////////////////////////////////////////////////
 
-    
+
     //////////////////////////////////////////////////////////////////// DEATH REPORT ////////////////////////////////////////////////////////////////////////////// 
     /* Show all summary statistics for dead orgarnisms.
     */
@@ -876,7 +864,7 @@ int main()
     float newOriginX;
     float newOriginY;
     float lineHeight;
-    float columnWidth; 
+    float columnWidth;
 
     canvasWidth = 0.9 * (windowWidth + paneWidth);
     canvasHeight = 0.9 * windowHeight;
@@ -893,7 +881,7 @@ int main()
             if (event.type == sf::Event::Closed)
                 windowSummary.close();
         }
-        
+
         windowParam.clear(sf::Color::White);
 
         sf::RectangleShape testBox(sf::Vector2f((windowWidth + paneWidth), windowHeight));
@@ -904,28 +892,28 @@ int main()
         windowSummary.draw(testBox);
 
 
-        
-        
+
+
         sf::Text currentText;
         currentText.setFont(font);
         currentText.setCharacterSize(20);
         currentText.setFillColor(sf::Color::Black);
         currentText.setString("Population Summary");
-        currentText.setPosition(newOriginX + canvasWidth * 0.5 - (currentText.getLocalBounds().width / 2.0), newOriginY + lineHeight * (1.0) - 
+        currentText.setPosition(newOriginX + canvasWidth * 0.5 - (currentText.getLocalBounds().width / 2.0), newOriginY + lineHeight * (1.0) -
             (currentText.getLocalBounds().height / 2.0));
         windowSummary.draw(currentText);
 
         currentText.setCharacterSize(12);
 
-        sf::RectangleShape speciesSeparator(sf::Vector2f( 20.0* columnWidth , 2.0));
+        sf::RectangleShape speciesSeparator(sf::Vector2f(20.0 * columnWidth, 2.0));
         speciesSeparator.setFillColor(sf::Color::Black);
         speciesSeparator.setOutlineThickness(0.f);
         speciesSeparator.setOutlineColor(sf::Color::Black);
 
         for (int i = 0; i < summaryStatistics.size(); i++) {
-            
 
-            speciesSeparator.setPosition(newOriginX + (-0.2 * columnWidth ), newOriginY + (1.8 + i * 6.0) * lineHeight);
+
+            speciesSeparator.setPosition(newOriginX + (-0.2 * columnWidth), newOriginY + (1.8 + i * 6.0) * lineHeight);
             windowSummary.draw(speciesSeparator);
             currentText.setString(summaryStatistics[i].speciesName);
             currentText.setPosition(newOriginX + 2.0 * columnWidth, newOriginY + (2.0 + i * 6.0) * lineHeight);
@@ -949,23 +937,23 @@ int main()
             currentText.setPosition(newOriginX, newOriginY + (7.0 + i * 6.0) * lineHeight);
             windowSummary.draw(currentText);
 
-            sf::RectangleShape traitSeparator(sf::Vector2f( 2.0 , 4.8*lineHeight));
+            sf::RectangleShape traitSeparator(sf::Vector2f(2.0, 4.8 * lineHeight));
             traitSeparator.setFillColor(sf::Color::Black);
             traitSeparator.setOutlineThickness(0.f);
             traitSeparator.setOutlineColor(sf::Color::Black);
-            
-            sf::RectangleShape classSeparator(sf::Vector2f( 1.0 , 3.8*lineHeight));
+
+            sf::RectangleShape classSeparator(sf::Vector2f(1.0, 3.8 * lineHeight));
             classSeparator.setFillColor(sf::Color::Black);
             classSeparator.setOutlineThickness(0.f);
             classSeparator.setOutlineColor(sf::Color::Black);
 
-            
+
 
             for (int j = 0; j < summaryStatistics[i].traitSummaryStatisticVector.size(); j++) {
                 currentText.setString(summaryStatistics[i].traitSummaryStatisticVector[j].traitName);
                 currentText.setPosition(newOriginX + (2.0 + 3.0 * j) * columnWidth, newOriginY + (3.0 + i * 6.0) * lineHeight);
                 windowSummary.draw(currentText);
-                traitSeparator.setPosition(newOriginX + (1.8 + 3.0 * (j+1 )) * columnWidth, newOriginY + (3.0 + i * 6.0) * lineHeight);
+                traitSeparator.setPosition(newOriginX + (1.8 + 3.0 * (j + 1)) * columnWidth, newOriginY + (3.0 + i * 6.0) * lineHeight);
                 windowSummary.draw(traitSeparator);
                 for (int k = 0; k < 3; k++) {
                     currentText.setString(std::to_string(k + 1));
@@ -974,7 +962,7 @@ int main()
                     classSeparator.setPosition(newOriginX + (1.8 + 3.0 * j + 1.0 * k) * columnWidth, newOriginY + (4.0 + i * 6.0) * lineHeight);
                     windowSummary.draw(classSeparator);
                     std::stringstream stream1;
-                    stream1 << std::fixed << std::setprecision(0) << (summaryStatistics[i].traitSummaryStatisticVector[j].population[k]); 
+                    stream1 << std::fixed << std::setprecision(0) << (summaryStatistics[i].traitSummaryStatisticVector[j].population[k]);
                     currentText.setString(stream1.str());
                     currentText.setPosition(newOriginX + (2.0 + 3.0 * j + 1.0 * k) * columnWidth, newOriginY + (4.0 + i * 6.0 + 1.0) * lineHeight);
                     windowSummary.draw(currentText);
@@ -982,13 +970,13 @@ int main()
                     std::string averageOffspringNumberAtDeath;
                     if (not (summaryStatistics[i].traitSummaryStatisticVector[j].population[k] == 0)) {
                         std::stringstream stream2;
-                        stream2 << std::fixed << std::setprecision(2) << ((1.0 * summaryStatistics[i].traitSummaryStatisticVector[j].sumOfAgesAtDeath[k]) / 
+                        stream2 << std::fixed << std::setprecision(2) << ((1.0 * summaryStatistics[i].traitSummaryStatisticVector[j].sumOfAgesAtDeath[k]) /
                             (1.0 * summaryStatistics[i].traitSummaryStatisticVector[j].population[k]));
-                        averageAgeAtDeath = stream2.str() ; 
+                        averageAgeAtDeath = stream2.str();
                         std::stringstream stream3;
-                        stream3 << std::fixed << std::setprecision(2) << ((1.0 * summaryStatistics[i].traitSummaryStatisticVector[j].sumOfOffsprings[k]) / 
+                        stream3 << std::fixed << std::setprecision(2) << ((1.0 * summaryStatistics[i].traitSummaryStatisticVector[j].sumOfOffsprings[k]) /
                             (1.0 * summaryStatistics[i].traitSummaryStatisticVector[j].population[k]));
-                        averageOffspringNumberAtDeath = stream3.str() ; 
+                        averageOffspringNumberAtDeath = stream3.str();
                     }
                     else {
                         averageAgeAtDeath = "No Data";
@@ -1002,7 +990,7 @@ int main()
                     windowSummary.draw(currentText);
                 }
             }
-        
+
         }
 
         speciesSeparator.setPosition(newOriginX, newOriginY + (1.8 + 2 * 6.0) * lineHeight);
@@ -1013,5 +1001,11 @@ int main()
         /////////////////////////////////////////////////////////////// DEATH REPORT End ////////////////////////////////////////////////////////////////////////////// 
     }
 
+}
+
+
+int main()
+{
+    startSimulation();
     return 0;
 }

@@ -43,7 +43,7 @@ public:
 
     virtual void update(std::vector<Organism*>& organismVector);
 
-    virtual void dies(std::vector<Organism*>& organismVector);
+    virtual void die(std::vector<Organism*>& organismVector);
 
 };
 

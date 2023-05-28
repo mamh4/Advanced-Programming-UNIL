@@ -64,5 +64,5 @@ std::string Organism::getType() {
 void Organism::update(std::vector<Organism*>& organismVector) {
 }
 
-void Organism::dies(std::vector<Organism*>& organismVector) {
+void Organism::die(std::vector<Organism*>& organismVector) {
 }

@@ -91,8 +91,8 @@ void Fauna::computeUtility(float distanceSquared, Organism* targetOrganism, std:
 }
 
 //Takes the organism vector as parameter and removes itself from the vector i.e. death
-void Fauna::dies(std::vector<Organism*>& organismVector) {
-    this->deathReport();
+void Fauna::die(std::vector<Organism*>& organismVector) {
+    this->generateDeathReport();
     if (Predator* myPredator = dynamic_cast<Predator*>(this)) {
         numberOfPredators -= 1;
         if (this->sex) {
@@ -139,7 +139,7 @@ void Fauna::move(int directionIndicator) {
     this->setEnergy(this->getEnergy() - energyCostOfMovement);
 }
 
-void Fauna::ageing() {
+void Fauna::mature() {
     age++;
 
     if (Predator* myPredator = dynamic_cast<Predator*>(this)) {
@@ -150,7 +150,7 @@ void Fauna::ageing() {
     }
 }
 
-//First the organism ages by 1. The energy is reduced by the metabolic rate. If the energy is less than 0, the organism dies.
+//First the organism ages by 1. The energy is reduced by the metabolic rate. If the energy is less than 0, the organism die.
 //If the organism is fertile, it has a chance to reproduce.
 //There is probability of 1% per year of life that the organism dies.
 //The probability of death increases with age.
@@ -161,11 +161,11 @@ void Fauna::ageing() {
 //Color changes based on energy.
 
 void Fauna::update(std::vector<Organism*>& organismVector) {
-    this->ageing(); 
+    this->mature(); 
     this->setEnergy(this->getEnergy() - std::min(this->getMetabolicRate(), this->getEnergy()));
 
     if ((1.0 * (rand() % 100) < (100 * std::pow(((1 + this->getAge()) / 6000), 10)) or (this->getEnergy() <= 0))) {
-        this->dies(organismVector);
+        this->die(organismVector);
 
     }
     else {
@@ -343,7 +343,7 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
     }
 }
 // Takes the genetic traits of the parents and returns the genetic traits of the offspring
-float geneticEngine (std::string speciesName, std::string traitName, float parent1TraitValue, float parent2TraitValue) {
+float mutateOffSpring (std::string speciesName, std::string traitName, float parent1TraitValue, float parent2TraitValue) {
     float offspringTraitValue = 0.0 ; 
 
     bool speciesFound = false ; 
@@ -396,7 +396,7 @@ float geneticEngine (std::string speciesName, std::string traitName, float paren
 }
 
 //Collects the statistics of dead organisms to view in the death report
-void Fauna::deathReport() {
+void Fauna::generateDeathReport() {
 	std::string currentSpecies; 
 	std::vector<std::string> traitNameList ; 
 	std::vector<float> traitValueList ; 
