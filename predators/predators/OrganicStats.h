@@ -4,6 +4,18 @@
 #include <SFML/Graphics.hpp>
 #include <variant>
 
+struct TraitSummaryStatistics {
+    std::string traitName;
+    float population[3];
+    float sumOfAgesAtDeath[3];
+    float sumOfOffsprings[3];
+};
+
+struct SpeciesSummaryStatistics {
+    std::string speciesName;
+    std::vector<TraitSummaryStatistics> traitSummaryStatisticVector;
+};
+
 extern int simulationTime;
 
 extern int numberOfPredators;
@@ -33,17 +45,7 @@ extern float totalAgePredator;
 extern float totalAgePrey;
 
 
-struct TraitSummaryStatistics {
-    std::string traitName;
-    float population [3]; 
-	float sumOfAgesAtDeath [3];
-	float sumOfOffsprings [3];
-};
 
-struct SpeciesSummaryStatistics {
-    std::string speciesName;
-    std::vector<TraitSummaryStatistics> traitSummaryStatisticVector;
-};
 
 
 extern TraitSummaryStatistics preySpeedSummaryStatistics ;
@@ -78,9 +80,6 @@ struct Plot {
     sf::VertexArray xcoord;
     sf::VertexArray ycoord;
     sf::VertexArray chartLine;
-    //sf::Text theTitle;
-    //sf::Text xlabel;
-    //sf::Text ylabel;
     sf::Text maxValue;
     sf::Text midValue;
 };
@@ -91,7 +90,6 @@ struct Plot2 {
     sf::VertexArray chartLine;
     sf::VertexArray chartLine2;
     sf::Text title;
-    //sf::Text xlabel;
     sf::Text ylabel;
     sf::Text maxValue;
     sf::Text midValue;
@@ -110,8 +108,6 @@ struct Plot3 {
     sf::VertexArray chartLine2;
     sf::VertexArray chartLine3;
     sf::Text title;
-    //sf::Text xlabel;
-    //sf::Text ylabel;
     sf::Text maxValue;
     sf::Text midValue;
     sf::Text percentile25;
@@ -127,8 +123,6 @@ struct Plot4 {
     std::vector<sf::VertexArray> chartlinesVector;
     sf::Text title;
     sf::Text xlabel;
-    //sf::Text ylabel;
-    //sf::Text percentage;
 };
 
 struct Plot5 {
@@ -137,8 +131,6 @@ struct Plot5 {
     std::vector<sf::VertexArray> chartlinesVector2;
     sf::Text title;
     sf::Text xlabel;
-    //sf::Text ylabel;
-    //sf::Text percentage;
 };
 
 Plot linePlot(float posX, float posY, std::vector<float> dataPoints, sf::Font& font,

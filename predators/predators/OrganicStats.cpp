@@ -7,7 +7,7 @@
 #include <iomanip>
 #include <sstream>
 
-
+//Trait summary statistics for the death report.
 TraitSummaryStatistics preySpeedSummaryStatistics = {
     "Speed",
     {0.0 , 0.0, 0.0 },
@@ -88,7 +88,7 @@ SpeciesSummaryStatistics predatorSummaryStatistics = {
 std::vector<SpeciesSummaryStatistics> summaryStatistics = { preySummaryStatistics, predatorSummaryStatistics };
 
 
-
+// a single line plot with a title and axes
 Plot linePlot(float posX, float posY, std::vector<float> dataPoints, 
     sf::Font& font,std::string title, float height, float width, int timeSpan) {
     Plot myPlot;
@@ -169,7 +169,7 @@ Plot linePlot(float posX, float posY, std::vector<float> dataPoints,
    
 }
 
-
+// Returns a two line plot with a title and axes
 Plot2 twoLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, std::vector<float>& dataPoints3,
     sf::Font& font, std::string title, float height, float width, int timeSpan) {
     Plot2 myPlot;
@@ -203,7 +203,7 @@ Plot2 twoLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, std:
     sf::Text theTitle;
     theTitle.setFont(font);
     theTitle.setCharacterSize(12);
-    theTitle.setPosition(posX +(width)/2,posY-height-15);//posX+width/2 , posY - height-20);
+    theTitle.setPosition(posX +(width)/2,posY-height-15);
     theTitle.setFillColor(sf::Color::White);
     theTitle.setString(title);
     theTitle.setOrigin(theTitle.getGlobalBounds().width/2, 0);
@@ -357,7 +357,7 @@ Plot2 twoLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, std:
     yAxis75.setString(m75);
 
     //Twice
-    if((maxDataPoint - minDataPoint) != 0.0) {//Removed if timeframe==0
+    if((maxDataPoint - minDataPoint) != 0.0) {
         for (int i = 0; i < std::min(static_cast<int>(dataPoints2.size()), timeSpan); i++) {
             chartLines[i].position = sf::Vector2f(posX + 1.0 * i * width / (timeSpan * 1.0),
                 posY - height * (dataPoints2[i]- minDataPoint) / (maxDataPoint - minDataPoint));
@@ -415,7 +415,7 @@ Plot2 twoLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, std:
     return myPlot;
 
 }
-
+//Returns a three line plot with a title, y axis label, and x axis label
 Plot3 threeLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, std::vector<float>& dataPoints3,
     std::vector<float>& dataPoints4, sf::Font& font, std::string title, float height, float width, int timeSpan) {
 
@@ -453,7 +453,7 @@ Plot3 threeLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, st
     sf::Text theTitle;
     theTitle.setFont(font);
     theTitle.setCharacterSize(12);
-    theTitle.setPosition(posX + width / 2, posY - height - 15);//posX+width/2 , posY - height-20);
+    theTitle.setPosition(posX + width / 2, posY - height - 15);
     theTitle.setFillColor(sf::Color::White);
     theTitle.setString(title);
     theTitle.setOrigin(theTitle.getGlobalBounds().width / 2, 0);
@@ -678,7 +678,7 @@ Plot3 threeLinesPlot(float posX, float posY, std::vector<float>& dataPoints2, st
     return myPlot;
 
 }
-
+// Returns a pie chart with two data sets
 Plot4 pieChart(float posX, float posY,std::vector<float> dataPoints, std::vector<float> dataPoints2
     , sf::Font& font, std::string title, float radius) {
     Plot4 myPlot;
@@ -758,7 +758,7 @@ else {
 }
 
 
-
+// Returns a pie chart with an outer circle (Displays two percentages).
 Plot5 pieChart2(float posX, float posY, std::vector<float> dataPoints, std::vector<float> dataPoints2,
     std::vector<float> dataPoints3, std::vector<float> dataPoints4,
     sf::Font& font, std::string title, float radius) {

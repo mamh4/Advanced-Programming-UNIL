@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 
+//Parameters for the fauna defined for each class. example speed (slowest is 0.5, highest is 1.5) for for class 1, 1.5 to 2.5 for class 2, 2.5 to 3.5 for class 3
 GeneticTraitInterval preySpeedRange = {
     "Speed",
     {0.5 , 1.5 , 2.5 , 3.5 }

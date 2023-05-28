@@ -90,7 +90,7 @@ void Fauna::interact(Organism* organism, std::vector<Organism*>& organismVector)
 void Fauna::computeUtility(float distanceSquared, Organism* targetOrganism, std::vector<float>& directionalUtility, std::vector<Organism*>& possibleCollisions, float& maxInteractionUtility, Organism*& maxInteractionUtilityTarget) {
 }
 
-//Takes the organism vector as parameter and removes itself from the vector
+//Takes the organism vector as parameter and removes itself from the vector i.e. death
 void Fauna::dies(std::vector<Organism*>& organismVector) {
     this->deathReport();
     if (Predator* myPredator = dynamic_cast<Predator*>(this)) {
@@ -150,15 +150,19 @@ void Fauna::ageing() {
     }
 }
 
+//First the organism ages by 1. The energy is reduced by the metabolic rate. If the energy is less than 0, the organism dies.
+//If the organism is fertile, it has a chance to reproduce.
+//There is probability of 1% per year of life that the organism dies.
+//The probability of death increases with age.
+//The fauna then iterates through the organism vector, identifies the set of possible actions and assigns utility to each action.
+//The action with the highest utility is then executed.
+//If the action is interaction the fauna will not move and will pursue the interaction.
+//If the action is to move , the fauna will move in the direction with the highest utility.
+//Color changes based on energy.
 
 void Fauna::update(std::vector<Organism*>& organismVector) {
     this->ageing(); 
     this->setEnergy(this->getEnergy() - std::min(this->getMetabolicRate(), this->getEnergy()));
-
-
-    float childRadius = 3.0;
-    float adultRadius = 6.0; 
-    int maxAge = 12000; 
 
     if ((1.0 * (rand() % 100) < (100 * std::pow(((1 + this->getAge()) / 6000), 10)) or (this->getEnergy() <= 0))) {
         this->dies(organismVector);
@@ -167,7 +171,8 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
     else {
         int minFertilityAge = 50;
         int maxFertilityAge = 100;
-        if ((1.0 * (rand() % 100) < std::max(0.0, (100 * std::pow(((this->getAge() - minFertilityAge) / (maxFertilityAge - minFertilityAge)), 10)))) and not this->getFertile()) {
+        if ((1.0 * (rand() % 100) < std::max(0.0, (100 * std::pow(((this->getAge() - minFertilityAge) / (maxFertilityAge - minFertilityAge)), 10)))) and 
+            not this->getFertile()) {
             this->setFertile(true);
 
             if (Prey* myPrey = dynamic_cast<Prey*>(this)) {
@@ -191,14 +196,10 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
         }
         for (int k = 0; k <= this->getSpeed(); k++) { // BEGINING OF TURN LOOP 
 
-            int boostingMomentTracker = 0 ; 
-            std::string boostingReport = "Boosting report: "; 
-
             float distSquare;
             float angleBetween = 0.0;
 
             float maxDirectionalUtility = 0;
-            //float maxInteractionUtility = -1000.0;
             float maxInteractionUtility = 0.0;
 
             Organism* maxInteractionUtilityTarget = nullptr;
@@ -209,10 +210,8 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
             std::vector<Organism*> possibleCollisions;
 
             for (int i = 0; i < organismVector.size(); i++) {
-                //TRY organismVector.at(i)->getRadius() print maybe
-                distSquare = distanceSquared(organismVector.at(i), this);//organismvector at get radius is read as an uninitialised organism
+                distSquare = distanceSquared(organismVector.at(i), this);
                 if ((distSquare > 0.0001) and (distSquare < std::pow(this->getVisionRange() - organismVector.at(i)->getRadius(), 2))) {
-                    //   this->computeUtility(distSquare, organismVector.at(i), directionalUtility, maxDirectionalUtility , maxDirectionalUtilityTarget , possibleCollisions, maxInteractionUtility , maxInteractionUtilityTarget ); 
                     this->computeUtility(distSquare, organismVector.at(i), directionalUtility, possibleCollisions, maxInteractionUtility, maxInteractionUtilityTarget);
                 }
             }
@@ -245,14 +244,14 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
             bool validDirectionFound = false ; 
             for (int i = 0; i < directionalUtility.size(); i++) {
                 if (directionalUtility.at(i) != 0.0) {
-                    noDirectionalUtility = false; // CHECK VALIDITY OR NOT ? 
+                    noDirectionalUtility = false; 
                 }
                 if (not validDirectionFound and directionalSelector.at(i)){
                     validDirectionFound = true ; 
                     maxDirectionalUtility = directionalUtility.at(i) ; 
                 }
             }
-            if (validDirectionFound){ // MAYBE ADD VALUES WITH COMPARABLE UTILITIES TO THE LIST ? INSTEAD OF JUST THE EQUAL ONES ? STANDARD DEVIATION KIND OF 
+            if (validDirectionFound){
                 for (int i = 0; i < directionalUtility.size(); i++) {
                     if (directionalUtility.at(i) != 0.0) {
                         noDirectionalUtility = false;
@@ -272,37 +271,29 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
                 }
             }
 
-           if ((maxDirectionalUtility >= maxInteractionUtility)) { // O by default, eliminates negative utility interactions 
+           if (maxDirectionalUtility >= maxInteractionUtility) { // O by default, eliminates negative utility interactions 
                 if (not noDirectionalUtility and validDirectionFound) {
-                    //RANDOM PICK OF DIRECTION
+                    //RANDOM PICK OF DIRECTION IF NO CLEAR MAXIMUM
                     int numberOfValidMaxUtilityDirections  = 0 ;
-                    boostingReport = boostingReport +  "I am looking for my next move " ; 
                     for (int i = 0; i < directionalSelector.size(); i++) {
                         if (directionalSelector.at(i)){
                             numberOfValidMaxUtilityDirections ++ ; 
                         }
                     }
-                    boostingReport = boostingReport +  " - the number of valid directions with max utility is : " + std::to_string( numberOfValidMaxUtilityDirections)  ; 
                     int decsionalCounter = 0 ;                     
                     int decisionalRand = 0 ; 
                     decisionalRand = (rand() % numberOfValidMaxUtilityDirections) ; 
-                    boostingReport = boostingReport +  " - the random number is : " +  std::to_string(decisionalRand) ; 
                     for (int i = 0; i < directionalSelector.size(); i++){
                         if (directionalSelector.at(i)){
-                            boostingReport = boostingReport + "   - the direction " +  std::to_string(i) + "is valid -  "; 
                             if (decsionalCounter == decisionalRand){
                                 this->move(i);
                                 decsionalCounter ++ ; 
-                                boostingMomentTracker ++ ; 
-                                boostingReport = boostingReport +  "   - counter is equal to. " +  std::to_string(decsionalCounter)  + "  matching the random number " +   std::to_string(decisionalRand) + "   I am moving towards   "  + std::to_string(  i ) +  "  -  " ; 
                             }
                             else {
                                 decsionalCounter ++ ; 
-                                boostingReport = boostingReport + "  -  counter is equal to.  " +  std::to_string( (decsionalCounter -1)  ) + "   NOT matching the random number.  " +  std::to_string( decisionalRand ) +  "   I am NOT moving towards    "  + std::to_string( i  ) +  "  -  " ; 
                             }
                         }
                         else{
-                            boostingReport = boostingReport + "   - the direction "  + std::to_string( i ) + "is NOT valid -  ";
                         }
                     } 
                 }
@@ -351,7 +342,7 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
     this->setShape(newShape);
     }
 }
-
+// Takes the genetic traits of the parents and returns the genetic traits of the offspring
 float geneticEngine (std::string speciesName, std::string traitName, float parent1TraitValue, float parent2TraitValue) {
     float offspringTraitValue = 0.0 ; 
 
@@ -372,7 +363,7 @@ float geneticEngine (std::string speciesName, std::string traitName, float paren
             while (j < geneticDatabase[i].geneticTraitIntervals.size() and not traitFound) {
                 if (geneticDatabase[i].geneticTraitIntervals[j].traitName == traitName) {
                     traitFound = true ; 
-                    geneticTraitInterval = geneticDatabase[i].geneticTraitIntervals[j].traitRange; // = geneticDatabase[i].geneticTraitIntervals[j].traitRange ; 
+                    geneticTraitInterval = geneticDatabase[i].geneticTraitIntervals[j].traitRange;
                 }
                 j++ ;
             }
@@ -404,7 +395,7 @@ float geneticEngine (std::string speciesName, std::string traitName, float paren
     return offspringTraitValue ; 
 }
 
-
+//Collects the statistics of dead organisms to view in the death report
 void Fauna::deathReport() {
 	std::string currentSpecies; 
 	std::vector<std::string> traitNameList ; 
@@ -468,7 +459,7 @@ void Fauna::deathReport() {
 						if (summaryStatistics[i].traitSummaryStatisticVector[j].traitName == currentTrait) {
 						traitFound = true ; 
 						summaryStatistics[i].traitSummaryStatisticVector[j].population[classIndex] += 1.0 ; 
-						summaryStatistics[i].traitSummaryStatisticVector[j].sumOfAgesAtDeath[classIndex] += this->getAge() ; 
+						summaryStatistics[i].traitSummaryStatisticVector[j].sumOfAgesAtDeath[classIndex] += this->getAge() / frameRate; 
 						summaryStatistics[i].traitSummaryStatisticVector[j].sumOfOffsprings[classIndex] += this->getNumberOfOffspring() ; 
 						}
 					j++ ;

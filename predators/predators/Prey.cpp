@@ -28,6 +28,11 @@ float Prey::getPredatorAversion() {
 	return this->predatorAversion;
 }
 
+//Is invoked by the update method of the Fauna class. Computes the utility of interacting with an organism and stores it in the directionalUtility vector.
+//computes the utility of interacting with the organism with the highest utility and stores it in maxInteractionUtility.
+//Also stores the organism in the possibleCollisions vector if it is within the interaction range.
+//The utility is spread out onto the half circle. i.e if the prey gains + utility to move 90 degrees but the action is blocked due to collision it can circle it.
+// Prey gain utility to run in opposite direction of predators. The utility is based on the predators aversion and the distance to the predator.
 void Prey::computeUtility(float distanceSquared, Organism* targetOrganism, std::vector<float>& directionalUtility, std::vector<Organism*>& possibleCollisions,
 	float& maxInteractionUtility, Organism*& maxInteractionUtilityTarget) {
 
@@ -55,7 +60,7 @@ void Prey::computeUtility(float distanceSquared, Organism* targetOrganism, std::
 			}
 		}
 		else if (Predator* myPredator = dynamic_cast<Predator*>(targetOrganism)) {
-			currentUtility = 50.0 * (1 + this->getPredatorAversion()); // 1000 AS DEATH SCORE ----> DISCUSS 
+			currentUtility = 50.0 * (1 + this->getPredatorAversion());
 			int oppositeCurrentIntegerDirection = (((angleSectionNumber / 2) + currentIntegerDirection) % angleSectionNumber);
 			directionalUtility[oppositeCurrentIntegerDirection] += currentUtility;
 			for (int l = 1; l <= (angleSectionNumber / 4); l++) {
@@ -84,7 +89,7 @@ void Prey::computeUtility(float distanceSquared, Organism* targetOrganism, std::
 
 		distanceToInterraction = sqrt(distanceSquared) - this->getRadius() - targetOrganism->getRadius();
 
-		distancefactor = proximityEffectFactor(0, this->getVisionRange(), distanceToInterraction);// USE VISION RANGE OR % OF IT ? 
+		distancefactor = proximityEffectFactor(0, this->getVisionRange(), distanceToInterraction);
 
 		if (Prey* myPrey = dynamic_cast<Prey*>(targetOrganism)) {
 			if ((this->getSex() != myPrey->getSex()) and this->getFertile() and myPrey->getFertile() and (myPrey->getEnergy() > 1.5 * baseReproductionCost)) {
@@ -94,7 +99,7 @@ void Prey::computeUtility(float distanceSquared, Organism* targetOrganism, std::
 			}
 		}
 		else if (Predator* myPredator = dynamic_cast<Predator*>(targetOrganism)) {
-			currentUtility = 15.0 * distancefactor * (1 + this->getPredatorAversion()); // 1000 arbitraty as death score  Then 50 then 25 
+			currentUtility = 15.0 * distancefactor * (1 + this->getPredatorAversion());
 			int oppositeCurrentIntegerDirection = (((angleSectionNumber / 2) + currentIntegerDirection) % angleSectionNumber);
 			directionalUtility[oppositeCurrentIntegerDirection] += currentUtility;
 			for (int l = 1; l <= (angleSectionNumber / 4); l++) {
@@ -123,9 +128,12 @@ void Prey::computeUtility(float distanceSquared, Organism* targetOrganism, std::
 	}
 }
 
+// Prey can interact with prey, flora and other predators.
+// If the prey is fertile and the other prey is fertile, both have enough energy to reproduce and is computed to be their max utility, they will try reproduce.
+// Reproduction is prevented if there is no place near the mother to give birth. Or the organisms vector reached size of 300, to avoid it growing out of control.
+// Prey also gain utilty from eating flora to get energy. they would absorb enegy from the flora.
 void Prey::interact(Organism* targetOrganism, std::vector<Organism*>& organismVector) {
 	if(Flora* myFlora = dynamic_cast<Flora*>(targetOrganism)){
-		// CLASS CONST OR ATTRIBUTE ? Maximum amount of energy the predator can take from a prey in one interaction 
 		float absorbedEnergy;
 		absorbedEnergy = std::min(energyAbsorbtionRate, targetOrganism->getEnergy());
 		targetOrganism->setEnergy(targetOrganism->getEnergy() - absorbedEnergy);
@@ -185,39 +193,29 @@ void Prey::interact(Organism* targetOrganism, std::vector<Organism*>& organismVe
 
 		if (validCandidateBirthPlace and organismVector.size()<=300) {
 
-			bool sex; //= false;//rand() % 2 == 0 ? true : false;
+			bool sex = (rand() % 2 == 0);
 
-			int randomSexDetermination;
-			randomSexDetermination = rand() % 2;
-			sex = (randomSexDetermination == 0);
-
-			int speed = 1;//rand() % 10 + 1;
+			int speed = 1;
 			speed = static_cast<int> (geneticEngine("Prey", "Speed", this->getSpeed(), myPrey->getSpeed()));
-			//std::cout << "Speed test genetics Engine " << speed << std::endl;
 
-			float hungerSensitivity = 1;//rand() % 100 + 1
+			float hungerSensitivity = 1;
 			hungerSensitivity = geneticEngine("Prey", "Hunger Sensitivity", this->getHungerSensitivity(), myPrey->getHungerSensitivity());
-			//std::cout << "Hunger Sensitivity test genetics Engine " << hungerSensitivity << std::endl;
 
-			float metabolicRate = 0.1;//static_cast<float>(rand() % 10 + 1) / 10.0f;
+			float metabolicRate = 0.1;
 			metabolicRate = geneticEngine("Prey", "Metabolic Rate", this->getMetabolicRate(), myPrey->getMetabolicRate());
-			//std::cout << "Metabolic Rate test genetics Engine " << metabolicRate << std::endl;
 
-			int lustLevel = 1;//rand() % 100 + 1;
+			int lustLevel = 1;
 			lustLevel = geneticEngine("Prey", "Lust Level", this->getLustLevel(), myPrey->getLustLevel());
-			//std::cout << "Lust Level test genetics Engine " << lustLevel << std::endl;
 
-			int visionRange = 250; //rand() % 100 + 1;
+			int visionRange = 250;
 			visionRange = geneticEngine("Prey", "Vision Range", this->getVisionRange(), myPrey->getVisionRange());
-			//std::cout << "Vision Range test genetics Engine " << visionRange << std::endl;
 
-			int predatorAversion = 1;//rand() % 100 + 1;
+			int predatorAversion = 1;
 			predatorAversion = geneticEngine("Prey", "Predator Aversion", this->getPredatorAversion(), myPrey->getPredatorAversion());
-			//std::cout << "Predator Aversion test genetics Engine " << predatorAversion << std::endl;
 
 
 			Prey* offspring = new Prey(candidateBirthPlaceX, candidateBirthPlaceY,
-				childRadius, baseReproductionCost*2.0 , sex, speed, hungerSensitivity, metabolicRate, lustLevel, visionRange, predatorAversion);//Above parameters cause program failure!
+			childRadius, baseReproductionCost*2.0 , sex, speed, hungerSensitivity, metabolicRate, lustLevel, visionRange, predatorAversion);
 			organismVector.push_back(offspring);
 
 			this->setEnergy(this->getEnergy() - baseReproductionCost);

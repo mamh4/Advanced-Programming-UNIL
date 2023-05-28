@@ -24,6 +24,10 @@ Predator::Predator(float myPosX, float myPosY, float myRadius, float myEnergy,bo
 
 }
 
+//Is invoked by the update method of the Fauna class. Computes the utility of interacting with an organism and stores it in the directionalUtility vector.
+//computes the utility of interacting with the organism with the highest utility and stores it in maxInteractionUtility.
+//Also stores the organism in the possibleCollisions vector if it is within the interaction range.
+//The utility is spread out onto the half circle. i.e if the predator gains + utility to move 90 degrees but the action is blocked due to collision it can circle it.
 void Predator::computeUtility(float distanceSquared, Organism* targetOrganism, std::vector<float>& directionalUtility , std::vector<Organism*>& possibleCollisions, 
 	float& maxInteractionUtility , Organism*& maxInteractionUtilityTarget ) {
 
@@ -94,6 +98,10 @@ void Predator::computeUtility(float distanceSquared, Organism* targetOrganism, s
 	}
 }
 
+// Predators can interact with prey and other predators.
+// If the predator is fertile and the other predator is fertile, both have enough energy to reproduce and is computed to be their max utility, they will try reproduce.
+// Reproduction is prevented if there is no place near the mother to give birth. Or the organisms vector reached size of 300, to avoid it growing out of control.
+// Predators also gain utilty from hunting prey to get energy. they would absorb enegy from the prey.
 void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organismVector) {
 	if(Prey* myPrey = dynamic_cast<Prey*>(targetOrganism)){
 		float absorbedEnergy;
@@ -156,38 +164,34 @@ void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organi
 		
 		if (validCandidateBirthPlace and organismVector.size() <= 300) {
 
-			float energy = 2*baseReproductionCost;//rand() % 100 + 1; 2* BASEREPRODZCTION COST 
-			bool sex; //= false;//rand() % 2 == 0 ? true : false;
+			float energy = 2*baseReproductionCost;
+			bool sex;
 
 			int randomSexDetermination;
 			randomSexDetermination = rand() % 2;
 			sex = (randomSexDetermination == 0);
 
-			int speed = 1;//rand() % 10 + 1;
+			int speed = 1;
 			speed = static_cast<int> (geneticEngine("Predator", "Speed", this->getSpeed(), myPred->getSpeed()));
-			//std::cout << "Speed test genetics Engine " << speed << std::endl; 
 
-			float hungerSensitivity = 1;//rand() % 100 + 1
+			float hungerSensitivity = 1;
 			hungerSensitivity = geneticEngine("Predator", "Hunger Sensitivity", this->getHungerSensitivity(), myPred->getHungerSensitivity());
-			//std::cout << "Hunger Sensitivity test genetics Engine " << hungerSensitivity << std::endl; 
 
-			float metabolicRate = 0.1;//static_cast<float>(rand() % 10 + 1) / 10.0f;
+			float metabolicRate = 0.1;
 			metabolicRate = geneticEngine("Predator", "Metabolic Rate", this->getMetabolicRate(), myPred->getMetabolicRate());
-			//std::cout << "Metabolic Rate test genetics Engine " << metabolicRate << std::endl; 
 
-			int lustLevel = 1;//rand() % 100 + 1;
+			int lustLevel = 1;
 			lustLevel = geneticEngine("Predator", "Lust Level", this->getLustLevel(), myPred->getLustLevel());
-			//std::cout << "Lust Level test genetics Engine " << lustLevel << std::endl; 
 
-			int visionRange = 250; //rand() % 100 + 1;
+			int visionRange = 250;
 			visionRange = geneticEngine("Predator", "Vision Range", this->getVisionRange(), myPred->getVisionRange());
 
 			Predator* offspring = new Predator(candidateBirthPlaceX, candidateBirthPlaceY,
-			childRadius, energy, sex, speed, hungerSensitivity, metabolicRate, lustLevel, visionRange);//Above parameters cause program failure!
+			childRadius, energy, sex, speed, hungerSensitivity, metabolicRate, lustLevel, visionRange);
 			organismVector.push_back(offspring);
 
 			this->setEnergy(this->getEnergy() - baseReproductionCost);
-			targetOrganism->setEnergy(targetOrganism->getEnergy() - baseReproductionCost);  // MOVE TO AFTER CHEcK IF REPRO POSSIBLE ELSE ENERGY TAKEN WITH NO OFFSPRING 
+			targetOrganism->setEnergy(targetOrganism->getEnergy() - baseReproductionCost);
 			this->setNumberOfOffspring(this->getNumberOfOffspring() + 1);
 			if (Predator* myPredator = dynamic_cast<Predator*>(this)){
 				myPredator->setNumberOfOffspring(myPredator->getNumberOfOffspring() + 1);
