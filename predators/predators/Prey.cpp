@@ -196,22 +196,22 @@ void Prey::interact(Organism* targetOrganism, std::vector<Organism*>& organismVe
 			bool sex = (rand() % 2 == 0);
 
 			int speed = 1;
-			speed = static_cast<int> (mutateOffSpring("Prey", "Speed", this->getSpeed(), myPrey->getSpeed()));
+			speed = static_cast<int> (mutateOffspring("Prey", "Speed", this->getSpeed(), myPrey->getSpeed()));
 
 			float hungerSensitivity = 1;
-			hungerSensitivity = mutateOffSpring("Prey", "Hunger Sensitivity", this->getHungerSensitivity(), myPrey->getHungerSensitivity());
+			hungerSensitivity = mutateOffspring("Prey", "Hunger Sensitivity", this->getHungerSensitivity(), myPrey->getHungerSensitivity());
 
 			float metabolicRate = 0.1;
-			metabolicRate = mutateOffSpring("Prey", "Metabolic Rate", this->getMetabolicRate(), myPrey->getMetabolicRate());
+			metabolicRate = mutateOffspring("Prey", "Metabolic Rate", this->getMetabolicRate(), myPrey->getMetabolicRate());
 
 			int lustLevel = 1;
-			lustLevel = mutateOffSpring("Prey", "Lust Level", this->getLustLevel(), myPrey->getLustLevel());
+			lustLevel = mutateOffspring("Prey", "Lust Level", this->getLustLevel(), myPrey->getLustLevel());
 
 			int visionRange = 250;
-			visionRange = mutateOffSpring("Prey", "Vision Range", this->getVisionRange(), myPrey->getVisionRange());
+			visionRange = mutateOffspring("Prey", "Vision Range", this->getVisionRange(), myPrey->getVisionRange());
 
 			int predatorAversion = 1;
-			predatorAversion = mutateOffSpring("Prey", "Predator Aversion", this->getPredatorAversion(), myPrey->getPredatorAversion());
+			predatorAversion = mutateOffspring("Prey", "Predator Aversion", this->getPredatorAversion(), myPrey->getPredatorAversion());
 
 
 			Prey* offspring = new Prey(candidateBirthPlaceX, candidateBirthPlaceY,

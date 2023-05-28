@@ -455,17 +455,17 @@ void startSimulation() {
             validRespawnPlace = true;
         }
         float energy = 1000.0;
-        float visionRange = mutateOffSpring("Predator", "Vision Range", averagePredatorVisionRange, averagePredatorVisionRange);
+        float visionRange = mutateOffspring("Predator", "Vision Range", averagePredatorVisionRange, averagePredatorVisionRange);
         bool sex = rand() % 2 == 0 ? true : false;
-        int speed = static_cast<int>(mutateOffSpring("Predator", "Speed", averagePredatorSpeed, averagePredatorSpeed));
-        float hungerLevel = mutateOffSpring("Predator", "Hunger Level", averagePredatorHungerSensitivity, averagePredatorHungerSensitivity);
-        float metabolicRate = mutateOffSpring("Predator", "Metabolic Rate", averagePredatorMetabolicRate, averagePredatorMetabolicRate);
-        int lustLevel = mutateOffSpring("Predator", "Lust Level", averagePredatorLustLevel, averagePredatorLustLevel);
+        int speed = static_cast<int>(mutateOffspring("Predator", "Speed", averagePredatorSpeed, averagePredatorSpeed));
+        float hungerLevel = mutateOffspring("Predator", "Hunger Level", averagePredatorHungerSensitivity, averagePredatorHungerSensitivity);
+        float metabolicRate = mutateOffspring("Predator", "Metabolic Rate", averagePredatorMetabolicRate, averagePredatorMetabolicRate);
+        int lustLevel = mutateOffspring("Predator", "Lust Level", averagePredatorLustLevel, averagePredatorLustLevel);
 
         Predator* myPredator = new Predator(posX, posY, radius, energy, sex, speed, hungerLevel, metabolicRate, lustLevel, visionRange);
         organismVector.push_back(myPredator);
     }
-
+    
     for (int i = 0; i < inputNrPrey; i++) {
         bool validRespawnPlace = false;
         float posX = isStandardModeFocused ? rand() % windowWidth : (rand() % (windowWidth - windowWidth / 2 + 1)) + windowWidth / 2;
@@ -487,13 +487,13 @@ void startSimulation() {
             validRespawnPlace = true;
         }
         float energy = 1000.0;
-        float visionRange = mutateOffSpring("Prey", "Vision Range", averagePredatorVisionRange, averagePredatorVisionRange);
+        float visionRange = mutateOffspring("Prey", "Vision Range", averagePredatorVisionRange, averagePredatorVisionRange);
         bool sex = rand() % 2 == 0 ? true : false;
-        int speed = static_cast<int>(mutateOffSpring("Prey", "Speed", averagePredatorSpeed, averagePredatorSpeed));
-        float hungerLevel = mutateOffSpring("Prey", "Hunger Level", averagePredatorHungerSensitivity, averagePredatorHungerSensitivity);
-        float metabolicRate = mutateOffSpring("Prey", "Metabolic Rate", averagePredatorMetabolicRate, averagePredatorMetabolicRate);
-        int lustLevel = mutateOffSpring("Prey", "Lust Level", averagePredatorLustLevel, averagePredatorLustLevel);
-        float predatorAversion = mutateOffSpring("Prey", "Predator Aversion", averagePreyPredatorAversion, averagePreyPredatorAversion);
+        int speed = static_cast<int>(mutateOffspring("Prey", "Speed", averagePredatorSpeed, averagePredatorSpeed));
+        float hungerLevel = mutateOffspring("Prey", "Hunger Level", averagePredatorHungerSensitivity, averagePredatorHungerSensitivity);
+        float metabolicRate = mutateOffspring("Prey", "Metabolic Rate", averagePredatorMetabolicRate, averagePredatorMetabolicRate);
+        int lustLevel = mutateOffspring("Prey", "Lust Level", averagePredatorLustLevel, averagePredatorLustLevel);
+        float predatorAversion = mutateOffspring("Prey", "Predator Aversion", averagePreyPredatorAversion, averagePreyPredatorAversion);
 
         Prey* myPrey = new Prey(posX, posY, radius, energy, sex, speed, hungerLevel, metabolicRate, lustLevel, visionRange, predatorAversion);
         organismVector.push_back(myPrey);

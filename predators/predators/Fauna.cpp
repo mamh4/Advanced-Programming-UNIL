@@ -343,7 +343,7 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
     }
 }
 // Takes the genetic traits of the parents and returns the genetic traits of the offspring
-float mutateOffSpring (std::string speciesName, std::string traitName, float parent1TraitValue, float parent2TraitValue) {
+float mutateOffspring (std::string speciesName, std::string traitName, float parent1TraitValue, float parent2TraitValue) {
     float offspringTraitValue = 0.0 ; 
 
     bool speciesFound = false ; 

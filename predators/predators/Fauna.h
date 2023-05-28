@@ -75,4 +75,4 @@ public:
 };
 
 
-    float mutateOffSpring (std::string speciesName, std::string traitName, float parent1TraitValue, float parent2TraitValue); 
+    float mutateOffspring (std::string speciesName, std::string traitName, float parent1TraitValue, float parent2TraitValue); 
