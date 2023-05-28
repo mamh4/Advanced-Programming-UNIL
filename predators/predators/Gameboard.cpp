@@ -17,7 +17,7 @@
 #include <random>
 #include <thread>
 
-
+/////////////////////////////////////////////////////////////// Tracking variables for plots and stats /////////////////////////////////////////////////////////////////
 
 int simulationTime = 0;
 
@@ -47,14 +47,18 @@ float totalAgePrey = 0.0;
 float avgAgePredator = 0.0;
 float avgAgePrey = 0.0;
 
+/////////////////////////////////////////////////////////// Tracking variables for plots and stats End /////////////////////////////////////////////////////////////////
 
-const int maxInput = 50;
 
 
 int main()
-{   
-    /////////////////////////////////////////////////////// Genetic Engine Data //////////////////////////////////////////////////////////
-    
+{
+
+    ////////////////////////////////////////////////////////////////////// Genetic Engine Data /////////////////////////////////////////////////////////////////////////
+
+    /* The input parameters for the initial population is set to be normally distributed around the average values of the genetic intervals. We leverage our implementation
+    * of the Genetic Intervals class to generate the initial population of prey and predators.
+    */
     int averagePredatorSpeed = (geneticDatabase[1].geneticTraitIntervals[0].traitRange[1] + geneticDatabase[1].geneticTraitIntervals[0].traitRange[2]) / 2.0;
     float averagePredatorVisionRange = (geneticDatabase[1].geneticTraitIntervals[4].traitRange[1] + geneticDatabase[1].geneticTraitIntervals[4].traitRange[2]) / 2.0;
     float averagePredatorMetabolicRate = (geneticDatabase[1].geneticTraitIntervals[2].traitRange[1] + geneticDatabase[1].geneticTraitIntervals[2].traitRange[2]) / 2.0;
@@ -68,18 +72,20 @@ int main()
     float averagePreyHungerSensitivity = (geneticDatabase[0].geneticTraitIntervals[1].traitRange[1] + geneticDatabase[0].geneticTraitIntervals[1].traitRange[2]) / 2.0;
     float averagePreyPredatorAversion = (geneticDatabase[0].geneticTraitIntervals[5].traitRange[1] + geneticDatabase[0].geneticTraitIntervals[5].traitRange[2]) / 2.0;
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////// Genetic Engine Data End ////////////////////////////////////////////////////////////////////////
 
-    //////////////////////////////////////////////////////// USER INPUT //////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////// USER INPUT /////////////////////////////////////////////////////////////////////////////
+
+    /* Here is all the UI code for the user input. We use SFML to create a window with input boxes for the user to input the number of predators, prey and flora. 
+    We then use our implementation of the Genetic Intervals class to generate the initial population of prey and predators.
+    */
+    
     int inputNrPred = 0;
     int inputNrPrey = 0;
     int inputNrFlora = 0;
-
+    const int maxInput = 50;
   
     sf::RenderWindow windowParam(sf::VideoMode(350, 300), "Input Box Example");
-
-    
-    
 
     sf::Texture backgroundTexture;
     if (!backgroundTexture.loadFromFile("background.png")) {
@@ -94,6 +100,13 @@ int main()
     
     sf::Font font;
     if (!font.loadFromFile("arial.ttf"))
+    {
+        std::cout << "Failed to load font!" << std::endl;
+        return -1;
+    }
+
+    sf::Font font2;
+    if (!font2.loadFromFile("aerial.ttf"))
     {
         std::cout << "Failed to load font!" << std::endl;
         return -1;
@@ -377,6 +390,15 @@ int main()
         versionText.setStyle(sf::Text::Italic);
         versionText.setPosition(280, 280);
 
+        sf::Text provideInputThenEnter;
+        provideInputThenEnter.setFont(font2);
+        provideInputThenEnter.setCharacterSize(10);
+        provideInputThenEnter.setFillColor(sf::Color::Black);
+        provideInputThenEnter.setString("Provide Input then hit Enter!");
+        provideInputThenEnter.setOrigin(provideInputThenEnter.getGlobalBounds().width / 2, provideInputThenEnter.getGlobalBounds().height / 2);
+        provideInputThenEnter.setPosition(175.f, 250.f);
+
+
         windowParam.clear(sf::Color::White);
         windowParam.draw(backgroundSprite);
         //Predator
@@ -403,64 +425,28 @@ int main()
         windowParam.draw(standardMode);
         windowParam.draw(standardModeTextPrompt);
 
+        //provide input then enter
+        windowParam.draw(provideInputThenEnter);
 
 
         windowParam.display();
     }
 
-
-    //////////////////////////////////////////////////////// USER INPUT END //////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////// USER INPUT END //////////////////////////////////////////////////////////////////////////////
    
-    /////////////////////////////////////////////////// Variable Initialisations /////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////// Variable Initialisations ////////////////////////////////////////////////////////////////////////
+
+    /* OrganismVector is used to storee all organisms. we start initialising predators, prey and flora according to user input.
+    * We then initlise the vectors contianing the statistics data.
+    */
+
 
     std::time_t seed = std::time(nullptr);
     srand(seed);
 
     std::vector<Organism*> organismVector;
     
-    /*
-    //TO BE DELETED Below
-    Predator* myPredator = new Predator(500, 600, 5, 2000, true, 1, 10, 1, 50, 800);
-    organismVector.push_back(myPredator);
-    Predator* myPredator2 = new Predator(475, 596, 5, 1000, false, 1, 10, 1, 50, 800);
-    organismVector.push_back(myPredator2);
-
-    Predator* myPredator3 = new Predator(500, 290, 2, 500, true, 1, 10, 1, 50, 800);
-    organismVector.push_back(myPredator3);
-
-    Predator* myPredator4 = new Predator(500, 290, 2, 600, true, 1, 10, 1, 50, 800);
-    organismVector.push_back(myPredator4);
-
-    Predator* myPredator5 = new Predator(330, 290, 2, 500, true, 1, 10, 1, 50, 800);
-    organismVector.push_back(myPredator5);
-    
-    Prey* myPrey = new Prey(400, 460, 7, 600, true, 2, 10, 0.1, 50, 900, 1);
-    organismVector.push_back(myPrey);
-       
-    Prey* myPrey2 = new Prey(400, 300, 3, 500, true, 3, 10, 1, 1, 300, 1);
-    organismVector.push_back(myPrey2);
-     
-    Prey* myPrey3 = new Prey(400, 450, 3, 700, false, 2, 10, 1, 1, 300, 1);
-    organismVector.push_back(myPrey3);
-
-    Flora* myFlora = new Flora(300, 300, 3, 50, 10);
-    organismVector.push_back(myFlora);
-
-    Flora* myFlora2 = new Flora(400, 400, 10, 50, 0.5);
-    organismVector.push_back(myFlora2);
-    */
-    //Flora* myFlora3 = new Flora(500, 500, 10, 1000, 0.5);
-    //organismVector.push_back(myFlora3);
-    //To be deleted Above
-
-    //UNCOMMENT
-    //std::cout << organismVector.at(0)->getType() << std::endl;
-    
-
-
-    
-    
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < inputNrPred; i++) {
         bool validRespawnPlace = false;
         float posX = isStandardModeFocused ? rand() % windowWidth : rand() % windowWidth /2 ;
         float posY = rand() % windowHeight;
@@ -492,7 +478,7 @@ int main()
         organismVector.push_back(myPredator);
     }
 
-    for (int i = 0; i < 50; i++) {
+    for (int i = 0; i < inputNrPrey; i++) {
         bool validRespawnPlace = false;
         float posX = isStandardModeFocused ? rand() % windowWidth : (rand() % (windowWidth - windowWidth / 2 + 1)) + windowWidth / 2;
         float posY = rand() % windowHeight;
@@ -512,7 +498,7 @@ int main()
             }
             validRespawnPlace = true;
         }
-        float energy = 500.0;
+        float energy = 1000.0;
         float visionRange = geneticEngine("Prey", "Vision Range", averagePredatorVisionRange, averagePredatorVisionRange);
         bool sex = rand() % 2 == 0 ? true : false;
         int speed = static_cast<int>(geneticEngine("Prey", "Speed", averagePredatorSpeed, averagePredatorSpeed));
@@ -525,7 +511,7 @@ int main()
         organismVector.push_back(myPrey);
     }
 
-    for (int i = 0; i < 50; i++) {
+    for (int i = 0; i < inputNrFlora; i++) {
         bool validRespawnPlace = false;
         float posX = rand() % windowWidth;
         float posY = rand() % windowHeight;
@@ -549,12 +535,7 @@ int main()
         float growthRate =11.425;// static_cast<float>(rand() % 10 + 1) * 10.0f;
         Flora* myFlora = new Flora(posX, posY, radius, energy, growthRate);
         organismVector.push_back(myFlora);
-    }
-
-
-
-    
-    
+    }    
 
     std::vector<float> numberOfFaunaAtTimeT;
     float totalNumberOfFauna = numberOfPrey + numberOfPredators;
@@ -596,14 +577,20 @@ int main()
     std::vector<float> avgAgePredatorAtTimeT;
     std::vector<float> avgAgePreyAtTimeT;
 
+    //////////////////////////////////////////////////////////////// Variable Initialisations End /////////////////////////////////////////////////////////////////////
 
 
-    /////////////////////////////////////////////// Simulation Window ////////////////////////////////////////////////////
+
+
+    ///////////////////////////////////////////////////////////////////// Simulation Window //////////////////////////////////////////////////////////////////////////
+
+    /* Here we create the window and set the frame rate, and then we enter the main loop of the program  
+    the one that handles events, draws the window, and processes user input until the program ends.
+    */
 
     sf::RenderWindow window(sf::VideoMode(windowWidth+paneWidth, windowHeight), "Prey vs Predator");
 
-
-    //Overlay on top of each other population counts!!!! with different colour plots based on flora, prey and pred
+    //Pane that will display the statistics
     sf::RectangleShape pane(sf::Vector2f(paneWidth, 720.f));
     pane.setPosition(sf::Vector2f(980.f, 0.f));
     pane.setFillColor(sf::Color(50,60,70));
@@ -621,15 +608,13 @@ int main()
                 window.close();
         }
 
-        
+        // Main programme, we call update method on each organism which invodes other functions influecing the behaviour of each organism.
         for (int i = 0; i < organismVector.size(); i++) {
-
             organismVector.at(i)->update(organismVector);
-
         }
 
 
-        // Simplified Survey Loop of Living Population 
+        // Simplified Survey Loop of Living Population to keep track of the energy flow in the system. We track it per species.
         totalEnergyFlora = 0.0 ;
         totalEnergyPrey = 0.0 ;
         totalEnergyPredator = 0.0 ;
@@ -645,18 +630,11 @@ int main()
             }
 		}
 
-
+        //update the summary statistics vectors
         numberOfPredatorsAtTimeT.push_back(numberOfPredators);
         numberOfPreyAtTimeT.push_back(numberOfPrey);
         totalNumberOfFauna = numberOfPrey + numberOfPredators;
         numberOfFaunaAtTimeT.push_back(totalNumberOfFauna);
-
-
-
-        //deal with issues when dying with energy becoming < 0
-        //if (totalEnergy < 0) { totalEnergy = 0; }
-        //if (totalEnergyPredator < 0) { totalEnergyPredator = 0; }
-       // if (totalEnergyPrey < 0) { totalEnergyPrey = 0; }
 
         totalEnergyOfFloraAtTimeT.push_back(totalEnergyFlora);
         totalEnergyOfPredatorAtTimeT.push_back(totalEnergyPredator);
@@ -680,18 +658,12 @@ int main()
 
         // Print statistics at the top left corner
         sf::Text text;
-        sf::Font font;
-        font.loadFromFile("arial.ttf");
-        if (!font.loadFromFile("arial.ttf")) {
-           
-        }
         text.setFont(font);
         text.setString("Simulation Time: " + std::to_string(simulationTime / 60) + "\n" +
             "Population: " + std::to_string(organismVector.size()) + "\n" +
             "Predators: " + std::to_string(numberOfPredators) + "\n" +
             "Prey: " + std::to_string(numberOfPrey) + "\n" +
             "Flora: " + std::to_string(numberOfFlora));
-        // +std::to_string(organismVector.size()));
         text.setCharacterSize(14);
         text.setFillColor(sf::Color::White);
 
@@ -699,25 +671,32 @@ int main()
         // clear the window
         window.clear(sf::Color::Black);
         
-        //Plot linePlot1 = linePlot(1010.0, 170.0,numberOfPredatorsAtTimeT, font,"Hello",120.0,250.0,2000);
+        /////////////////////////////////////////////////////////////// Simulation Window End //////////////////////////////////////////////////////////////////////////
+
+
+        /////////////////////////////////////////////////////////////////// Simulation pane ////////////////////////////////////////////////////////////////////////////
+
+        /* The pan contains all the plots and the legends of the organisms
+        */
+
+
+        // Population plot
         Plot2 mixedPlot = twoLinesPlot(1030.0, 170.0,numberOfPredatorsAtTimeT, numberOfPreyAtTimeT
             , font, "Total Population", 110.0, 225.0, 1800);
 
+        // Energy plot
         Plot3 mixedPlot2 = threeLinesPlot(1030.0, 330.0, totalEnergyOfPredatorAtTimeT, totalEnergyOfPreyAtTimeT,
             totalEnergyOfFloraAtTimeT, font, "Total Energy", 110.0, 225.0, 1800);
 
+        // Average Age plot
         Plot2 mixedPlot3 = twoLinesPlot(1030.0, 490.0 ,avgAgePredatorAtTimeT, avgAgePreyAtTimeT,
             font, "Average Age",110.0, 225.0, 1800);
         
-
-        //TO BE REPLACED WITH pieChart2 Plot 5 below
-        //Plot4 myPieChart = pieChart(1065.0, 605.0, numberOfPredatorsAtTimeT, numberOfFemalePredatorsAtTimeT,font,"% Female Predator");
-        //Plot4 myPieChart2 = pieChart(1200.0, 605.0, numberOfPreyAtTimeT, numberOfFemalePreyAtTimeT, font, "% Female Prey");
-
+        // Pie Charts Gender and fertility for Predators
         Plot5 myPieChart3 = pieChart2(1065.0, 605.0, numberOfPredatorsAtTimeT, numberOfFemalePredatorsAtTimeT,
             numberOfFertileFemalePredatorAtTimeT, numberOfFertileMalePredatorAtTimeT,font, "Predator", 30);
 
-        
+        // Pie Charts Gender and fertility for Prey
         Plot5 myPieChart4 = pieChart2(1200, 605.0, numberOfPreyAtTimeT, numberOfFemalePreyAtTimeT,
             numberOfFertileFemalePreyAtTimeT, numberOfFertileMalePreyAtTimeT, font, "Prey", 30);
 
@@ -725,6 +704,8 @@ int main()
         for (Organism* organism : organismVector) {
             window.draw(organism->getShape());
         }
+
+        // Draw the pane and the plots
         window.draw(pane);
         window.draw(text);
         
@@ -773,7 +754,6 @@ int main()
         window.draw(mixedPlot3.ylabel);
           
 
-        //tiral new Pie chart
         window.draw(myPieChart3.circle);
         window.draw(myPieChart3.title);
         window.draw(myPieChart3.xlabel);
@@ -794,23 +774,6 @@ int main()
         }
 
 
-
-        /*
-        window.draw(myPieChart.circle);
-        window.draw(myPieChart.title);
-        window.draw(myPieChart.xlabel);
-        for (int i = 0; i < myPieChart.chartlinesVector.size(); i++) {
-            window.draw(myPieChart.chartlinesVector[i]);
-        }
-
-
-        window.draw(myPieChart2.circle); 
-        window.draw(myPieChart2.title);
-        window.draw(myPieChart2.xlabel);
-        for (int i = 0; i < myPieChart2.chartlinesVector.size(); i++) {
-            window.draw(myPieChart2.chartlinesVector[i]);
-        }
-        */
         //Line Plots legend
         sf::RectangleShape predatorBox(sf::Vector2f(8.f, 8.f));
         predatorBox.setFillColor(sf::Color::Red);
@@ -893,22 +856,20 @@ int main()
         window.draw(femaleTextString);
         window.draw(fertileBox);
         window.draw(fertileTextString);
-            //window.draw(linePlot(1010.0, 170.0, dataPoints, "Hello")[1]);
-            //window.draw(linePlot(1010.0, 170.0, dataPoints, "Hello")[2]);
-
         
         simulationTime ++ ; 
         window.display();
     }
-    
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////// DEATH REPORT ////////////////////////////////////////////////////////////////// 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 
- 
+    /////////////////////////////////////////////////////////////// Simulation pane End ////////////////////////////////////////////////////////////////////////////
+
+    
+    //////////////////////////////////////////////////////////////////// DEATH REPORT ////////////////////////////////////////////////////////////////////////////// 
+    /* Show all summary statistics for dead orgarnisms.
+    */
+
 
     sf::RenderWindow windowSummary(sf::VideoMode(windowWidth + paneWidth, windowHeight), "Death Summary");
-
 
     float canvasWidth;
     float canvasHeight;
@@ -1020,10 +981,12 @@ int main()
                     std::string averageOffspringNumberAtDeath;
                     if (not (summaryStatistics[i].traitSummaryStatisticVector[j].population[k] == 0)) {
                         std::stringstream stream2;
-                        stream2 << std::fixed << std::setprecision(2) << ((1.0 * summaryStatistics[i].traitSummaryStatisticVector[j].sumOfAgesAtDeath[k]) / (1.0 * summaryStatistics[i].traitSummaryStatisticVector[j].population[k]));
+                        stream2 << std::fixed << std::setprecision(2) << ((1.0 * summaryStatistics[i].traitSummaryStatisticVector[j].sumOfAgesAtDeath[k]) / 
+                            (1.0 * summaryStatistics[i].traitSummaryStatisticVector[j].population[k]));
                         averageAgeAtDeath = stream2.str() ; 
                         std::stringstream stream3;
-                        stream3 << std::fixed << std::setprecision(2) << ((1.0 * summaryStatistics[i].traitSummaryStatisticVector[j].sumOfOffsprings[k]) / (1.0 * summaryStatistics[i].traitSummaryStatisticVector[j].population[k]));
+                        stream3 << std::fixed << std::setprecision(2) << ((1.0 * summaryStatistics[i].traitSummaryStatisticVector[j].sumOfOffsprings[k]) / 
+                            (1.0 * summaryStatistics[i].traitSummaryStatisticVector[j].population[k]));
                         averageOffspringNumberAtDeath = stream3.str() ; 
                     }
                     else {
@@ -1046,7 +1009,7 @@ int main()
 
 
         windowSummary.display();
-        
+        /////////////////////////////////////////////////////////////// DEATH REPORT End ////////////////////////////////////////////////////////////////////////////// 
     }
 
     return 0;
