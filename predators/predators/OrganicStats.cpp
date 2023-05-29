@@ -6,6 +6,7 @@
 #include "OrganicMaths.h"
 #include <iomanip>
 #include <sstream>
+#include "GeneticIntervals.h"
 
 //Trait summary statistics for the death report.
 TraitSummaryStatistics preySpeedSummaryStatistics = {
@@ -167,6 +168,58 @@ Plot linePlot(float posX, float posY, std::vector<float> dataPoints,
     myPlot.midValue = yAxisMid;
     return myPlot;
    
+}
+
+float mutateOffspring(std::string speciesName, std::string traitName, float parent1TraitValue, float parent2TraitValue) {
+    float offspringTraitValue = 0.0;
+
+    bool speciesFound = false;
+    bool traitFound = false;
+
+    std::vector<float> geneticTraitInterval;
+
+    int geneticRand = 0;
+
+    float parentsTraitValues[2] = { parent1TraitValue, parent2TraitValue };
+
+    int i = 0;
+    while (i < geneticDatabase.size() and not speciesFound) {
+        if (geneticDatabase[i].speciesName == speciesName) {
+            speciesFound = true;
+            int j = 0;
+            while (j < geneticDatabase[i].geneticTraitIntervals.size() and not traitFound) {
+                if (geneticDatabase[i].geneticTraitIntervals[j].traitName == traitName) {
+                    traitFound = true;
+                    geneticTraitInterval = geneticDatabase[i].geneticTraitIntervals[j].traitRange;
+                }
+                j++;
+            }
+        }
+        i++;
+    }
+
+    if (traitFound and speciesFound) {
+        int alleleCounter = 0;
+        for (float parentTraitValue : parentsTraitValues) {
+            if (parentTraitValue >= geneticTraitInterval[0] and parentTraitValue < geneticTraitInterval[1]) {
+
+            }
+            else if (parentTraitValue >= geneticTraitInterval[1] and parentTraitValue < geneticTraitInterval[2]) {
+                geneticRand = rand() % 2;
+                if (geneticRand == 1) {
+                    alleleCounter++;
+                }
+            }
+            else if (parentTraitValue >= geneticTraitInterval[2] and parentTraitValue < geneticTraitInterval[3]) {
+                alleleCounter++;
+            }
+        }
+        geneticRand = (rand() % 100);
+        offspringTraitValue = geneticTraitInterval[alleleCounter] + (geneticTraitInterval[alleleCounter + 1] -
+            geneticTraitInterval[alleleCounter]) * (0.5 + 0.5 * std::pow((-1 + 2 * geneticRand / 100.0), 5));
+    }
+
+    return offspringTraitValue;
 }
 
 // Returns a two line plot with a title and axes

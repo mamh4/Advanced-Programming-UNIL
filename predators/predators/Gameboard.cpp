@@ -81,7 +81,7 @@ void startSimulation() {
     int inputNrFlora = 0;
     const int maxInput = 50;
 
-    sf::RenderWindow windowParam(sf::VideoMode(350, 300), "Input Box Example");
+    sf::RenderWindow windowParam(sf::VideoMode(350, 300), "Main menu");
 
     sf::Texture backgroundTexture;
     backgroundTexture.loadFromFile("background.png");
@@ -256,6 +256,7 @@ void startSimulation() {
                         // Backspace was pressed
                         predatorInputString.pop_back();
                         predatorInputText.setString(predatorInputString);
+                        inputNrPred = predatorInputString.empty() ? 0 : std::stoi(predatorInputString);
                         //predator
                     }
 
@@ -292,6 +293,7 @@ void startSimulation() {
                         // Backspace was pressed
                         preyInputString.pop_back();
                         preyInputText.setString(preyInputString);
+                        inputNrPrey = preyInputString.empty() ? 0 : std::stoi(preyInputString);
                         //predator
                     }
 
@@ -328,6 +330,7 @@ void startSimulation() {
                         // Backspace was pressed
                         floraInputString.pop_back();
                         floraInputText.setString(floraInputString);
+                        inputNrFlora = floraInputString.empty() ? 0 : std::stoi(floraInputString);
                         //predator
                     }
 
@@ -368,7 +371,7 @@ void startSimulation() {
         maxInputString.setFillColor(sf::Color::Black);
         maxInputString.setString("Maximum input per species: 50.");
         maxInputString.setStyle(sf::Text::Italic);
-        maxInputString.setPosition(0, 280);
+        maxInputString.setPosition(5, 280);
 
         sf::Text versionText;
         versionText.setFont(font);
@@ -438,7 +441,7 @@ void startSimulation() {
         bool validRespawnPlace = false;
         float posX = isStandardModeFocused ? rand() % windowWidth : rand() % windowWidth / 2;
         float posY = rand() % windowHeight;
-        float radius = 3;
+        float radius = rand() %2 +2;
         while (not validRespawnPlace) {
             for (int j = 0; j < i; j++) {
                 float distanceSquare = pow(posX - organismVector.at(j)->getPosX(), 2) + pow(posY - organismVector.at(j)->getPosY(), 2);
@@ -470,7 +473,7 @@ void startSimulation() {
         bool validRespawnPlace = false;
         float posX = isStandardModeFocused ? rand() % windowWidth : (rand() % (windowWidth - windowWidth / 2 + 1)) + windowWidth / 2;
         float posY = rand() % windowHeight;
-        float radius = 3;
+        float radius = rand() % 2 + 2;
         while (not validRespawnPlace) {
             for (int j = 0; j < i; j++) {
                 float distanceSquare = pow(posX - organismVector.at(j)->getPosX(), 2) + pow(posY - organismVector.at(j)->getPosY(), 2);
@@ -486,7 +489,7 @@ void startSimulation() {
             }
             validRespawnPlace = true;
         }
-        float energy = 1000.0;
+        float energy = 500.0;
         float visionRange = mutateOffspring("Prey", "Vision Range", averagePredatorVisionRange, averagePredatorVisionRange);
         bool sex = rand() % 2 == 0 ? true : false;
         int speed = static_cast<int>(mutateOffspring("Prey", "Speed", averagePredatorSpeed, averagePredatorSpeed));
@@ -503,7 +506,7 @@ void startSimulation() {
         bool validRespawnPlace = false;
         float posX = rand() % windowWidth;
         float posY = rand() % windowHeight;
-        float radius = 3;
+        float radius = rand() % 2 + 2;
         while (not validRespawnPlace) {
             for (int j = 0; j < i; j++) {
                 float distanceSquare = pow(posX - organismVector.at(j)->getPosX(), 2) + pow(posY - organismVector.at(j)->getPosY(), 2);
@@ -519,8 +522,8 @@ void startSimulation() {
             }
             validRespawnPlace = true;
         }
-        float energy = 1000; //TODO NEED TO PICK A VALID RANDOM ENERGY
-        float growthRate = 11.425;// static_cast<float>(rand() % 10 + 1) * 10.0f;
+        float energy = 500; //TODO NEED TO PICK A VALID RANDOM ENERGY
+        float growthRate = 7.0;// static_cast<float>(rand() % 10 + 1) * 10.0f;
         Flora* myFlora = new Flora(posX, posY, radius, energy, growthRate);
         organismVector.push_back(myFlora);
     }
@@ -905,16 +908,11 @@ void startSimulation() {
 
         currentText.setCharacterSize(12);
 
-        sf::RectangleShape speciesSeparator(sf::Vector2f(20.0 * columnWidth, 2.0));
-        speciesSeparator.setFillColor(sf::Color::Black);
-        speciesSeparator.setOutlineThickness(0.f);
-        speciesSeparator.setOutlineColor(sf::Color::Black);
 
         for (int i = 0; i < summaryStatistics.size(); i++) {
 
 
-            speciesSeparator.setPosition(newOriginX + (-0.2 * columnWidth), newOriginY + (1.8 + i * 6.0) * lineHeight);
-            windowSummary.draw(speciesSeparator);
+
             currentText.setString(summaryStatistics[i].speciesName);
             currentText.setPosition(newOriginX + 2.0 * columnWidth, newOriginY + (2.0 + i * 6.0) * lineHeight);
             windowSummary.draw(currentText);
@@ -936,7 +934,7 @@ void startSimulation() {
             currentText.setString("AVG # of Offsprings:");
             currentText.setPosition(newOriginX, newOriginY + (7.0 + i * 6.0) * lineHeight);
             windowSummary.draw(currentText);
-
+            /*
             sf::RectangleShape traitSeparator(sf::Vector2f(2.0, 4.8 * lineHeight));
             traitSeparator.setFillColor(sf::Color::Black);
             traitSeparator.setOutlineThickness(0.f);
@@ -946,21 +944,21 @@ void startSimulation() {
             classSeparator.setFillColor(sf::Color::Black);
             classSeparator.setOutlineThickness(0.f);
             classSeparator.setOutlineColor(sf::Color::Black);
-
+            */
 
 
             for (int j = 0; j < summaryStatistics[i].traitSummaryStatisticVector.size(); j++) {
                 currentText.setString(summaryStatistics[i].traitSummaryStatisticVector[j].traitName);
                 currentText.setPosition(newOriginX + (2.0 + 3.0 * j) * columnWidth, newOriginY + (3.0 + i * 6.0) * lineHeight);
                 windowSummary.draw(currentText);
-                traitSeparator.setPosition(newOriginX + (1.8 + 3.0 * (j + 1)) * columnWidth, newOriginY + (3.0 + i * 6.0) * lineHeight);
-                windowSummary.draw(traitSeparator);
+                //traitSeparator.setPosition(newOriginX + (1.8 + 3.0 * (j + 1)) * columnWidth, newOriginY + (3.0 + i * 6.0) * lineHeight);
+                //windowSummary.draw(traitSeparator);
                 for (int k = 0; k < 3; k++) {
                     currentText.setString(std::to_string(k + 1));
                     currentText.setPosition(newOriginX + (2.0 + 3.0 * j + 1.0 * k) * columnWidth, newOriginY + (4.0 + i * 6.0) * lineHeight);
                     windowSummary.draw(currentText);
-                    classSeparator.setPosition(newOriginX + (1.8 + 3.0 * j + 1.0 * k) * columnWidth, newOriginY + (4.0 + i * 6.0) * lineHeight);
-                    windowSummary.draw(classSeparator);
+                    //classSeparator.setPosition(newOriginX + (1.8 + 3.0 * j + 1.0 * k) * columnWidth, newOriginY + (4.0 + i * 6.0) * lineHeight);
+                    //windowSummary.draw(classSeparator);
                     std::stringstream stream1;
                     stream1 << std::fixed << std::setprecision(0) << (summaryStatistics[i].traitSummaryStatisticVector[j].population[k]);
                     currentText.setString(stream1.str());
@@ -993,8 +991,7 @@ void startSimulation() {
 
         }
 
-        speciesSeparator.setPosition(newOriginX, newOriginY + (1.8 + 2 * 6.0) * lineHeight);
-        windowSummary.draw(speciesSeparator);
+
 
 
         windowSummary.display();

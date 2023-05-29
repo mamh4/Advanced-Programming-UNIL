@@ -133,6 +133,8 @@ struct Plot5 {
     sf::Text xlabel;
 };
 
+float mutateOffspring(std::string speciesName, std::string traitName, float parent1TraitValue, float parent2TraitValue);
+
 Plot linePlot(float posX, float posY, std::vector<float> dataPoints, sf::Font& font,
     std::string title, float height = 120.0, float width = 225.0, int timeSpan = 500);
 
