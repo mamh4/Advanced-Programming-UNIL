@@ -165,6 +165,8 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
     this->mature(); 
     this->setEnergy(this->getEnergy() - std::min(this->getMetabolicRate(), this->getEnergy()));
 
+
+    //organism dies if energy is less than 0. In addition, The probability of dying due to old age increases as age increases. Could use De'Moivre's Law in the future.
     if ((1.0 * (rand() % 100) < (100 * std::pow(((1 + this->getAge()) / 6000), 10)) or (this->getEnergy() <= 0))) {
         this->die(organismVector);
 
@@ -172,6 +174,7 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
     else {
         int minFertilityAge = 50;
         int maxFertilityAge = 100;
+        //fertility check, only between age 50 and 100 and becomes increasingly difficult as they age.
         if ((1.0 * (rand() % 100) < std::max(0.0, (100 * std::pow(((this->getAge() - minFertilityAge) / (maxFertilityAge - minFertilityAge)), 10)))) and 
             not this->getFertile()) {
             this->setFertile(true);
@@ -195,6 +198,7 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
 			}
 
         }
+        //Fauna take as many turns as their speed allows.
         for (int k = 0; k <= this->getSpeed(); k++) { // BEGINING OF TURN LOOP 
 
             float distSquare;
