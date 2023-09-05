@@ -208,7 +208,7 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
             float maxInteractionUtility = 0.0;
 
             Organism* maxInteractionUtilityTarget = nullptr;
-            int maxDirectionalUtilityTarget = 0;
+            int maxDirectionalUtilityDirection = 0;
 
             std::vector<float> directionalUtility(angleSectionNumber, 0.0);
             std::vector<bool> directionalSelector(angleSectionNumber, true);
@@ -228,7 +228,7 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
                     float newPosY = this->getPosY() + stepSize * sin(2 * M_PI * (j + 0.5) / directionalUtility.size());
                     if (std::pow(newPosX - possibleCollisions.at(i)->getPosX(), 2) + pow(newPosY - possibleCollisions.at(i)->getPosY(), 2) <
                         std::pow((this->getRadius() + possibleCollisions.at(i)->getRadius()), 2)) {
-                        directionalSelector.at(j) = false ; 
+                        directionalSelector.at(j) = false;
                     }
                 }
             }
@@ -239,21 +239,78 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
                     (this->getPosY() + stepSize * sin(2 * M_PI * (i + 0.5) / directionalUtility.size()) > windowHeight - this->getRadius()) or
                     (this->getPosY() + stepSize * sin(2 * M_PI * (i + 0.5) / directionalUtility.size()) < 0 + this->getRadius())) {
                     //directionalUtility.at(i) = -10000.0;
-                   directionalSelector.at(i) = false ; 
+                    directionalSelector.at(i) = false;
                 }
             }
-            
-            
-            maxDirectionalUtility = 0.0 ; 
+            maxDirectionalUtility = 0.0;
             bool noDirectionalUtility = true;
-            bool validDirectionFound = false ; 
+            bool validDirectionFound = false;
+
+            directionalUtility;
+            possibleCollisions;
+            directionalSelector;
+
+            //Handle boundary conditions: 1) All directions generate the same utility
+            //If the directional utility of any direction is not equal to the first then this boundary case does not occur.
             for (int i = 0; i < directionalUtility.size(); i++) {
-                if (directionalUtility.at(i) != 0.0) {
-                    noDirectionalUtility = false; 
+                if (directionalUtility.at(i) != directionalUtility[1]) {
+                    noDirectionalUtility = false;
+                    break;
+                }
+            }
+
+            //Evaluate the maximum valid directional utility
+            for (int i = 0; i < directionalUtility.size(); i++) {
+                if (maxDirectionalUtility <= directionalUtility.at(i) and directionalSelector.at(i)) {
+                    maxDirectionalUtility = directionalUtility.at(i);
+                    maxDirectionalUtilityDirection = i;
+                }
+            }
+            //std::cout << "Max Directional Utility " << maxDirectionalUtility << " ,Max Interaction utillity " << maxInteractionUtility << std::endl;
+                //boundary condition: all directions generate the same utility
+
+            //If this is the case, move in a random viable direction.
+            if (noDirectionalUtility) {
+                //viable directions vector
+                std::vector<int>* viableDirections = new std::vector<int>();
+                for (int i = 0; i < directionalUtility.size(); i++) {
+                    if (directionalSelector.at(i)) {
+                        viableDirections->push_back(i);
+                    }
+                }
+                if (!viableDirections->empty()) {
+                    int randomViableDirectionByIndex = rand() % viableDirections->size();
+                    //this->move(viableDirections->at(randomViableDirectionByIndex)); DISABLED FOR NOW
+                    //std::cout << "Move Randomly, all are the same" << std::endl;
+                }
+            }
+            else if (maxDirectionalUtility >= maxInteractionUtility) {
+                this->move(maxDirectionalUtilityDirection);
+                //std::cout << "Direction Wins: " << maxDirectionalUtilityDirection <<std::endl;
+            }
+            else if (maxDirectionalUtility < maxInteractionUtility) {
+                this->interact(maxInteractionUtilityTarget, organismVector);
+               // std::cout << "Interaction Wins" << std::endl;
+            }
+            else {
+                //std::cout << "SOMETHING IS WRONG WITH UTILITY" << std::endl;
+            }
+        }
+            
+
+            /*
+
+
+
+            for (int i = 0; i < directionalUtility.size(); i++) {
+                if (directionalUtility.at(i) > 0.0) {
+                    noDirectionalUtility = false;
                 }
                 if (not validDirectionFound and directionalSelector.at(i)){
                     validDirectionFound = true ; 
-                    maxDirectionalUtility = directionalUtility.at(i) ; 
+                    if (maxDirectionalUtility <= directionalUtility.at(i)) {
+                        maxDirectionalUtility = directionalUtility.at(i) ;
+                    }
                 }
             }
             if (validDirectionFound){
@@ -277,37 +334,41 @@ void Fauna::update(std::vector<Organism*>& organismVector) {
             }
 
            if (maxDirectionalUtility >= maxInteractionUtility) { // O by default, eliminates negative utility interactions 
-                if (not noDirectionalUtility and validDirectionFound) {
-                    //RANDOM PICK OF DIRECTION IF NO CLEAR MAXIMUM
-                    int numberOfValidMaxUtilityDirections  = 0 ;
-                    for (int i = 0; i < directionalSelector.size(); i++) {
-                        if (directionalSelector.at(i)){
-                            numberOfValidMaxUtilityDirections ++ ; 
-                        }
-                    }
-                    int decsionalCounter = 0 ;                     
-                    int decisionalRand = 0 ; 
-                    decisionalRand = (rand() % numberOfValidMaxUtilityDirections) ; 
-                    for (int i = 0; i < directionalSelector.size(); i++){
-                        if (directionalSelector.at(i)){
-                            if (decsionalCounter == decisionalRand){
-                                this->move(i);
-                                decsionalCounter ++ ; 
-                            }
-                            else {
-                                decsionalCounter ++ ; 
-                            }
-                        }
-                        else{
-                        }
-                    } 
-                }
+               if (noDirectionalUtility and validDirectionFound) {
+                   //RANDOM PICK OF DIRECTION IF NO CLEAR MAXIMUM
+                   int numberOfValidMaxUtilityDirections = 0;
+                   for (int i = 0; i < directionalSelector.size(); i++) {
+                       if (directionalSelector.at(i)) {
+                           numberOfValidMaxUtilityDirections++;
+                       }
+                   }
+                   int decsionalCounter = 0;
+                   int decisionalRand = 0;
+                   decisionalRand = (rand() % numberOfValidMaxUtilityDirections);
+                   for (int i = 0; i < directionalSelector.size(); i++) {
+                       if (directionalSelector.at(i)) {
+                           if (decsionalCounter == decisionalRand) {
+                               this->move(i);
+                               decsionalCounter++;
+                           }
+                           else {
+                               decsionalCounter++;
+                           }
+                       }
+                       else {
+                       }
+                   }
+               }
+               else if (noDirectionalUtility and validDirectionFound) {
+                   this->move(maxDirectionalUtility);
+               }
             }
             else {
                 this->interact(maxInteractionUtilityTarget, organismVector);
-            }
-
-    }
+            */
+            
+            
+    
 
     float maxEnergy = 200.0; 
     sf::CircleShape newShape;

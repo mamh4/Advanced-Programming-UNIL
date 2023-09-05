@@ -172,7 +172,10 @@ void Predator::interact(Organism* targetOrganism, std::vector<Organism*>& organi
 			sex = (randomSexDetermination == 0);
 
 			int speed = 1;
-			speed = static_cast<int> (mutateOffspring("Predator", "Speed", this->getSpeed(), myPred->getSpeed()));
+			speed = static_cast<int> (
+				
+				
+				("Predator", "Speed", this->getSpeed(), myPred->getSpeed()));
 
 			float hungerSensitivity = 1;
 			hungerSensitivity = mutateOffspring("Predator", "Hunger Sensitivity", this->getHungerSensitivity(), myPred->getHungerSensitivity());
