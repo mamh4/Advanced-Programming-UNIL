@@ -10,7 +10,10 @@ Download the folder [Advanced-Programming-UNIL/predators/Release](https://github
 ## Running the simulation
 Upon double clicking the 'predators.exe' a small input window would open for the simulation parameters. Tap the input window and plug-in the desired parameters.
 
-![mainmenu (1)](https://github.com/mamh4/Advanced-Programming-UNIL/assets/57665567/036edc7b-d993-4d32-8869-272dc2fadc78)
+
+<p align="center">
+    <img src="https://github.com/mamh4/Advanced-Programming-UNIL/assets/57665567/036edc7b-d993-4d32-8869-272dc2fadc78" width="250px">
+    
 
 ![simulationWindow (1)](https://github.com/mamh4/Advanced-Programming-UNIL/assets/57665567/23c6a16a-e5e5-4466-9a7b-fe9531cc84c6)
 
@@ -19,8 +22,9 @@ Upon double clicking the 'predators.exe' a small input window would open for the
 
 
 ## Implementation
+<p align="center">
+    <img src="https://github.com/mamh4/Advanced-Programming-UNIL/assets/57665567/3fc32712-ed46-4208-a187-e20a7968f2fc" width="300px">
 
-![hopefullyLastUML](https://github.com/mamh4/Advanced-Programming-UNIL/assets/57665567/3fc32712-ed46-4208-a187-e20a7968f2fc)
 
 
 ## Adjusting the parameters
